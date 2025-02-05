@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
     alias(libs.plugins.ksp)
     alias(libs.plugins.google.services)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
@@ -103,7 +102,7 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
 
-    //Play Services for Map, Location and Places
+    //Play Services for Map and Location
     implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
 }
