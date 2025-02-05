@@ -11,12 +11,15 @@ import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.data.repository.EventRepository
 import com.example.a24hberlin.data.repository.UserRepository
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
+    private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepository(EventApi)
-    private val userRepo = UserRepository()
+    private val TAG = "EventViewModel"
+    private val userRepo = UserRepository(db)
 
     private var _currentUser = MutableLiveData<AppUser?>()
     val currentUser: LiveData<AppUser?>
