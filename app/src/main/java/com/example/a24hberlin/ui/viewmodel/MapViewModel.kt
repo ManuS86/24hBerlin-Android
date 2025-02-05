@@ -1,0 +1,4 @@
+package com.example.a24hberlin.ui.viewmodel
+
+class MapViewModel {
+}

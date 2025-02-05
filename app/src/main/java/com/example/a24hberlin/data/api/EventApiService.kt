@@ -1,0 +1,41 @@
+package com.example.a24hberlin.data.api
+
+import com.example.a24hberlin.data.model.ServerResponse
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.GET
+
+const val BASE_URL = "http://www.twenty-four-hours.info/wp-json/eventon"
+
+private val logger: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+    level = HttpLoggingInterceptor.Level.BODY
+}
+
+private val httpClient = OkHttpClient.Builder()
+    .addInterceptor(logger)
+    .build()
+
+private val moshi = Moshi
+    .Builder()
+    .add(KotlinJsonAdapterFactory())
+    .build()
+
+private val retrofit = Retrofit
+    .Builder()
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
+    .baseUrl(BASE_URL)
+    .client(httpClient)
+    .build()
+
+interface EventApiService {
+    @GET("/events?post_status=publish")
+    suspend fun getEvents(): ServerResponse
+}
+
+object EventApi {
+    val retrofitService: EventApiService by lazy { retrofit.create(EventApiService::class.java) }
+}
