@@ -73,4 +73,18 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
+
+    fun addFavoriteID(favoriteID: String) {
+
+    }
+
+    fun removeFavoriteID(favoriteID: String) {
+
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        listener?.remove()
+        listener = null
+    }
 }
