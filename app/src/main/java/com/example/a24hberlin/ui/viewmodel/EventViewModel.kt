@@ -75,11 +75,23 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addFavoriteID(favoriteID: String) {
-
+        viewModelScope.launch {
+            try {
+                userRepo.addFavoriteID(favoriteID)
+            } catch (ex: Exception) {
+                Log.e("Add Favorite ID", ex.toString())
+            }
+        }
     }
 
     fun removeFavoriteID(favoriteID: String) {
-
+        viewModelScope.launch {
+            try {
+                userRepo.removeFavoriteID(favoriteID)
+            } catch (ex: Exception) {
+                Log.e("Remove Favorite ID", ex.toString())
+            }
+        }
     }
 
     override fun onCleared() {

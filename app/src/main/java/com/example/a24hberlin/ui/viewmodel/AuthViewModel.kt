@@ -11,6 +11,7 @@ import com.example.a24hberlin.data.repository.UserRepository
 import com.example.a24hberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.DocumentReference
@@ -71,6 +72,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 userRepo.login(email, password)
+                analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
+                    param(FirebaseAnalytics.Param.ITEM_ID, _currentUser.value?.email!!)
+                    param(FirebaseAnalytics.Param.ITEM_NAME, "Email")
+                }
             } catch (ex: Exception) {
                 _errorMessage.value = "invalid_email_or_password."
                 Log.e("Login", ex.toString())

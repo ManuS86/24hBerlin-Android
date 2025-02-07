@@ -31,7 +31,7 @@ class UserRepository(private var db: FirebaseFirestore) {
             collRef
                 .document(user.uid)
                 .set(AppUser(user.uid))
-        }
+        }?.await()
     }
 
     fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
@@ -49,15 +49,15 @@ class UserRepository(private var db: FirebaseFirestore) {
         }
     }
 
-    fun changeEmail(email: String) {
-        auth.currentUser?.verifyBeforeUpdateEmail(email)
+    suspend fun changeEmail(email: String) {
+        auth.currentUser?.verifyBeforeUpdateEmail(email)?.await()
     }
 
-    fun changePassword(password: String) {
-        auth.currentUser?.updatePassword(password)
+    suspend fun changePassword(password: String) {
+        auth.currentUser?.updatePassword(password)?.await()
     }
 
-    fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
+    suspend fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
         val values = mutableMapOf<String, Any>()
         favoriteID?.let { values["favoriteIDs"] = FieldValue.arrayUnion(listOf(it)) }
         settings?.let {
@@ -67,7 +67,13 @@ class UserRepository(private var db: FirebaseFirestore) {
             )
         }
         if (values.isEmpty()) return
-        userRef?.update(values)
+        userRef?.update(values)?.await()
+    }
+
+    suspend fun addFavoriteID(favoriteID: String) {
+        userRef?.set(
+            mapOf("favoriteIDs" to FieldValue.arrayUnion(listOf(favoriteID)))
+        )?.await()
     }
 
     suspend fun removeFavoriteID(favoriteID: String) {
@@ -89,7 +95,11 @@ class UserRepository(private var db: FirebaseFirestore) {
         auth.signOut()
     }
 
-    fun sendBugReport(
+    suspend fun reAuthenticate() {
+        auth
+    }
+
+    suspend fun sendBugReport(
         message: String,
         completion: (Exception?) -> Unit
     ) {
@@ -111,7 +121,7 @@ class UserRepository(private var db: FirebaseFirestore) {
                 } else {
                     completion(task.exception)
                 }
-            }
+            }.await()
     }
 
     private fun FirebaseAuth.currentUserRef(): DocumentReference? {

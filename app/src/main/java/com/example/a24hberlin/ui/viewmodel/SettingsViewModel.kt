@@ -58,6 +58,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
         }
     }
+
     fun changeEmail(email: String) {
         viewModelScope.launch {
             try {
@@ -87,7 +88,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
                     _confirmationMessage.value = "password_changed_successfully."
                 } catch (ex: Exception) {
                     _confirmationMessage.value = null
-                        _errorMessage.value = ex.localizedMessage
+                    _errorMessage.value = ex.localizedMessage
                     Log.e("Change Password", ex.toString())
                 }
             }
@@ -102,8 +103,16 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun reauthenticate() {
+    fun reAuthenticate(email: String, password: String) {
         _errorMessage.value = null
+
+        viewModelScope.launch {
+            try {
+                userRepo.reAuthenticate()
+            } catch (ex: Exception) {
+                Log.e("Account Deletion", ex.toString())
+            }
+        }
     }
 
     fun deleteAccount() {
@@ -126,15 +135,23 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
             }
         )
 
-        try {
-            userRepo.updateUserInformation(settings = settings)
-        } catch (ex: Exception) {
-            Log.e("Save Settings", ex.toString())
+        viewModelScope.launch {
+            try {
+                userRepo.updateUserInformation(settings = settings)
+            } catch (ex: Exception) {
+                Log.e("Save Settings", ex.toString())
+            }
         }
     }
 
     fun sendBugReport(message: String, completion: (Exception?) -> Unit) {
-        userRepo.sendBugReport(message, completion)
+        viewModelScope.launch {
+            try {
+                userRepo.sendBugReport(message, completion)
+            } catch (ex: Exception) {
+                Log.e("Send Bug Report", ex.toString())
+            }
+        }
     }
 
     override fun onCleared() {
