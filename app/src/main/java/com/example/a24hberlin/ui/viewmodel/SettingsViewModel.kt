@@ -125,6 +125,10 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
+    fun removeAllPendingNotifications() {
+
+    }
+
     fun saveSettings() {
         val settings = Settings(
             pushNotificationsEnabled = _pushNotificationsEnabled.value ?: false,

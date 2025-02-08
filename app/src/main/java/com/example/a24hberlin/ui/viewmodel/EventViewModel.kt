@@ -75,6 +75,10 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addFavoriteID(favoriteID: String) {
+        events.value?.let { event ->
+            val event = event.find { it.id == favoriteID } ?: return
+        }
+
         viewModelScope.launch {
             try {
                 userRepo.addFavoriteID(favoriteID)
@@ -85,6 +89,10 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun removeFavoriteID(favoriteID: String) {
+        events.value?.let { event ->
+            val event = event.find { it.id == favoriteID } ?: return
+        }
+
         viewModelScope.launch {
             try {
                 userRepo.removeFavoriteID(favoriteID)
@@ -92,6 +100,14 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                 Log.e("Remove Favorite ID", ex.toString())
             }
         }
+    }
+
+    fun addFavoritePushNotification(event: Event, dayModifier: Int, hourModifier: Int) {
+
+    }
+
+    fun setupAbsenceReminder() {
+
     }
 
     override fun onCleared() {

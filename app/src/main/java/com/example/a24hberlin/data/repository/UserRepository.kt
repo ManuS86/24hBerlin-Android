@@ -25,8 +25,8 @@ class UserRepository(private var db: FirebaseFirestore) {
         userRef = auth.currentUserRef()
     }
 
-    suspend fun register(email : String, password: String){
-        val result = auth.createUserWithEmailAndPassword(email,password).await()
+    suspend fun register(email: String, password: String) {
+        val result = auth.createUserWithEmailAndPassword(email, password).await()
 
         result.user?.let { user ->
             collRef
@@ -58,6 +58,11 @@ class UserRepository(private var db: FirebaseFirestore) {
         auth.currentUser?.updatePassword(password)?.await()
     }
 
+    suspend fun resetPassword(email: String) {
+        auth.sendPasswordResetEmail(email).await()
+    }
+
+
     suspend fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
         val values = mutableMapOf<String, Any>()
         favoriteID?.let { values["favoriteIDs"] = FieldValue.arrayUnion(listOf(it)) }
@@ -88,11 +93,11 @@ class UserRepository(private var db: FirebaseFirestore) {
         auth.currentUser?.delete()?.await()
     }
 
-    suspend fun login(email : String, password: String){
-        auth.signInWithEmailAndPassword(email,password).await()
+    suspend fun login(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    fun logout(){
+    fun logout() {
         auth.signOut()
     }
 

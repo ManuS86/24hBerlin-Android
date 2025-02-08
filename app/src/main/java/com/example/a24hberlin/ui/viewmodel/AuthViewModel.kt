@@ -27,6 +27,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "AuthViewModel"
     private val userRepo = UserRepository(db)
 
+    private var _confirmationMessage = MutableLiveData<String?>()
+    val confirmationMessage: LiveData<String?>
+        get() = _confirmationMessage
+
     private var _currentUser = MutableLiveData<FirebaseUser?>(auth.currentUser)
     val currentUser: LiveData<FirebaseUser?>
         get() = _currentUser
@@ -79,6 +83,20 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
             } catch (ex: Exception) {
                 _errorMessage.value = "invalid_email_or_password."
                 Log.e("Login", ex.toString())
+            }
+        }
+    }
+
+    fun resetPassword(email: String) {
+        viewModelScope.launch {
+            try {
+                userRepo.resetPassword(email)
+                _errorMessage.value = null
+                _confirmationMessage.value = "email_sent."
+            } catch (ex: Exception) {
+                _confirmationMessage.value = null
+                _errorMessage.value = ex.localizedMessage
+                Log.e("Password reset requested", ex.toString())
             }
         }
     }
