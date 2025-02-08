@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095749043096",
+    "project_id": "hberlin-android",
+    "storage_bucket": "hberlin-android.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095749043096:android:fb23a331b81ea43f6261ed",
+        "android_client_info": {
+          "package_name": "com.example.a24hberlin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvRfxPJaxllk8KKo7bmKV6UZVG9ur_Bkg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
