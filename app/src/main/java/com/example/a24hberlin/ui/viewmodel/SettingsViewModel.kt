@@ -103,14 +103,14 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    fun reAuthenticate(email: String, password: String) {
+    fun reAuthenticate(password: String) {
         _errorMessage.value = null
 
         viewModelScope.launch {
             try {
-                userRepo.reAuthenticate()
+                userRepo.reAuthenticate(password)
             } catch (ex: Exception) {
-                Log.e("Account Deletion", ex.toString())
+                Log.e("Re-Authentication", ex.toString())
             }
         }
     }

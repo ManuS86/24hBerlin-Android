@@ -2,6 +2,7 @@ package com.example.a24hberlin.data.repository
 
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -71,13 +72,13 @@ class UserRepository(private var db: FirebaseFirestore) {
     }
 
     suspend fun addFavoriteID(favoriteID: String) {
-        userRef?.set(
+        userRef?.update(
             mapOf("favoriteIDs" to FieldValue.arrayUnion(listOf(favoriteID)))
         )?.await()
     }
 
     suspend fun removeFavoriteID(favoriteID: String) {
-        userRef?.set(
+        userRef?.update(
             mapOf("favoriteIDs" to FieldValue.arrayRemove(listOf(favoriteID)))
         )?.await()
     }
@@ -95,8 +96,11 @@ class UserRepository(private var db: FirebaseFirestore) {
         auth.signOut()
     }
 
-    suspend fun reAuthenticate() {
-        auth
+    suspend fun reAuthenticate(password: String) {
+        val user = auth.currentUser
+        val credential = EmailAuthProvider.getCredential(user?.email!!, password)
+
+        user.reauthenticate(credential).await()
     }
 
     suspend fun sendBugReport(
