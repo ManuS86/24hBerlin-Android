@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,7 +34,7 @@ fun SearchBar(
             }
             ) {
                 Icon(
-                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     contentDescription = "Search"
                 )
             }
@@ -51,24 +51,24 @@ fun SearchBar(
                 }
             }
         },
-        placeholder = { Text("Search") },
+        placeholder = { Text("Search...") },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = regularPadding)
             .padding(bottom = mediumPadding),
         singleLine = true,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(32.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
-            focusedContainerColor = Color.DarkGray.copy(0.3f),
-            unfocusedContainerColor = Color.DarkGray.copy(0.3f),
-            focusedTextColor = Color.Gray,
-            unfocusedTextColor = Color.Gray,
-            focusedLeadingIconColor = Color.Gray,
-            unfocusedLeadingIconColor = Color.Gray,
-            focusedTrailingIconColor = Color.Gray,
-            unfocusedTrailingIconColor = Color.Gray,
+            focusedContainerColor = Color.Gray.copy(0.15f),
+            unfocusedContainerColor = Color.Gray.copy(0.15f),
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White,
+            focusedLeadingIconColor = Color.White,
+            unfocusedLeadingIconColor = Color.White,
+            focusedTrailingIconColor = Color.White,
+            unfocusedTrailingIconColor = Color.White,
             focusedPlaceholderColor = Color.Gray,
             unfocusedPlaceholderColor = Color.Gray
         )
