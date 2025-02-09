@@ -24,10 +24,20 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.BottomNavigationBar
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.NavGraph
+import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
+import com.example.a24hberlin.ui.screens.events.EventsScreen
+import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
+import com.example.a24hberlin.ui.screens.settings.SettingsScreen
+
+const val EVENTS_ROUTE = "events"
+const val CLUB_MAP_ROUTE = "club_map"
+const val FAVORITES_ROUTE = "favorites"
+const val SETTINGS_ROUTE = "settings"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,7 +95,20 @@ fun AppNavigation() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            NavGraph(navController)
+            NavHost(navController = navController, startDestination = EVENTS_ROUTE) {
+                composable(EVENTS_ROUTE) {
+                    EventsScreen(searchText)
+                }
+                composable(CLUB_MAP_ROUTE) {
+                    ClubMapScreen(searchText)
+                }
+                composable(FAVORITES_ROUTE) {
+                    FavoritesScreen(searchText)
+                }
+                composable(SETTINGS_ROUTE) {
+                    SettingsScreen()
+                }
+            }
         }
     }
 }

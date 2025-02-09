@@ -23,11 +23,9 @@ fun SettingsScreen() {
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
-        Column(
-            Modifier.fillMaxSize()
-        ) {
+        Column(Modifier.fillMaxSize()) {
             LazyColumn(
-                modifier = Modifier
+                Modifier
                     .padding(horizontal = regularPadding)
                     .padding(vertical = mediumPadding)
             ) {
