@@ -33,10 +33,11 @@ import com.example.a24hberlin.utils.slightRounding
 @Composable
 fun PasswordField(
     title: String,
-    hint: String
+    hint: String,
+    password: String,
+    onPasswordChanged: (String) -> Unit
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -50,8 +51,8 @@ fun PasswordField(
         )
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = password,
+            onValueChange = onPasswordChanged,
             placeholder = {
                 Text(
                     hint,
@@ -86,8 +87,12 @@ fun PasswordField(
 @Preview(showBackground = true)
 @Composable
 fun PasswordFieldPreview() {
+    var password by remember { mutableStateOf("") }
+
     PasswordField(
         title = "Password",
-        hint = "Enter your password"
+        hint = "Enter your password",
+        password = password,
+        onPasswordChanged = { password = it }
     )
 }

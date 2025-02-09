@@ -26,10 +26,10 @@ import com.example.a24hberlin.utils.slightRounding
 @Composable
 fun EmailField(
     title: String,
-    hint: String
+    hint: String,
+    email: String,
+    onEmailChanged: (String) -> Unit
 ) {
-    var text by remember { mutableStateOf("") }
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
@@ -42,8 +42,8 @@ fun EmailField(
         )
 
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = email,
+            onValueChange = onEmailChanged,
             placeholder = {
                 Text(
                     hint,
@@ -68,8 +68,12 @@ fun EmailField(
 @Preview(showBackground = true)
 @Composable
 fun EmailFieldPreview() {
+    var email by remember { mutableStateOf("") }
+
     EmailField(
         title = "Email",
-        hint = "Enter your email"
+        hint = "Enter your email",
+        email = email,
+        onEmailChanged = { email = it }
     )
 }
