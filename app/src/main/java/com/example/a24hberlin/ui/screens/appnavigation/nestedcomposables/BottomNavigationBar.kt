@@ -5,20 +5,20 @@ import androidx.compose.material.icons.filled.Event
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.Map
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.example.a24hberlin.ui.screens.appnavigation.AppNavigation
-import com.example.a24hberlin.ui.theme.text
 
 @Composable
 fun BottomNavigationBar(
@@ -28,22 +28,26 @@ fun BottomNavigationBar(
     val items = listOf(
         NavigationItem(
             route = EVENTS_ROUTE,
-            icon = Icons.Filled.Event,
+            selectedIcon = Icons.Filled.Event,
+            unselectedIcon = Icons.Outlined.Event,
             label = "Events"
         ),
         NavigationItem(
             route = CLUB_MAP_ROUTE,
-            icon = Icons.Filled.Map,
+            selectedIcon = Icons.Filled.Map,
+            unselectedIcon = Icons.Outlined.Map,
             label = "Club Map"
         ),
         NavigationItem(
             route = FAVORITES_ROUTE,
-            icon = Icons.Filled.Star,
+            selectedIcon = Icons.Filled.Star,
+            unselectedIcon = Icons.Outlined.StarOutline,
             label = "Favorites"
         ),
         NavigationItem(
             route = SETTINGS_ROUTE,
-            icon = Icons.Filled.Settings,
+            selectedIcon = Icons.Filled.Settings,
+            unselectedIcon = Icons.Outlined.Settings,
             label = "Settings"
         )
     )
@@ -51,22 +55,25 @@ fun BottomNavigationBar(
     NavigationBar(
         containerColor = Color.Black
     ) {
-        val navBackStackEntry = navController.currentBackStackEntryAsState()
-        val currentRoute = navBackStackEntry.value?.destination?.route
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentDestination = navBackStackEntry?.destination
 
         items.forEach { item ->
+            val selected = currentDestination?.route == item.route
+
             NavigationBarItem(
-                icon = { Icon(item.icon, contentDescription = item.label) },
-                selected = currentRoute == item.route,
+                icon = {
+                    Icon(
+                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = item.label
+                    )
+                },
+                selected = selected,
                 onClick = {
-                    navController.navigate(item.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
                     onTitleChange(item.label)
+                    navController.navigate(item.route) {
+                        launchSingleTop = true
+                    }
                 },
                 alwaysShowLabel = false,
                 colors = NavigationBarItemDefaults.colors(
@@ -81,6 +88,7 @@ fun BottomNavigationBar(
 
 data class NavigationItem(
     val route: String,
-    val icon: ImageVector,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
     val label: String
 )

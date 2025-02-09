@@ -4,42 +4,50 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.slightRounding
 
 @Composable
 fun SearchBar(
     searchText: TextFieldValue,
-    onSearchTextChange: (TextFieldValue) -> Unit
+    onSearchTextChange: (TextFieldValue) -> Unit,
+    onSearchClosed: () -> Unit
 ) {
     OutlinedTextField(
         value = searchText,
         onValueChange = onSearchTextChange,
         leadingIcon = {
-            Icon(imageVector = Icons.Filled.Search, contentDescription = "Search")
+            IconButton(onClick = {
+                onSearchClosed()
+            }
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ArrowBackIosNew,
+                    contentDescription = "Search"
+                )
+            }
         },
         trailingIcon = {
             if (searchText.text.isNotEmpty()) {
-                IconButton(onClick = { onSearchTextChange(TextFieldValue("")) }) {
-                    Icon(imageVector = Icons.Filled.Close, contentDescription = "Clear")
+                IconButton(onClick = {
+                    onSearchTextChange(TextFieldValue(""))
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.Close,
+                        contentDescription = "Clear"
+                    )
                 }
             }
         },
@@ -49,7 +57,7 @@ fun SearchBar(
             .padding(horizontal = regularPadding)
             .padding(bottom = mediumPadding),
         singleLine = true,
-        shape = RoundedCornerShape(mediumRounding),
+        shape = RoundedCornerShape(16.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.Transparent,
             unfocusedBorderColor = Color.Transparent,
