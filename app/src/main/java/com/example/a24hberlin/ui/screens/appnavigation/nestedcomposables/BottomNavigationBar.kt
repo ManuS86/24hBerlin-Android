@@ -20,6 +20,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 
+const val EVENTS_ROUTE = "events"
+const val CLUB_MAP_ROUTE = "club_map"
+const val FAVORITES_ROUTE = "favorites"
+const val SETTINGS_ROUTE = "settings"
+
 @Composable
 fun BottomNavigationBar(
     navController: NavHostController,

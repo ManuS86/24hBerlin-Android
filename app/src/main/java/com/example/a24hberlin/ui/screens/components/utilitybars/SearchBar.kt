@@ -22,12 +22,12 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun SearchBar(
     searchText: TextFieldValue,
-    onSearchTextChange: (TextFieldValue) -> Unit,
+    onSearchTextChanged: (TextFieldValue) -> Unit,
     onSearchClosed: () -> Unit
 ) {
     OutlinedTextField(
         value = searchText,
-        onValueChange = onSearchTextChange,
+        onValueChange = onSearchTextChanged,
         leadingIcon = {
             IconButton(onClick = {
                 onSearchClosed()
@@ -42,7 +42,7 @@ fun SearchBar(
         trailingIcon = {
             if (searchText.text.isNotEmpty()) {
                 IconButton(onClick = {
-                    onSearchTextChange(TextFieldValue(""))
+                    onSearchTextChanged(TextFieldValue(""))
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
