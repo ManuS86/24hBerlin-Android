@@ -2,21 +2,18 @@ package com.example.a24hberlin.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.repository.UserRepository
 import com.example.a24hberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.analytics.logEvent
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -27,21 +24,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "AuthViewModel"
     private val userRepo = UserRepository(db)
 
-    private var _confirmationMessage = MutableLiveData<String?>()
-    val confirmationMessage: LiveData<String?>
-        get() = _confirmationMessage
+    var confirmationMessage by mutableStateOf<String?>(null)
+        private set
 
-    private var _currentUser = MutableLiveData<FirebaseUser?>(auth.currentUser)
-    val currentUser: LiveData<FirebaseUser?>
-        get() = _currentUser
+    var currentUser by mutableStateOf(auth.currentUser)
+        private set
 
-    private var _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?>
-        get() = _errorMessage
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
 
-    private var _passwordError = MutableLiveData<String?>()
-    val passwordError: LiveData<String?>
-        get() = _passwordError
+    var passwordError by mutableStateOf<String?>(null)
+        private set
 
     init {
         if (auth.currentUser != null) {
@@ -51,10 +44,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
-        _errorMessage.value = null
-        _passwordError.value = null
+        errorMessage = null
+        passwordError = null
 
-        _passwordError.value = checkPassword(password, confirmPassword)
+        passwordError = checkPassword(password, confirmPassword)
 
         if (errorMessage == null && passwordError == null) {
             viewModelScope.launch {
@@ -63,7 +56,7 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
                     auth.useAppLanguage()
                     auth.currentUser?.sendEmailVerification()
                 } catch (ex: Exception) {
-                    _errorMessage.value = ex.localizedMessage
+                    errorMessage = ex.localizedMessage
                     Log.e("Registration", ex.toString())
                 }
             }
@@ -71,17 +64,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun login(email: String, password: String) {
-        _errorMessage.value = null
+        errorMessage = null
 
         viewModelScope.launch {
             try {
                 userRepo.login(email, password)
                 analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
-                    param(FirebaseAnalytics.Param.ITEM_ID, _currentUser.value?.email!!)
+                    param(FirebaseAnalytics.Param.ITEM_ID, currentUser?.email!!)
                     param(FirebaseAnalytics.Param.ITEM_NAME, "Email")
                 }
             } catch (ex: Exception) {
-                _errorMessage.value = "invalid_email_or_password."
+                errorMessage = "invalid_email_or_password."
                 Log.e("Login", ex.toString())
             }
         }
@@ -91,17 +84,17 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 userRepo.resetPassword(email)
-                _errorMessage.value = null
-                _confirmationMessage.value = "email_sent."
+                errorMessage = null
+                confirmationMessage = "email_sent."
             } catch (ex: Exception) {
-                _confirmationMessage.value = null
-                _errorMessage.value = ex.localizedMessage
+                confirmationMessage = null
+                errorMessage = ex.localizedMessage
                 Log.e("Password reset requested", ex.toString())
             }
         }
     }
 
     private fun setUpUserEnv() {
-        _currentUser.value = auth.currentUser
+        currentUser = auth.currentUser
     }
 }

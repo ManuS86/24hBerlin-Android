@@ -2,9 +2,10 @@ package com.example.a24hberlin.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.api.EventApi
 import com.example.a24hberlin.data.model.AppUser
@@ -23,18 +24,16 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "EventViewModel"
     private val userRepo = UserRepository(db)
 
-    private var _currentAppUser = MutableLiveData<AppUser?>()
-    val currentAppUser: LiveData<AppUser?>
-        get() = _currentAppUser
+    var currentAppUser by mutableStateOf<AppUser?>(null)
+        private set
 
-    private var _events = MutableLiveData<List<Event>>()
-    val events: LiveData<List<Event>>
-        get() = _events
+    var events by mutableStateOf<List<Event>>(emptyList())
+        private set
 
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->
-                _currentAppUser.value = user
+                currentAppUser = user
             }
         }
         loadEvents()
@@ -46,12 +45,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                 val allEvents = eventRepo.loadEvents()
 
                 allEvents.let { eventsMap ->
-                    eventsMap.map { (id, event) -> // setEventIDs
+                    eventsMap.map { (id, event) ->
                         event.id = id
                         event
                     }
                 }.let { eventsWithIDs ->
-                    eventsWithIDs.flatMap { event -> // expandEventsWithRepeats
+                    eventsWithIDs.flatMap { event ->
                         listOf(event) + (event.repeats?.mapIndexed { index, repeatData ->
                             event.copy(
                                 id = "${event.id}-${index}",
@@ -62,11 +61,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                         } ?: emptyList())
                     }
                 }.let { expandedEvents ->
-                    expandedEvents.filter { event -> // filterAndSort
+                    expandedEvents.filter { event ->
                         event.start.toLocalDate() >= LocalDate.now()
                     }.sortedBy { it.start }
                 }.let { finalEvents ->
-                    _events.value = finalEvents
+                    events = finalEvents // Update the MutableState
                 }
             } catch (ex: Exception) {
                 Log.e("EventsApiCall", ex.toString())
@@ -75,13 +74,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addFavoriteID(favoriteID: String) {
-        events.value?.let { event ->
-            val event = event.find { it.id == favoriteID } ?: return
-        }
-
         viewModelScope.launch {
             try {
                 userRepo.addFavoriteID(favoriteID)
+                // Optionally update the events list to reflect the change locally
+                // This would require fetching the updated user data and events
             } catch (ex: Exception) {
                 Log.e("Add Favorite ID", ex.toString())
             }
@@ -89,13 +86,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun removeFavoriteID(favoriteID: String) {
-        events.value?.let { event ->
-            val event = event.find { it.id == favoriteID } ?: return
-        }
-
         viewModelScope.launch {
             try {
                 userRepo.removeFavoriteID(favoriteID)
+                // Optionally update the events list to reflect the change locally
+                // This would require fetching the updated user data and events
             } catch (ex: Exception) {
                 Log.e("Remove Favorite ID", ex.toString())
             }

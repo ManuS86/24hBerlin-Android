@@ -2,9 +2,10 @@ package com.example.a24hberlin.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.AppUser
@@ -25,36 +26,30 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     private val TAG = "SettingsViewModel"
     private val userRepo = UserRepository(db)
 
-    private var _confirmationMessage = MutableLiveData<String?>()
-    val confirmationMessage: LiveData<String?>
-        get() = _confirmationMessage
+    var confirmationMessage by mutableStateOf<String?>(null)
+        private set
 
-    private var _currentAppUser = MutableLiveData<AppUser?>()
-    val currentAppUser: LiveData<AppUser?>
-        get() = _currentAppUser
+    var currentAppUser by mutableStateOf<AppUser?>(null)
+        private set
 
-    private var _errorMessage = MutableLiveData<String?>()
-    val errorMessage: LiveData<String?>
-        get() = _errorMessage
+    var errorMessage by mutableStateOf<String?>(null)
+        private set
 
-    private var _language = MutableLiveData<Language?>()
-    val language: LiveData<Language?>
-        get() = _language
+    var language by mutableStateOf<Language?>(null)
+        private set
 
-    private var _passwordError = MutableLiveData<String?>()
-    val passwordError: LiveData<String?>
-        get() = _passwordError
+    var passwordError by mutableStateOf<String?>(null)
+        private set
 
-    private var _pushNotificationsEnabled = MutableLiveData(false)
-    val pushNotificationsEnabled: LiveData<Boolean>
-        get() = _pushNotificationsEnabled
+    var pushNotificationsEnabled by mutableStateOf(false)
+        private set
 
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->
-                _currentAppUser.value = user
-                _pushNotificationsEnabled.value = user?.settings?.pushNotificationsEnabled
-                _language.value = user?.settings?.language?.toLanguageOrNull()
+                currentAppUser = user
+                pushNotificationsEnabled = user?.settings?.pushNotificationsEnabled ?: false
+                language = user?.settings?.language?.toLanguageOrNull()
             }
         }
     }
@@ -63,32 +58,32 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
         viewModelScope.launch {
             try {
                 userRepo.changeEmail(email)
-                _errorMessage.value = null
-                _confirmationMessage.value = "email_changed_successfully."
+                errorMessage = null
+                confirmationMessage = "email_changed_successfully."
             } catch (ex: Exception) {
-                _confirmationMessage.value = null
-                _errorMessage.value = ex.localizedMessage
+                confirmationMessage = null
+                errorMessage = ex.localizedMessage
                 Log.e("Change Email", ex.toString())
             }
         }
     }
 
     fun changePassword(password: String, confirmPassword: String) {
-        _errorMessage.value = null
-        _passwordError.value = null
+        errorMessage = null
+        passwordError = null
 
-        _passwordError.value = checkPassword(password, confirmPassword)
+        passwordError = checkPassword(password, confirmPassword)
 
         if (errorMessage == null && passwordError == null) {
             viewModelScope.launch {
                 try {
                     userRepo.changePassword(password)
-                    _errorMessage.value = null
-                    _passwordError.value = null
-                    _confirmationMessage.value = "password_changed_successfully."
+                    errorMessage = null
+                    passwordError = null
+                    confirmationMessage = "password_changed_successfully."
                 } catch (ex: Exception) {
-                    _confirmationMessage.value = null
-                    _errorMessage.value = ex.localizedMessage
+                    confirmationMessage = null
+                    errorMessage = ex.localizedMessage
                     Log.e("Change Password", ex.toString())
                 }
             }
@@ -104,7 +99,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun reAuthenticate(password: String) {
-        _errorMessage.value = null
+        errorMessage = null
 
         viewModelScope.launch {
             try {
@@ -126,17 +121,13 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun removeAllPendingNotifications() {
-
+        // Implementation for removing notifications
     }
 
     fun saveSettings() {
         val settings = Settings(
-            pushNotificationsEnabled = _pushNotificationsEnabled.value ?: false,
-            language = if (_language != null) {
-                _language.value?.label
-            } else {
-                null
-            }
+            pushNotificationsEnabled = pushNotificationsEnabled,
+            language = language?.label
         )
 
         viewModelScope.launch {

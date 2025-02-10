@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(device = Devices.PIXEL_7, showBackground = true, showSystemUi = true)
 @Composable
-fun GreetingPreview() {
+fun AppNavigationPreview() {
     _24hBerlinTheme {
         AppNavigation()
     }

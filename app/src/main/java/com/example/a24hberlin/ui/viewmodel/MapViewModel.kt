@@ -1,4 +1,8 @@
 package com.example.a24hberlin.ui.viewmodel
 
-class MapViewModel {
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+
+class MapViewModel(application: Application) : AndroidViewModel(application) {
+
 }
