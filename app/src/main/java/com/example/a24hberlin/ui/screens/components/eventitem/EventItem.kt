@@ -56,7 +56,6 @@ fun EventItem(event: Event) {
                     }
                 }
             }
-
             if (showDetail) {
                 EventDetailItem()
             }

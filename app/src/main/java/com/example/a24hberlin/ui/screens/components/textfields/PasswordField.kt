@@ -33,8 +33,8 @@ import com.example.a24hberlin.utils.slightRounding
 @Composable
 fun PasswordField(
     title: String,
-    hint: String,
     password: String,
+    hint: String,
     onPasswordChanged: (String) -> Unit
 ) {
     var passwordVisible by remember { mutableStateOf(false) }

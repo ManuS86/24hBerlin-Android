@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.a24hberlin.ui.screens.appnavigation.AppNavigation
+import com.example.a24hberlin.ui.screens.auth.AuthWrapper
 import com.example.a24hberlin.ui.theme._24hBerlinTheme
 
 class MainActivity : ComponentActivity() {
@@ -23,7 +24,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             _24hBerlinTheme {
-                AppNavigation()
+                AuthWrapper()
             }
         }
     }
@@ -33,6 +34,6 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigationPreview() {
     _24hBerlinTheme {
-        AppNavigation()
+        AuthWrapper()
     }
 }

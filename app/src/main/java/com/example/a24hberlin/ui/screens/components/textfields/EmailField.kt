@@ -26,8 +26,8 @@ import com.example.a24hberlin.utils.slightRounding
 @Composable
 fun EmailField(
     title: String,
-    hint: String,
     email: String,
+    hint: String,
     onEmailChanged: (String) -> Unit
 ) {
     Column(
