@@ -28,15 +28,18 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.BottomNavigationBar
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.CLUB_MAP_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.EVENTS_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.FAVORITES_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.SETTINGS_ROUTE
+import com.example.a24hberlin.ui.screens.auth.nestedcomposables.ForgotPasswordScreen
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
 import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
 import com.example.a24hberlin.ui.screens.settings.SettingsScreen
+
+const val EVENTS_ROUTE = "events"
+const val CLUB_MAP_ROUTE = "club_map"
+const val FAVORITES_ROUTE = "favorites"
+const val SETTINGS_ROUTE = "settings"
+const val FORGOT_PASSWORD_ROUTE = "forgot_password"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -106,6 +109,9 @@ fun AppNavigation() {
                 }
                 composable(SETTINGS_ROUTE) {
                     SettingsScreen()
+                }
+                composable(FORGOT_PASSWORD_ROUTE) {
+                    ForgotPasswordScreen()
                 }
             }
         }

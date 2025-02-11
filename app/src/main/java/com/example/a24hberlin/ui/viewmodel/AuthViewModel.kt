@@ -36,9 +36,6 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
     var passwordError by mutableStateOf<String?>(null)
         private set
 
-    var showRegister by mutableStateOf(false)
-        private set
-
     init {
         if (auth.currentUser != null) {
             setUpUserEnv()
