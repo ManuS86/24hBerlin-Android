@@ -2,20 +2,24 @@ package com.example.a24hberlin.ui.screens.components.eventitem
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.Card
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.buttons.FavoriteButton
@@ -28,6 +32,7 @@ import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.
 import com.example.a24hberlin.ui.theme.ArtAndCulture
 import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Party
+import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -41,39 +46,52 @@ fun EventItem(event: Event) {
         else -> ArtAndCulture
     }
 
-    SelectionContainer {
-        Card(
+    Column(
+        Modifier.clip(RoundedCornerShape(mediumRounding))
+    ) {
+        Column(
             Modifier
+                .clickable {
+                    showDetail = !showDetail
+                }
                 .background(eventColor)
-                .shadow(1.dp),
-            shape = RoundedCornerShape(mediumRounding)
+                .shadow(1.dp)
         ) {
-            Row(Modifier.padding(regularPadding)) {
-                ImageAndDate(
-                    event.imageURL,
-                    event.startTime,
-                    event.endTime
-                )
+            CompositionLocalProvider(LocalContentColor provides Color.White) {
+                Column {
+                    Row(Modifier.padding(regularPadding)) {
+                        ImageAndDate(
+                            event.imageURL,
+                            event.start,
+                            event.end
+                        )
 
-                Column(horizontalAlignment = Alignment.Start) {
-                    Header(
-                        event.name,
-                        event.permalink,
-                        event.subtitle
-                    )
-                    Categories(
-                        event.eventType,
-                        event.sounds
-                    )
-                    Time(
-                        event.startTime,
-                        event.endTime
-                    )
-                    Location(
-                        event.locationName,
-                        event.address
-                    )
-                    FavoriteButton(event)
+                        Column(horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
+                            Header(
+                                event.name,
+                                event.permalink,
+                                event.subtitle
+                            )
+                            Categories(
+                                event.eventType,
+                                event.sounds
+                            )
+                            Time(
+                                event.start,
+                                event.end
+                            )
+                            Location(
+                                event.locationName,
+                                event.address
+                            )
+                            Row(Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End) {
+                                FavoriteButton(event)
+                            }
+
+                        }
+                    }
                 }
             }
         }

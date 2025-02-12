@@ -18,7 +18,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneOffset
+import java.time.ZoneId
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
@@ -71,12 +71,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                         listOf(event) + (event.repeats?.mapIndexed { index, repeatData ->
                             event.copy(
                                 id = "${event.id}-${index}",
-                                startTime = repeatData[0].let {
-                                    Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC)
+                                start = repeatData[0].let {
+                                    Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
                                         .toLocalDateTime()
                                 },
-                                endTime = repeatData.getOrNull(1)?.let {
-                                    Instant.ofEpochMilli(it).atZone(ZoneOffset.UTC)
+                                end = repeatData.getOrNull(1)?.let {
+                                    Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
                                         .toLocalDateTime()
                                 },
                                 repeats = null
@@ -84,9 +84,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                         } ?: emptyList())
                     }
                 }.let { expandedEvents ->
-                    expandedEvents.filter { event -> // Remove events in the past and sort by start time
-                        event.startTime.toLocalDate() >= LocalDate.now()
-                    }.sortedBy { it.startTime }
+                    expandedEvents.filter { event ->
+                        val now = LocalDate.now()
+                        val eventDate = event.start.toLocalDate()
+
+                        eventDate.isEqual(now) || eventDate.isAfter(now) // Today or later
+                    }.sortedBy { it.start }
                 }.let { finalEvents ->
                     events = finalEvents
                 }

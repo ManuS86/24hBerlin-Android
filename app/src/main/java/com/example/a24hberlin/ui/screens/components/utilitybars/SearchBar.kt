@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape

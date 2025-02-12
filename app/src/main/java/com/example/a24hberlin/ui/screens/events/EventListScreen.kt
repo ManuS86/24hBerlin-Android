@@ -2,8 +2,10 @@ package com.example.a24hberlin.ui.screens.events
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -16,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
@@ -44,9 +47,10 @@ fun EventsScreen(searchText: TextFieldValue) {
 
             LazyColumn(
                 Modifier
-                    .padding(horizontal = regularPadding)
-                    .padding(vertical = mediumPadding),
-                state = listState
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
             ) {
                 items(
                     items = eventVM.events,

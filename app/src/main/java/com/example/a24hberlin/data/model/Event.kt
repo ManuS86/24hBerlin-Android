@@ -1,24 +1,23 @@
 package com.example.a24hberlin.data.model
 
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-@JsonClass(generateAdapter = true)
+//@JsonClass(generateAdapter = true)
 data class Event(
     var id: String = "",
     val content: String,
     val name: String,
     val permalink: String,
-    @Json(name = "start") val startMillis: Long,
-    @Json(name = "end") val endMillis: Long?,
-    @Transient var startTime: LocalDateTime = LocalDateTime.now(),
-    @Transient var endTime: LocalDateTime? = null,
+    @Json(name = "start") val startSecs: String,
+    @Json(name = "end") val endSecs: Long?,
+    @Transient var start: LocalDateTime = LocalDateTime.now(),
+    @Transient var end: LocalDateTime? = null,
     val details: String,
     val repeats: List<List<Long>>?,
-    val subtitle: String?,
+    @Json(name = "event_subtitle") val subtitle: String?,
     @Json(name = "learnmore_link") val learnmoreLink: String?,
     val featured: String?,
     @Json(name = "image_url") val imageURL: String?,
@@ -34,7 +33,12 @@ data class Event(
     @Json(name = "event_type_2") val sounds: Map<String, String>?
 ) {
     init {
-        startTime = Instant.ofEpochMilli(startMillis).atZone(ZoneId.of("UTC")).toLocalDateTime()
-        endTime = endMillis?.let { Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDateTime() }
+            val startMillisLong = startSecs.toLong()
+            start = Instant.ofEpochSecond(startMillisLong).atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+            end = endSecs?.let {
+                Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
+                    .toLocalDateTime()
+            }
     }
 }

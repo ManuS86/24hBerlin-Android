@@ -2,8 +2,10 @@ package com.example.a24hberlin.ui.screens.favorites
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,9 +46,10 @@ fun FavoritesScreen(searchText: TextFieldValue) {
 
             LazyColumn(
                 Modifier
-                    .padding(horizontal = regularPadding)
-                    .padding(vertical = mediumPadding),
-                state = listState
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
             ) {
                 items(
                     items = eventVM.favorites ?: emptyList(),

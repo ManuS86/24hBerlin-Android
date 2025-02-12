@@ -9,16 +9,22 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Image
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import coil3.request.ImageRequest
+import coil3.request.crossfade
 import com.example.a24hberlin.utils.eventImageSize
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
@@ -36,78 +42,85 @@ fun ImageAndDate(
     val locale = Locale.getDefault()
 
     Column(modifier = Modifier.padding(end = mediumPadding)) {
-        imageURL?.let {
+        imageURL?.let { imageURL ->
             AsyncImage(
-                model = imageURL,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(imageURL)
+                    .crossfade(true)
+                    .build(),
                 placeholder = rememberVectorPainter(image = Icons.Default.Image),
                 error = rememberVectorPainter(image = Icons.Default.BrokenImage),
                 contentDescription = "Event Image",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(eventImageSize)
                     .clip(RoundedCornerShape(mediumRounding))
             )
         }
-        Row(
-            modifier = Modifier.size(eventImageSize),
-            verticalAlignment = Alignment.Top
-        ) {
-            Column(
-                modifier = Modifier.padding(start = smallPadding),
-                horizontalAlignment = Alignment.Start
+
+        CompositionLocalProvider(LocalTextStyle provides LocalTextStyle.current.copy(fontWeight = FontWeight.Black)) {
+            Row(
+                modifier = Modifier.size(eventImageSize),
+                verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    start.format(
-                        DateTimeFormatter.ofPattern("EEE").withLocale(locale) // Weekday
-                    ).uppercase(),
-                    fontSize = 10.sp,
-                    modifier = Modifier.offset(y = 3.dp)
-                )
-                Text(
-                    start.format(
-                        DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
-                    ),
-                    fontSize = 20.sp
-                )
-                Text(
-                    start.format(
-                        DateTimeFormatter.ofPattern("MMM").withLocale(locale) // Month
-                    ).uppercase(),
-                    fontSize = 10.sp,
-                    modifier = Modifier.offset(y = (-2).dp)
-                )
-            }
-
-            end?.let {
-                if (
-                    end.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
-                    != start.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
+                Column(
+                    modifier = Modifier.padding(start = smallPadding),
+                    horizontalAlignment = Alignment.Start
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            "-",
-                            fontSize = 14.sp,
-                            modifier = Modifier.padding(top = mediumPadding)
-                        )
+                    Text(
+                        start.format(
+                            DateTimeFormatter.ofPattern("EE").withLocale(locale) // Weekday
+                        ).uppercase(),
+                        fontSize = 11.sp,
+                        modifier = Modifier.offset(y = 3.dp)
+                    )
+                    Text(
+                        start.format(
+                            DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
+                        ),
+                        fontSize = 24.sp
+                    )
+                    Text(
+                        start.format(
+                            DateTimeFormatter.ofPattern("MMM").withLocale(locale) // Month
+                        ).uppercase(),
+                        fontSize = 11.sp,
+                        modifier = Modifier.offset(y = (-2).dp)
+                    )
+                }
 
-                        Column(
-                            horizontalAlignment = Alignment.Start
-                        ) {
+                end?.let {
+                    if (
+                        end.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
+                        != start.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
+                    ) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
-                                end.format(
-                                    DateTimeFormatter.ofPattern("EEE").withLocale(locale) // Weekday
-                                ).uppercase(),
-                                fontSize = 8.sp,
-                                modifier = Modifier
-                                    .offset(y = 2.dp)
-                                    .padding(top = 2.dp)
+                                "-",
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(top = mediumPadding)
                             )
-                            Text(
-                                end.format(
-                                    DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
-                                ),
-                                fontSize = 14.sp
-                            )
+
+                            Column {
+                                Text(
+                                    end.format(
+                                        DateTimeFormatter.ofPattern("EE")
+                                            .withLocale(locale) // Weekday
+                                    ).uppercase(),
+                                    fontSize = 9.sp,
+                                    modifier = Modifier
+                                        .offset(y = 2.dp)
+                                        .padding(top = 2.dp)
+                                )
+                                Text(
+                                    end.format(
+                                        DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
+                                    ),
+                                    fontSize = 16.sp,
+                                    modifier = Modifier
+                                        .offset(y = -mediumPadding)
+                                )
+                            }
                         }
                     }
                 }

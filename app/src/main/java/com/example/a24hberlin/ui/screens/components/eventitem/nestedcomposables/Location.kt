@@ -3,6 +3,7 @@ package com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
@@ -29,10 +30,9 @@ fun Location(
                     modifier = Modifier.padding(end = mediumPadding)
                 )
 
-                Column(horizontalAlignment = Alignment.Start) {
+                Column {
                     Text(
                         text = name,
-                        modifier = Modifier.padding(top = 3.dp),
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
