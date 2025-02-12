@@ -7,12 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.sp
 import com.example.a24hberlin.ui.screens.components.buttons.ShareButton
 import com.example.a24hberlin.utils.mediumPadding
 
@@ -24,7 +22,7 @@ fun Header(
 ) {
     val context = LocalContext.current
 
-    Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)){
+    Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
         Row(
             modifier = Modifier.fillMaxWidth()
         ) {

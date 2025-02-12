@@ -1,11 +1,12 @@
 package com.example.a24hberlin.data.model
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-//@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = true)
 data class Event(
     var id: String = "",
     val content: String,
@@ -33,12 +34,13 @@ data class Event(
     @Json(name = "event_type_2") val sounds: Map<String, String>?
 ) {
     init {
-            val startMillisLong = startSecs.toLong()
-            start = Instant.ofEpochSecond(startMillisLong).atZone(ZoneId.systemDefault())
+        val startMillisLong = startSecs.toLong()
+
+        start = Instant.ofEpochSecond(startMillisLong).atZone(ZoneId.systemDefault())
+            .toLocalDateTime()
+        end = endSecs?.let {
+            Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
-            end = endSecs?.let {
-                Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
-                    .toLocalDateTime()
-            }
+        }
     }
 }

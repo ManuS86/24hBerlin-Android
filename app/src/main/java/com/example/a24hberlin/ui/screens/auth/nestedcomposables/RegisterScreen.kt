@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -49,11 +50,15 @@ fun RegisterScreen(onClick: () -> Unit) {
             modifier = Modifier.fillMaxSize()
         )
 
-        Column(Modifier.padding(horizontal = regularPadding)) {
+        Column(
+            Modifier.padding(horizontal = regularPadding),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Spacer(Modifier.height(maxPadding))
 
             Text(
                 "Twenty Four Hours Kulturprogramm",
+                Modifier.padding(top = regularPadding),
                 maxLines = 2,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Black,
@@ -91,7 +96,8 @@ fun RegisterScreen(onClick: () -> Unit) {
             authVM.errorMessage?.let { error ->
                 Text(
                     error,
-                    Modifier.padding(top = errorPadding)
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red
                 )
             }
 

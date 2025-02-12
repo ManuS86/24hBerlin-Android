@@ -66,8 +66,10 @@ fun EventItem(event: Event) {
                             event.end
                         )
 
-                        Column(horizontalAlignment = Alignment.Start,
-                            verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
+                        Column(
+                            horizontalAlignment = Alignment.Start,
+                            verticalArrangement = Arrangement.spacedBy(mediumPadding)
+                        ) {
                             Header(
                                 event.name,
                                 event.permalink,
@@ -85,8 +87,10 @@ fun EventItem(event: Event) {
                                 event.locationName,
                                 event.address
                             )
-                            Row(Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.End) {
+                            Row(
+                                Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.End
+                            ) {
                                 FavoriteButton(event)
                             }
 

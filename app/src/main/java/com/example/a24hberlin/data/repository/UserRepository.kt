@@ -4,7 +4,6 @@ import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.BuildConfig
 import com.google.firebase.firestore.DocumentReference
