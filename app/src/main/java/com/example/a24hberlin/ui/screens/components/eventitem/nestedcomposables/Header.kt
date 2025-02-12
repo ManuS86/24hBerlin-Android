@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.a24hberlin.ui.screens.components.buttons.ShareButton
 
 @Composable
 fun Header(
@@ -28,19 +29,10 @@ fun Header(
             fontWeight = FontWeight.Black,
             fontSize = 22.sp
         )
+
         Spacer(Modifier.weight(1f))
-        Icon(
-            imageVector = Icons.Default.Share,
-            contentDescription = "Share",
-            modifier = Modifier
-                .clickable {
-                    val intent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, permalink)
-                    }
-                    context.startActivity(Intent.createChooser(intent, "Share link"))
-                }
-        )
+
+        ShareButton(context, permalink)
     }
 
     subtitle?.let {

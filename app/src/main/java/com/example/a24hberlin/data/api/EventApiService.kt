@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-const val BASE_URL = "http://www.twenty-four-hours.info/wp-json/eventon"
+const val BASE_URL = "https://www.twenty-four-hours.info/"
 
 private val logger: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
     level = HttpLoggingInterceptor.Level.BODY
@@ -32,7 +32,7 @@ private val retrofit = Retrofit
     .build()
 
 interface EventApiService {
-    @GET("/events?post_status=publish")
+    @GET("/wp-json/eventon/events?post_status=publish")
     suspend fun getEvents(): ServerResponse
 }
 

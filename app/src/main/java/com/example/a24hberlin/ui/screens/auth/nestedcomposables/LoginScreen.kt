@@ -56,6 +56,7 @@ fun LoginScreen(onClick: () -> Unit) {
 
             Text(
                 "Twenty Four Hours Kulturprogramm",
+                Modifier.padding(top = regularPadding),
                 maxLines = 2,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Black,
@@ -89,7 +90,9 @@ fun LoginScreen(onClick: () -> Unit) {
                 )
             }
 
-            LargeDarkButton("Login") { authVM.login(email, password) }
+            LargeDarkButton("Login") {
+                authVM.login(email, password)
+            }
 
             Spacer(Modifier.height(regularPadding))
 

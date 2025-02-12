@@ -2,38 +2,21 @@ package com.example.a24hberlin.ui.screens.appnavigation
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.BottomNavigationBar
-import com.example.a24hberlin.ui.screens.auth.nestedcomposables.ForgotPasswordScreen
-import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
-import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
-import com.example.a24hberlin.ui.screens.events.EventsScreen
-import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
-import com.example.a24hberlin.ui.screens.settings.SettingsScreen
+import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.MyBottomNavigationBar
+import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.MyTopAppBar
+import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.NavGraph
 
 const val EVENTS_ROUTE = "events"
 const val CLUB_MAP_ROUTE = "club_map"
@@ -41,7 +24,6 @@ const val FAVORITES_ROUTE = "favorites"
 const val SETTINGS_ROUTE = "settings"
 const val FORGOT_PASSWORD_ROUTE = "forgot_password"
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -51,38 +33,17 @@ fun AppNavigation() {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        appBarTitle,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                },
-                actions = {
-                    if (appBarTitle != "Settings")
-                        if (!showSearchBar) {
-                            IconButton(onClick = { showSearchBar = !showSearchBar }) {
-                                Icon(Icons.Filled.Search, contentDescription = "Search")
-                            }
-                        } else {
-                            SearchBar(
-                                searchText = searchText,
-                                onSearchTextChanged = { searchText = it },
-                                onSearchClosed = { showSearchBar = false }
-                            )
-                        }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Black,
-                    titleContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                )
+            MyTopAppBar(
+                title = appBarTitle,
+                showSearchBar = showSearchBar,
+                searchText = searchText,
+                onSearchIconClick = { showSearchBar = !showSearchBar },
+                onSearchTextChanged = { searchText = it },
+                onSearchClosed = { showSearchBar = false }
             )
         },
         bottomBar = {
-            BottomNavigationBar(
+            MyBottomNavigationBar(
                 navController,
                 onTitleChange = {
                     appBarTitle = it
@@ -97,23 +58,7 @@ fun AppNavigation() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            NavHost(navController = navController, startDestination = EVENTS_ROUTE) {
-                composable(EVENTS_ROUTE) {
-                    EventsScreen(searchText)
-                }
-                composable(CLUB_MAP_ROUTE) {
-                    ClubMapScreen(searchText)
-                }
-                composable(FAVORITES_ROUTE) {
-                    FavoritesScreen(searchText)
-                }
-                composable(SETTINGS_ROUTE) {
-                    SettingsScreen()
-                }
-                composable(FORGOT_PASSWORD_ROUTE) {
-                    ForgotPasswordScreen()
-                }
-            }
+            NavGraph(navController, searchText)
         }
     }
 }

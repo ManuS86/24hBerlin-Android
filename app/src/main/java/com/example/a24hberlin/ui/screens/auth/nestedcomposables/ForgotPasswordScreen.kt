@@ -73,7 +73,9 @@ fun ForgotPasswordScreen() {
                 )
             }
 
-            LargeDarkButton("Reset Password") { authVM.resetPassword(email) }
+            LargeDarkButton("Reset Password") {
+                authVM.resetPassword(email)
+            }
         }
     }
 }

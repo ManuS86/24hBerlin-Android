@@ -24,16 +24,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             _24hBerlinTheme {
-                AuthWrapper()
+                AppNavigation()
             }
         }
-    }
-}
-
-@Preview(device = Devices.PIXEL_7, showBackground = true, showSystemUi = true)
-@Composable
-fun AppNavigationPreview() {
-    _24hBerlinTheme {
-        AuthWrapper()
     }
 }

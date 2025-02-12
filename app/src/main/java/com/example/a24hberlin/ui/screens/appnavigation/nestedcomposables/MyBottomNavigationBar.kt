@@ -25,7 +25,7 @@ import com.example.a24hberlin.ui.screens.appnavigation.FAVORITES_ROUTE
 import com.example.a24hberlin.ui.screens.appnavigation.SETTINGS_ROUTE
 
 @Composable
-fun BottomNavigationBar(
+fun MyBottomNavigationBar(
     navController: NavHostController,
     onTitleChange: (String) -> Unit
 ) {

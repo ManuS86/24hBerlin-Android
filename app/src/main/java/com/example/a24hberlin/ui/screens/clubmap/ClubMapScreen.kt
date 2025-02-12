@@ -13,13 +13,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun ClubMapScreen(searchText: TextFieldValue) {
+    val eventVM: EventViewModel = viewModel()
+
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background),
