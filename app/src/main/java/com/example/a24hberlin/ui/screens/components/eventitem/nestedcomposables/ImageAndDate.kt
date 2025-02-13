@@ -55,6 +55,7 @@ fun ImageAndDate(
                 modifier = Modifier
                     .size(eventImageSize)
                     .clip(RoundedCornerShape(mediumRounding))
+                    .padding(end = smallPadding)
             )
         }
 
@@ -97,7 +98,7 @@ fun ImageAndDate(
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
                                 "-",
-                                fontSize = 16.sp,
+                                fontSize = 17.sp,
                                 modifier = Modifier.padding(top = mediumPadding)
                             )
 
@@ -116,7 +117,7 @@ fun ImageAndDate(
                                     end.format(
                                         DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                                     ),
-                                    fontSize = 16.sp,
+                                    fontSize = 17.sp,
                                     modifier = Modifier
                                         .offset(y = -mediumPadding)
                                 )
