@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,12 @@ fun RegisterScreen(onClick: () -> Unit) {
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            authVM.clearErrorMessages()
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -92,6 +99,14 @@ fun RegisterScreen(onClick: () -> Unit) {
                 "Please confirm your Password",
                 confirmPassword
             ) { confirmPassword = it }
+
+            authVM.passwordError?.let { error ->
+                Text(
+                    error,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red
+                )
+            }
 
             authVM.errorMessage?.let { error ->
                 Text(

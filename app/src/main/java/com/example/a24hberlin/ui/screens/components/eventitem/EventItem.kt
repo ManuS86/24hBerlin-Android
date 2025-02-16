@@ -93,7 +93,6 @@ fun EventItem(event: Event) {
                             ) {
                                 FavoriteButton(event)
                             }
-
                         }
                     }
                 }

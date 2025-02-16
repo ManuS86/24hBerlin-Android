@@ -1,10 +1,10 @@
 package com.example.a24hberlin.data.model
 
-import java.time.LocalDateTime
+import com.google.firebase.Timestamp
+import java.util.Date
 
 data class AppUser(
-    val id: String,
     var favoriteIDs: MutableList<String> = mutableListOf(),
-    var registerDate: LocalDateTime = LocalDateTime.now(),
+    var registerDate: Timestamp = Timestamp(Date()),
     var settings: Settings = Settings()
 )

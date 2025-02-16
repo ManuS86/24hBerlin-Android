@@ -1,12 +1,10 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,13 +12,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -36,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
+import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
@@ -128,120 +125,59 @@ fun FilterBar(
 
 
         if (showFilters) {
-            Column(
+            Row(
                 modifier = Modifier
-                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = regularPadding),
+                horizontalArrangement = Arrangement.spacedBy(mediumPadding),
             ) {
                 FilterDropdown(
                     label = "Type",
                     selectedValue = selectedEventType,
                     onValueSelected = onEventTypeSelected,
-                    options = EventType.allValues.map { it.label }
+                    options = EventType.allValues.map { it.label },
+                    stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
+                    itemToLabel = { eventType -> eventType?.label }
                 )
-//                FilterDropdown(
-//                    label = "Sound",
-//                    selectedValue = selectedSound,
-//                    onValueSelected = onSoundSelected,
-//                    options = Sound.allValues.map { it.label }
-//                )
-//
-//                FilterDropdown(
-//                    label = "Venue",
-//                    selectedValue = selectedVenue,
-//                    onValueSelected = onVenueSelected,
-//                    options = venues
-//                )
+
+                FilterDropdown(
+                    label = "Sound",
+                    selectedValue = selectedSound,
+                    onValueSelected = onSoundSelected,
+                    options = Sound.allValues.map { it.label },
+                    stringToItem = { str -> Sound.entries.firstOrNull { it.label == str } },
+                    itemToLabel = { sound -> sound?.label }
+                )
+
+                FilterDropdown(
+                    label = "Venue",
+                    selectedValue = selectedVenue,
+                    onValueSelected = onVenueSelected,
+                    options = venues,
+                    stringToItem = { it },
+                    itemToLabel = { venue -> venue }
+                )
 
                 if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        IconButton(onClick = {
-                            onEventTypeSelected(null)
-                            onSoundSelected(null)
-                            onVenueSelected(null)
-                        }) {
-                            Icon(
-                                imageVector = Icons.Filled.Clear,
-                                contentDescription = "Clear Filters",
-                                tint = Color.White
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Filled.Clear,
+                            contentDescription = "Clear Filters",
+                            Modifier
+                                .padding(top = 12.dp)
+                                .clickable {
+                                    onEventTypeSelected(null)
+                                    onSoundSelected(null)
+                                    onVenueSelected(null)
+                                },
+                            tint = Color.White
+                        )
                     }
                 }
             }
         }
-    }
-}
-
-
-@Composable
-fun FilterDropdown(
-    label: String,
-    selectedValue: EventType?,
-    onValueSelected: (EventType?) -> Unit,
-    options: List<String>
-) {
-    var expanded by remember { mutableStateOf(false) }
-
-    Column(
-        modifier = Modifier
-            .padding(bottom = smallPadding)
-    ) {
-        OutlinedButton(
-            onClick = { expanded = true },
-            border = BorderStroke(1.dp, Color.Gray),
-            shape = RoundedCornerShape(mediumRounding),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color.White,
-                containerColor = Color.Transparent
-            )
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = selectedValue?.toString() ?: label,
-                    color = if (selectedValue == null) Color.Gray else Color.White
-                )
-                Icon(
-                    imageVector = Icons.Filled.KeyboardArrowDown,
-                    contentDescription = "Dropdown",
-                    tint = Color.White
-                )
-            }
-        }
-
-//        DropdownMenu(
-//            expanded = expanded,
-//            onDismissRequest = { expanded = false }
-//        ) {
-//            DropdownMenuItem(
-//                text = {  }
-//                , onClick = {
-//                onValueSelected(null)
-//                expanded = false
-//            }) {
-//                Text(text = label)
-//            }
-//            options.forEach { option ->
-//                DropdownMenuItem(onClick = {
-//                    onValueSelected(
-//                        when (label) {
-//                            "Type" -> EventType.values().firstOrNull { it.label == option }
-//                            "Sound" -> Sound.values().firstOrNull { it.label == option }
-//                            "Venue" -> option
-//                            else -> null
-//                        }
-//                    )
-//                    expanded = false
-//                }) {
-//                    Text(text = option)
-//                }
-//            }
-//        }
     }
 }

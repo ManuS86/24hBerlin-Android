@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -43,6 +44,12 @@ fun LoginScreen(onClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     val navController = rememberNavController()
     var password by remember { mutableStateOf("") }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            authVM.clearErrorMessages()
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
         Image(

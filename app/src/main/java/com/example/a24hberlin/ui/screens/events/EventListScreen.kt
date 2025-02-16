@@ -13,9 +13,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,6 +43,10 @@ fun EventsScreen(searchText: TextFieldValue) {
     var selectedMonth by remember { mutableStateOf< Month?>(null) }
     var selectedSound by remember { mutableStateOf<Sound?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
+
+    LaunchedEffect(key1 = Unit) {
+        eventVM.loadEvents()
+    }
 
     Box(Modifier.fillMaxSize()) {
         Image(

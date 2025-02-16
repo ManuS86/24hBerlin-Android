@@ -18,7 +18,7 @@ fun Categories(
     sounds: Map<String, String>?
 ) {
     eventType?.let {
-        Column(verticalArrangement = Arrangement.spacedBy(smallPadding)) {
+        Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
             Row {
                 Text(
                     "Types",

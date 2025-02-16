@@ -83,7 +83,6 @@ fun EventItemExpanded(event: Event) {
                             ) {
                                 FavoriteButton(event)
                             }
-
                         }
                     }
                 }

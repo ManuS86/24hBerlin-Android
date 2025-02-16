@@ -1,0 +1,119 @@
+package com.example.a24hberlin.ui.screens.components.utilityelements
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.utils.mediumRounding
+import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.utils.smallPadding
+
+@Composable
+fun <T> FilterDropdown(
+    label: String,
+    selectedValue: T?,
+    onValueSelected: (T?) -> Unit,
+    options: List<String>,
+    stringToItem: (String) -> T?,
+    itemToLabel: (T?) -> String?
+) {
+    var isExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier.padding(bottom = smallPadding)
+    ) {
+        OutlinedButton(
+            onClick = { isExpanded = !isExpanded },
+            Modifier.width(110.dp),
+            border = BorderStroke(1.5.dp, Color.Gray),
+            shape = RoundedCornerShape(mediumRounding),
+            colors = ButtonDefaults.outlinedButtonColors(
+                contentColor = Color.White,
+                containerColor = Color.Transparent
+            ),
+            contentPadding = PaddingValues(
+                start = regularPadding,
+                end = mediumPadding
+            )
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = selectedValue?.let { itemToLabel(it) } ?: label,
+                    Modifier.weight(1f),
+                    color = if (selectedValue == null) Color.Gray else Color.White,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1
+                )
+
+                Icon(
+                    imageVector = Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Dropdown",
+                    tint = Color.White
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = !isExpanded }
+        ) {
+            DropdownMenuItem(
+                text = {
+                    Text(
+                        text = label,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier
+                            .padding(end = mediumPadding)
+                    )
+                },
+                onClick = {
+                    onValueSelected(null)
+                    isExpanded = !isExpanded
+                }
+            )
+
+            options.forEach { option ->
+                DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = option,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier
+                                .padding(end = mediumPadding)
+                        )
+                    },
+                    onClick = {
+                        onValueSelected(stringToItem(option))
+                        isExpanded = !isExpanded
+                    }
+                )
+            }
+        }
+    }
+}

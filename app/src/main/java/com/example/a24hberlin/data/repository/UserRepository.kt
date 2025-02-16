@@ -27,10 +27,10 @@ class UserRepository(private var db: FirebaseFirestore) {
     suspend fun register(email: String, password: String) {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
 
-        result.user?.let { user ->
+        result.user?.let {
             collRef
-                .document(user.uid)
-                .set(AppUser(user.uid))
+                .document(result.user!!.uid)
+                .set(AppUser())
         }?.await()
     }
 
@@ -50,50 +50,69 @@ class UserRepository(private var db: FirebaseFirestore) {
     }
 
     suspend fun changeEmail(email: String) {
-        auth.currentUser?.verifyBeforeUpdateEmail(email)?.await()
+        auth.currentUser
+            ?.verifyBeforeUpdateEmail(email)
+            ?.await()
     }
 
     suspend fun changePassword(password: String) {
-        auth.currentUser?.updatePassword(password)?.await()
+        auth.currentUser
+            ?.updatePassword(password)
+            ?.await()
     }
 
     suspend fun resetPassword(email: String) {
-        auth.sendPasswordResetEmail(email).await()
+        auth
+            .sendPasswordResetEmail(email)
+            .await()
     }
 
 
     suspend fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
         val values = mutableMapOf<String, Any>()
-        favoriteID?.let { values["favoriteIDs"] = FieldValue.arrayUnion(listOf(it)) }
+
+        favoriteID?.let { values["favoriteIDs"] = FieldValue.arrayUnion(it) }
+
         settings?.let {
             values["settings"] = mapOf(
                 "pushNotificationsEnabled" to it.pushNotificationsEnabled,
                 "language" to it.language
             )
         }
+
         if (values.isEmpty()) return
-        userRef?.update(values)?.await()
+
+        userRef
+            ?.update(values)
+            ?.await()
     }
 
     suspend fun addFavoriteID(favoriteID: String) {
-        userRef?.update(
-            mapOf("favoriteIDs" to FieldValue.arrayUnion(listOf(favoriteID)))
-        )?.await()
+        userRef
+            ?.update("favoriteIDs", FieldValue.arrayUnion(favoriteID))
+            ?.await()
     }
 
     suspend fun removeFavoriteID(favoriteID: String) {
-        userRef?.update(
-            mapOf("favoriteIDs" to FieldValue.arrayRemove(listOf(favoriteID)))
-        )?.await()
+        userRef
+            ?.update("favoriteIDs", FieldValue.arrayRemove(favoriteID))
+            ?.await()
     }
 
     suspend fun deleteUserDataAndAuth() {
-        userRef?.delete()?.await()
-        auth.currentUser?.delete()?.await()
+        userRef
+            ?.delete()
+            ?.await()
+
+        auth.currentUser
+            ?.delete()
+            ?.await()
     }
 
     suspend fun login(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).await()
+        auth
+            .signInWithEmailAndPassword(email, password)
+            .await()
     }
 
     fun logout() {
@@ -104,7 +123,9 @@ class UserRepository(private var db: FirebaseFirestore) {
         val user = auth.currentUser
         val credential = EmailAuthProvider.getCredential(user?.email!!, password)
 
-        user.reauthenticate(credential).await()
+        user
+            .reauthenticate(credential)
+            .await()
     }
 
     suspend fun sendBugReport(

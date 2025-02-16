@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,12 @@ fun ForgotPasswordScreen() {
     val authVM: AuthViewModel = viewModel()
     var email by remember { mutableStateOf("") }
 
+    DisposableEffect(Unit) {
+        onDispose {
+            authVM.clearErrorMessages()
+        }
+    }
+
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background),
@@ -48,6 +55,7 @@ fun ForgotPasswordScreen() {
 
             Text(
                 "Twenty Four Hours Kulturprogramm",
+                Modifier.padding(top = regularPadding),
                 maxLines = 2,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Black,
@@ -69,6 +77,13 @@ fun ForgotPasswordScreen() {
             authVM.errorMessage?.let { error ->
                 Text(
                     error,
+                    Modifier.padding(top = errorPadding)
+                )
+            }
+
+            authVM.confirmationMessage?.let { confirmation ->
+                Text(
+                    confirmation,
                     Modifier.padding(top = errorPadding)
                 )
             }

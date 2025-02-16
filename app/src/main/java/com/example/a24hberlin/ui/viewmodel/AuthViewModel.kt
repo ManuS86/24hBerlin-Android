@@ -37,9 +37,10 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         private set
 
     init {
-        if (auth.currentUser != null) {
-            setUpUserEnv()
+        auth.addAuthStateListener { firebaseAuth ->
+            currentUser = firebaseAuth.currentUser
         }
+
         analytics = Firebase.analytics
     }
 
@@ -94,7 +95,9 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private fun setUpUserEnv() {
-        currentUser = auth.currentUser
+    fun clearErrorMessages() {
+        confirmationMessage = null
+        errorMessage = null
+        passwordError = null
     }
 }
