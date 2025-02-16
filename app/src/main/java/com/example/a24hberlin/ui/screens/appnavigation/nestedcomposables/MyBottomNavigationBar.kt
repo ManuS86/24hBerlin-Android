@@ -19,10 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.a24hberlin.ui.screens.appnavigation.CLUB_MAP_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.EVENTS_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.FAVORITES_ROUTE
-import com.example.a24hberlin.ui.screens.appnavigation.SETTINGS_ROUTE
+import com.example.a24hberlin.navigation.Screen
 
 @Composable
 fun MyBottomNavigationBar(
@@ -31,25 +28,25 @@ fun MyBottomNavigationBar(
 ) {
     val items = listOf(
         NavigationItem(
-            route = EVENTS_ROUTE,
+            route = Screen.Events.route,
             selectedIcon = Icons.Filled.Event,
             unselectedIcon = Icons.Outlined.Event,
             label = "Events"
         ),
         NavigationItem(
-            route = CLUB_MAP_ROUTE,
+            route = Screen.ClubMap.route,
             selectedIcon = Icons.Filled.Map,
             unselectedIcon = Icons.Outlined.Map,
             label = "Club Map"
         ),
         NavigationItem(
-            route = FAVORITES_ROUTE,
+            route = Screen.Favorites.route,
             selectedIcon = Icons.Filled.Star,
             unselectedIcon = Icons.Outlined.StarOutline,
             label = "Favorites"
         ),
         NavigationItem(
-            route = SETTINGS_ROUTE,
+            route = Screen.Settings.route,
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
             label = "Settings"

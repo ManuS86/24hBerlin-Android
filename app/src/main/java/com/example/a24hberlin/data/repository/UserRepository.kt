@@ -69,27 +69,20 @@ class UserRepository(private var db: FirebaseFirestore) {
 
 
     suspend fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
-        val values = mutableMapOf<String, Any>()
-
-        favoriteID?.let { values["favoriteIDs"] = FieldValue.arrayUnion(it) }
-
-        settings?.let {
-            values["settings"] = mapOf(
-                "pushNotificationsEnabled" to it.pushNotificationsEnabled,
-                "language" to it.language
-            )
+        val values = mutableMapOf<String, Any>().apply {
+            favoriteID?.let { this["favoriteIDs"] = FieldValue.arrayUnion(it) }
+            settings?.let {
+                this["settings"] = mapOf(
+                    "pushNotificationsEnabled" to it.pushNotificationsEnabled,
+                    "language" to it.language
+                )
+            }
         }
 
         if (values.isEmpty()) return
 
         userRef
             ?.update(values)
-            ?.await()
-    }
-
-    suspend fun addFavoriteID(favoriteID: String) {
-        userRef
-            ?.update("favoriteIDs", FieldValue.arrayUnion(favoriteID))
             ?.await()
     }
 

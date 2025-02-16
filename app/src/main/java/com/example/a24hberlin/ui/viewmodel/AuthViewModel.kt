@@ -1,11 +1,10 @@
 package com.example.a24hberlin.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.repository.UserRepository
 import com.example.a24hberlin.utils.checkPassword
@@ -17,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class AuthViewModel(application: Application) : AndroidViewModel(application) {
+class AuthViewModel : ViewModel() {
     private var analytics: FirebaseAnalytics
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()

@@ -65,18 +65,22 @@ fun EventItemExpanded(event: Event) {
                                 event.permalink,
                                 event.subtitle
                             )
+
                             Categories(
                                 event.eventType,
                                 event.sounds
                             )
+
                             Time(
                                 event.start,
                                 event.end
                             )
+
                             Location(
                                 event.locationName,
                                 event.address
                             )
+
                             Row(
                                 Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.End

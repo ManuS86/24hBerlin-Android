@@ -1,11 +1,10 @@
 package com.example.a24hberlin.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.AppUser
@@ -19,7 +18,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(application: Application) : AndroidViewModel(application) {
+class SettingsViewModel : ViewModel() {
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null

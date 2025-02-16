@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
-import com.example.a24hberlin.ui.screens.appnavigation.FORGOT_PASSWORD_ROUTE
+import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
@@ -110,7 +110,7 @@ fun LoginScreen(onClick: () -> Unit) {
 
             AuthTextButton(
                 label = "Forgot Password?",
-                onClick = { navController.navigate(FORGOT_PASSWORD_ROUTE) }
+                onClick = { navController.navigate(Screen.ForgotPassword.route) }
             )
 
             Spacer(Modifier.weight(1f))

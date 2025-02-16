@@ -38,10 +38,6 @@ import com.example.a24hberlin.utils.regularPadding
 fun FavoritesScreen(searchText: TextFieldValue) {
     val eventVM: EventViewModel = viewModel()
     val listState: LazyListState = rememberLazyListState()
-    var selectedEventType by remember { mutableStateOf<EventType?>(null) }
-    var selectedMonth by remember { mutableStateOf< Month?>(null) }
-    var selectedSound by remember { mutableStateOf<Sound?>(null) }
-    var selectedVenue by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(key1 = Unit) {
         eventVM.loadEvents()
@@ -56,20 +52,6 @@ fun FavoritesScreen(searchText: TextFieldValue) {
         )
 
         Column(Modifier.fillMaxSize()) {
-            Column(Modifier.background(Color.Black)) {
-                FilterBar(
-                    selectedEventType,
-                    { selectedEventType = it },
-                    selectedMonth,
-                    { selectedMonth = it },
-                    selectedSound,
-                    { selectedSound = it },
-                    selectedVenue,
-                    { selectedVenue = it },
-                    eventVM.uniqueLocations
-                )
-            }
-
             LazyColumn(
                 Modifier
                     .padding(horizontal = regularPadding),

@@ -1,12 +1,11 @@
 package com.example.a24hberlin.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.api.EventApi
 import com.example.a24hberlin.data.model.AppUser
@@ -20,7 +19,7 @@ import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
 
-class EventViewModel(application: Application) : AndroidViewModel(application) {
+class EventViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepository(EventApi)
     private var listener: ListenerRegistration? = null
@@ -102,7 +101,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     fun addFavoriteID(favoriteID: String) {
         viewModelScope.launch {
             try {
-                userRepo.addFavoriteID(favoriteID)
+                userRepo.updateUserInformation(favoriteID)
                 // Optionally update the events list to reflect the change locally
                 // This would require fetching the updated user data and events
             } catch (ex: Exception) {
