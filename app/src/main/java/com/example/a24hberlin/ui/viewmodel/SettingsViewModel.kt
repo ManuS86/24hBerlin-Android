@@ -43,6 +43,9 @@ class SettingsViewModel : ViewModel() {
     var pushNotificationsEnabled by mutableStateOf(false)
         private set
 
+    var isReauthenticated by mutableStateOf(false)
+        private set
+
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->
@@ -103,7 +106,9 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 userRepo.reAuthenticate(password)
+                isReauthenticated = true
             } catch (ex: Exception) {
+                errorMessage = ex.localizedMessage
                 Log.e("Re-Authentication", ex.toString())
             }
         }
@@ -146,6 +151,12 @@ class SettingsViewModel : ViewModel() {
                 Log.e("Send Bug Report", ex.toString())
             }
         }
+    }
+
+    fun clearErrorMessages() {
+        confirmationMessage = null
+        errorMessage = null
+        passwordError = null
     }
 
     override fun onCleared() {
