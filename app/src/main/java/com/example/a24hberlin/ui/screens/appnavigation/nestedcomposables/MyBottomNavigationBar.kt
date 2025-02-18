@@ -9,6 +9,8 @@ import androidx.compose.material.icons.outlined.Event
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.StarOutline
+import androidx.compose.material.icons.rounded.Star
+import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -41,8 +43,8 @@ fun MyBottomNavigationBar(
         ),
         NavigationItem(
             route = Screen.Favorites.route,
-            selectedIcon = Icons.Filled.Star,
-            unselectedIcon = Icons.Outlined.StarOutline,
+            selectedIcon = Icons.Rounded.Star,
+            unselectedIcon = Icons.Rounded.StarOutline,
             label = "Favorites"
         ),
         NavigationItem(

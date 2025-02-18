@@ -2,7 +2,7 @@ package com.example.a24hberlin.utils
 
 import com.example.a24hberlin.data.enums.Language
 
-fun checkPassword(password: String, confirmPassword: String): String? {
+fun checkPassword(password: String, confirmPassword: String): String {
     if (password != confirmPassword) {
         return "passwords_do_not_match"
     }
@@ -24,7 +24,7 @@ fun checkPassword(password: String, confirmPassword: String): String? {
         return "password_must_contain_at_least_one_special_character"
     }
 
-    return null
+    return ""
 }
 
 

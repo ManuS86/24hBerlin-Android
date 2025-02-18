@@ -37,7 +37,7 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun FavoritesScreen(searchText: TextFieldValue) {
     val eventVM: EventViewModel = viewModel()
-    val listState: LazyListState = rememberLazyListState()
+    val listState = rememberLazyListState()
 
     LaunchedEffect(key1 = Unit) {
         eventVM.loadEvents()
@@ -45,7 +45,7 @@ fun FavoritesScreen(searchText: TextFieldValue) {
 
     Box(Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painterResource(R.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
@@ -60,8 +60,8 @@ fun FavoritesScreen(searchText: TextFieldValue) {
                 contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
             ) {
                 items(
-                    items = eventVM.favorites ?: emptyList(),
-                    key = { favorite -> favorite.id }
+                    eventVM.favorites ?: emptyList(),
+                    { favorite -> favorite.id }
                 ) { favorite ->
                     EventItem(favorite)
                 }

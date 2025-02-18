@@ -76,25 +76,30 @@ fun ChangePasswordScreen() {
                 confirmPassword
             ) { confirmPassword = it }
 
-            settingsVM.passwordError?.let { error ->
+            if (settingsVM.passwordError.isNotEmpty()) {
                 Text(
-                    error,
+                    settingsVM.passwordError,
                     Modifier.padding(top = errorPadding),
-                    color = Color.Red
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            settingsVM.errorMessage?.let { error ->
+            if (settingsVM.errorMessage.isNotEmpty()) {
                 Text(
-                    error,
-                    Modifier.padding(top = errorPadding)
+                    settingsVM.errorMessage,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            settingsVM.confirmationMessage?.let { confirmation ->
+            if (settingsVM.confirmationMessage.isNotEmpty()) {
                 Text(
-                    confirmation,
-                    Modifier.padding(top = errorPadding)
+                    settingsVM.confirmationMessage,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Green,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 

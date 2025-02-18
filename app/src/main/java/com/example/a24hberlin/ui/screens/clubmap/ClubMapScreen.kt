@@ -34,7 +34,7 @@ fun ClubMapScreen(searchText: TextFieldValue) {
 
     Box(Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painterResource(R.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()

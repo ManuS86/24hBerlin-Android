@@ -23,16 +23,16 @@ class AuthViewModel : ViewModel() {
     private val TAG = "AuthViewModel"
     private val userRepo = UserRepository(db)
 
-    var confirmationMessage by mutableStateOf<String?>(null)
+    var confirmationMessage by mutableStateOf("")
         private set
 
     var currentUser by mutableStateOf(auth.currentUser)
         private set
 
-    var errorMessage by mutableStateOf<String?>(null)
+    var errorMessage by mutableStateOf("")
         private set
 
-    var passwordError by mutableStateOf<String?>(null)
+    var passwordError by mutableStateOf("")
         private set
 
     init {
@@ -44,19 +44,19 @@ class AuthViewModel : ViewModel() {
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
-        errorMessage = null
-        passwordError = null
+        errorMessage = ""
+        passwordError = ""
 
         passwordError = checkPassword(password, confirmPassword)
 
-        if (errorMessage == null && passwordError == null) {
+        if (errorMessage.isEmpty() && passwordError.isEmpty()) {
             viewModelScope.launch {
                 try {
                     userRepo.register(email, password)
                     auth.useAppLanguage()
                     auth.currentUser?.sendEmailVerification()
                 } catch (ex: Exception) {
-                    errorMessage = ex.localizedMessage
+                    errorMessage = ex.localizedMessage?.toString() ?: ""
                     Log.e("Registration", ex.toString())
                 }
             }
@@ -64,7 +64,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String) {
-        errorMessage = null
+        errorMessage = ""
 
         viewModelScope.launch {
             try {
@@ -84,19 +84,19 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 userRepo.resetPassword(email)
-                errorMessage = null
+                errorMessage = ""
                 confirmationMessage = "email_sent."
             } catch (ex: Exception) {
-                confirmationMessage = null
-                errorMessage = ex.localizedMessage
+                confirmationMessage = ""
+                errorMessage = ex.localizedMessage?.toString() ?: ""
                 Log.e("Password reset requested", ex.toString())
             }
         }
     }
 
     fun clearErrorMessages() {
-        confirmationMessage = null
-        errorMessage = null
-        passwordError = null
+        confirmationMessage = ""
+        errorMessage = ""
+        passwordError = ""
     }
 }

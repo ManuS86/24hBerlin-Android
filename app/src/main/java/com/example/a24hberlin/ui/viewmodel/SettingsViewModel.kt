@@ -12,32 +12,29 @@ import com.example.a24hberlin.data.model.Settings
 import com.example.a24hberlin.data.repository.UserRepository
 import com.example.a24hberlin.utils.checkPassword
 import com.example.a24hberlin.utils.toLanguageOrNull
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 class SettingsViewModel : ViewModel() {
-    private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null
     private val TAG = "SettingsViewModel"
     private val userRepo = UserRepository(db)
 
-    var confirmationMessage by mutableStateOf<String?>(null)
+    var confirmationMessage by mutableStateOf("")
         private set
 
     var currentAppUser by mutableStateOf<AppUser?>(null)
         private set
 
-    var errorMessage by mutableStateOf<String?>(null)
+    var errorMessage by mutableStateOf("")
         private set
 
     var language by mutableStateOf<Language?>(null)
         private set
 
-    var passwordError by mutableStateOf<String?>(null)
+    var passwordError by mutableStateOf("")
         private set
 
     var pushNotificationsEnabled by mutableStateOf(false)
@@ -60,32 +57,32 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 userRepo.changeEmail(email)
-                errorMessage = null
+                errorMessage = ""
                 confirmationMessage = "email_changed_successfully."
             } catch (ex: Exception) {
-                confirmationMessage = null
-                errorMessage = ex.localizedMessage
+                confirmationMessage = ""
+                errorMessage = ex.localizedMessage?.toString() ?: ""
                 Log.e("Change Email", ex.toString())
             }
         }
     }
 
     fun changePassword(password: String, confirmPassword: String) {
-        errorMessage = null
-        passwordError = null
+        errorMessage = ""
+        passwordError = ""
 
         passwordError = checkPassword(password, confirmPassword)
 
-        if (errorMessage == null && passwordError == null) {
+        if (errorMessage.isEmpty() && passwordError.isEmpty()) {
             viewModelScope.launch {
                 try {
                     userRepo.changePassword(password)
-                    errorMessage = null
-                    passwordError = null
+                    errorMessage = ""
+                    passwordError = ""
                     confirmationMessage = "password_changed_successfully."
                 } catch (ex: Exception) {
-                    confirmationMessage = null
-                    errorMessage = ex.localizedMessage
+                    confirmationMessage = ""
+                    errorMessage = ex.localizedMessage?.toString() ?: ""
                     Log.e("Change Password", ex.toString())
                 }
             }
@@ -101,14 +98,14 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun reAuthenticate(password: String) {
-        errorMessage = null
+        errorMessage = ""
 
         viewModelScope.launch {
             try {
                 userRepo.reAuthenticate(password)
                 isReauthenticated = true
             } catch (ex: Exception) {
-                errorMessage = ex.localizedMessage
+                errorMessage = ex.localizedMessage?.toString() ?: ""
                 Log.e("Re-Authentication", ex.toString())
             }
         }
@@ -154,9 +151,9 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun clearErrorMessages() {
-        confirmationMessage = null
-        errorMessage = null
-        passwordError = null
+        confirmationMessage = ""
+        errorMessage = ""
+        passwordError = ""
     }
 
     override fun onCleared() {

@@ -8,15 +8,18 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
@@ -83,9 +85,11 @@ fun FilterBar(
                 ) {
                     Text(
                         text = "All",
-                        fontSize = 14.sp,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (selectedMonth == null) Color.White else Color.Gray
+                        color = if (selectedMonth == null) Color.White else Color.White.copy(
+                            0.6f
+                        ),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
@@ -103,18 +107,18 @@ fun FilterBar(
                     ) {
                         Text(
                             text = month.englishName,
-                            fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
                             color = if (selectedMonth == month) Color.White else Color.White.copy(
                                 0.6f
-                            )
+                            ),
+                            style = MaterialTheme.typography.bodyMedium
                         )
                     }
                 }
             }
 
             Icon(
-                imageVector = Icons.Filled.FilterList,
+                imageVector = Icons.Rounded.Tune,
                 contentDescription = "Show Filters",
                 Modifier
                     .padding(start = mediumPadding)
@@ -131,43 +135,50 @@ fun FilterBar(
                     .padding(horizontal = regularPadding),
                 horizontalArrangement = Arrangement.spacedBy(mediumPadding),
             ) {
-                FilterDropdown(
-                    label = "Type",
-                    selectedValue = selectedEventType,
-                    onValueSelected = onEventTypeSelected,
-                    options = EventType.allValues.map { it.label },
-                    stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
-                    itemToLabel = { eventType -> eventType?.label }
-                )
 
-                FilterDropdown(
-                    label = "Sound",
-                    selectedValue = selectedSound,
-                    onValueSelected = onSoundSelected,
-                    options = Sound.allValues.map { it.label },
-                    stringToItem = { str -> Sound.entries.firstOrNull { it.label == str } },
-                    itemToLabel = { sound -> sound?.label }
-                )
+                Row(Modifier.weight(1f)) {
+                    FilterDropdown(
+                        label = "Type",
+                        selectedValue = selectedEventType,
+                        onValueSelected = onEventTypeSelected,
+                        options = EventType.allValues.map { it.label },
+                        stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
+                        itemToLabel = { eventType -> eventType?.label }
+                    )
+                }
 
-                FilterDropdown(
-                    label = "Venue",
-                    selectedValue = selectedVenue,
-                    onValueSelected = onVenueSelected,
-                    options = venues,
-                    stringToItem = { it },
-                    itemToLabel = { venue -> venue }
-                )
+                Row(Modifier.weight(1f)) {
+                    FilterDropdown(
+                        label = "Sound",
+                        selectedValue = selectedSound,
+                        onValueSelected = onSoundSelected,
+                        options = Sound.allValues.map { it.label },
+                        stringToItem = { str -> Sound.entries.firstOrNull { it.label == str } },
+                        itemToLabel = { sound -> sound?.label }
+                    )
+                }
 
-                if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
+                Row(Modifier.weight(1f)) {
+                    FilterDropdown(
+                        label = "Venue",
+                        selectedValue = selectedVenue,
+                        onValueSelected = onVenueSelected,
+                        options = venues,
+                        stringToItem = { it },
+                        itemToLabel = { venue -> venue }
+                    )
+                }
+
+                Row(
+                    modifier = Modifier
+                        .size(width = 24.dp, height = 48.dp)
+                ) {
+                    if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
                         Icon(
-                            imageVector = Icons.Filled.Clear,
+                            imageVector = Icons.Rounded.Clear,
                             contentDescription = "Clear Filters",
                             Modifier
-                                .padding(top = 12.dp)
+                                .size(48.dp)
                                 .clickable {
                                     onEventTypeSelected(null)
                                     onSoundSelected(null)

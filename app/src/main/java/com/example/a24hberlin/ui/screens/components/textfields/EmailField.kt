@@ -9,19 +9,13 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.slightRounding
+import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun EmailField(
@@ -36,9 +30,8 @@ fun EmailField(
     ) {
         Text(
             title,
-            fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = mediumPadding)
+            modifier = Modifier.padding(bottom = smallPadding)
         )
 
         OutlinedTextField(
@@ -55,25 +48,11 @@ fun EmailField(
             singleLine = true,
             shape = RoundedCornerShape(slightRounding),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Gray.copy(0.5f),
                 unfocusedBorderColor = Color.Gray.copy(0.5f),
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             )
         )
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun EmailFieldPreview() {
-    var email by remember { mutableStateOf("") }
-
-    EmailField(
-        title = "Email",
-        hint = "Enter your email",
-        email = email,
-        onEmailChanged = { email = it }
-    )
 }

@@ -4,10 +4,18 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -22,7 +30,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
@@ -32,13 +39,14 @@ import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.utils.errorPadding
-import com.example.a24hberlin.utils.largePadding
-import com.example.a24hberlin.utils.maxPadding
+import com.example.a24hberlin.utils.extraLargePadding
+import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun RegisterScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()
+    val scrollState = rememberScrollState()
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -49,81 +57,90 @@ fun RegisterScreen(onClick: () -> Unit) {
         }
     }
 
-    Box(Modifier.fillMaxSize()) {
+    Box {
         Image(
-            painter = painterResource(id = R.drawable.background),
+            painterResource(R.drawable.background),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
 
         Column(
-            Modifier.padding(horizontal = regularPadding),
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(regularPadding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
+                ),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(maxPadding))
+            Spacer(Modifier.height(extraLargePadding))
 
             Text(
                 "Twenty Four Hours Kulturprogramm",
-                Modifier.padding(top = regularPadding),
                 maxLines = 2,
-                fontSize = 28.sp,
                 fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.headlineLarge
             )
 
-            Spacer(Modifier.height(largePadding))
+            Spacer(Modifier.height(regularPadding))
 
             AppLogo()
 
-            Spacer(Modifier.height(largePadding))
+            Spacer(Modifier.height(regularPadding))
 
             EmailField(
                 "Email",
-                "Please enter your Email",
+                "Please enter your email",
                 email
             ) { email = it }
 
-            Spacer(Modifier.height(regularPadding))
+            Spacer(Modifier.height(mediumPadding))
 
             PasswordField(
                 "Password",
-                "Please enter your Password",
+                "Please enter your password",
                 password
             ) { password = it }
 
-            Spacer(Modifier.height(regularPadding))
+            Spacer(Modifier.height(mediumPadding))
 
             PasswordField(
                 "Confirm Password",
-                "Please confirm your Password",
+                "Please confirm your password",
                 confirmPassword
             ) { confirmPassword = it }
 
-            authVM.passwordError?.let { error ->
+            if(authVM.passwordError.isNotEmpty()) {
                 Text(
-                    error,
+                    authVM.passwordError,
                     Modifier.padding(top = errorPadding),
-                    color = Color.Red
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            authVM.errorMessage?.let { error ->
+            if(authVM.errorMessage.isNotEmpty()) {
                 Text(
-                    error,
+                    authVM.errorMessage,
                     Modifier.padding(top = errorPadding),
-                    color = Color.Red
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton("Register") { authVM.register(email, password, confirmPassword) }
+            LargeDarkButton("Register") {
+                authVM.register(email, password, confirmPassword)
+            }
 
             Spacer(Modifier.weight(1f))
 
             Text(
                 "Already have an account?",
                 Modifier.fillMaxWidth(),
-                color = Color.DarkGray,
+                color = Color.Gray,
                 textAlign = TextAlign.Center
             )
 
@@ -131,8 +148,6 @@ fun RegisterScreen(onClick: () -> Unit) {
                 label = "Login",
                 onClick = onClick
             )
-
-            Spacer(Modifier.height(largePadding))
         }
     }
 }

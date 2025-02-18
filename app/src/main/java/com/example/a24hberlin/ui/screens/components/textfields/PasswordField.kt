@@ -25,10 +25,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.slightRounding
+import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun PasswordField(
@@ -45,9 +43,8 @@ fun PasswordField(
     ) {
         Text(
             title,
-            fontSize = 18.sp,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = mediumPadding)
+            modifier = Modifier.padding(bottom = smallPadding)
         )
 
         OutlinedTextField(
@@ -68,31 +65,21 @@ fun PasswordField(
                 val description = if (passwordVisible) "Hide password" else "Show password"
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(imageVector = image, contentDescription = description)
+                    Icon(
+                        imageVector = image,
+                        contentDescription = description,
+                        tint = Color.Gray
+                    )
                 }
             },
             singleLine = true,
             shape = RoundedCornerShape(slightRounding),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Gray,
+                focusedBorderColor = Color.Gray.copy(0.5f),
                 unfocusedBorderColor = Color.Gray.copy(0.5f),
                 focusedContainerColor = Color.White,
                 unfocusedContainerColor = Color.White
             )
         )
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PasswordFieldPreview() {
-    var password by remember { mutableStateOf("") }
-
-    PasswordField(
-        title = "Password",
-        hint = "Enter your password",
-        password = password,
-        onPasswordChanged = { password = it }
-    )
 }

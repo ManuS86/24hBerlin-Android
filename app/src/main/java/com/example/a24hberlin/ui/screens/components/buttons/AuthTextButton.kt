@@ -1,6 +1,7 @@
 package com.example.a24hberlin.ui.screens.components.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -15,15 +16,13 @@ fun AuthTextButton(
     onClick: () -> Unit
 ) {
     TextButton(
-        onClick = onClick,
-        modifier = Modifier
-            .fillMaxWidth()
+        onClick = onClick
     ) {
         Text(
             text = label,
-            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = Color.Black,
+            style = MaterialTheme.typography.bodyLarge
         )
     }
 }

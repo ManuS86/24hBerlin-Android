@@ -5,8 +5,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -28,7 +28,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.regularPadding
 import com.example.a24hberlin.utils.smallPadding
 
 @Composable
@@ -47,28 +46,35 @@ fun <T> FilterDropdown(
     ) {
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
-            Modifier.width(110.dp),
-            border = BorderStroke(1.5.dp, Color.Gray),
+            Modifier.fillMaxWidth(),
+            border = BorderStroke(1.dp, if (selectedValue != null) Color.White.copy(
+                0.8f
+            ) else Color.White.copy(
+                0.4f
+            )),
             shape = RoundedCornerShape(mediumRounding),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color.White,
                 containerColor = Color.Transparent
             ),
             contentPadding = PaddingValues(
-                start = regularPadding,
-                end = mediumPadding
+                start = 12.dp,
+                end = 6.dp
             )
         ) {
             Row(
+                Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = selectedValue?.let { itemToLabel(it) } ?: label,
-                    Modifier.weight(1f),
-                    color = if (selectedValue == null) Color.Gray else Color.White,
+                    color = if (selectedValue != null) Color.White else Color.White.copy(
+                        0.6f
+                    ),
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1
+                    maxLines = 1,
+                    modifier = Modifier.weight(1f)
                 )
 
                 Icon(
@@ -88,8 +94,7 @@ fun <T> FilterDropdown(
                     Text(
                         text = label,
                         overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier
-                            .padding(end = mediumPadding)
+                        modifier = Modifier.padding(end = mediumPadding)
                     )
                 },
                 onClick = {

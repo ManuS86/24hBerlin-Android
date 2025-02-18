@@ -22,6 +22,7 @@ import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.MyBotto
 import com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables.MyTopAppBar
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 
 @Composable
 fun AppNavigation() {
@@ -78,6 +79,7 @@ fun AppNavigation() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
+            SetSystemBarColorsToLight(false)
             NavGraph(navController, searchText)
         }
     }
