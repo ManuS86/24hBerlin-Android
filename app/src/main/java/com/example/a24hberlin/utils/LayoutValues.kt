@@ -15,7 +15,6 @@ val slightRounding = 8.dp
 val errorPadding = 8.dp
 val extraLargePadding = 32.dp
 val largePadding = 24.dp
-val maxPadding = 48.dp
 val mediumPadding = 8.dp
 val regularPadding = 16.dp
 val smallPadding = 4.dp

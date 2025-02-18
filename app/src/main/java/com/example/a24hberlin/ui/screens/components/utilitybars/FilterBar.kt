@@ -12,8 +12,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Button

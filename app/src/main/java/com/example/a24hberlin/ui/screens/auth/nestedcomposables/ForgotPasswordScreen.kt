@@ -91,7 +91,7 @@ fun ForgotPasswordScreen() {
                 email
             ) { email = it }
 
-            if(authVM.errorMessage.isNotEmpty()) {
+            if (authVM.errorMessage.isNotEmpty()) {
                 Text(
                     authVM.errorMessage,
                     Modifier.padding(top = errorPadding),
@@ -100,7 +100,7 @@ fun ForgotPasswordScreen() {
                 )
             }
 
-            if(authVM.confirmationMessage.isNotEmpty()) {
+            if (authVM.confirmationMessage.isNotEmpty()) {
                 Text(
                     authVM.confirmationMessage,
                     Modifier.padding(top = errorPadding),

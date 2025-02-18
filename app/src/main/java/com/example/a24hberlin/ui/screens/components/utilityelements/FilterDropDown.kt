@@ -47,11 +47,13 @@ fun <T> FilterDropdown(
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
             Modifier.fillMaxWidth(),
-            border = BorderStroke(1.dp, if (selectedValue != null) Color.White.copy(
-                0.8f
-            ) else Color.White.copy(
-                0.4f
-            )),
+            border = BorderStroke(
+                1.dp, if (selectedValue != null) Color.White.copy(
+                    0.8f
+                ) else Color.White.copy(
+                    0.4f
+                )
+            ),
             shape = RoundedCornerShape(mediumRounding),
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = Color.White,

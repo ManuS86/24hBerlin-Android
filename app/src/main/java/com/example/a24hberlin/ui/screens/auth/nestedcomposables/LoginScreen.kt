@@ -106,7 +106,7 @@ fun LoginScreen(onClick: () -> Unit) {
                 password
             ) { password = it }
 
-            if(authVM.errorMessage.isNotEmpty()) {
+            if (authVM.errorMessage.isNotEmpty()) {
                 Text(
                     authVM.errorMessage,
                     Modifier.padding(top = errorPadding),

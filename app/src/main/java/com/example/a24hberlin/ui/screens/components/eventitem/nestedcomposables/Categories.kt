@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun Categories(

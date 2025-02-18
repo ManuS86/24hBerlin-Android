@@ -32,11 +32,11 @@ fun FavoriteButton(event: Event) {
         Modifier
             .size(28.dp)
             .clickable {
-            if (isFavorite) {
-                eventVM.removeFavoriteID(favoriteID = event.id)
-            } else {
-                eventVM.addFavoriteID(favoriteID = event.id)
+                if (isFavorite) {
+                    eventVM.removeFavoriteID(favoriteID = event.id)
+                } else {
+                    eventVM.addFavoriteID(favoriteID = event.id)
+                }
             }
-        }
     )
 }

@@ -113,7 +113,7 @@ fun RegisterScreen(onClick: () -> Unit) {
                 confirmPassword
             ) { confirmPassword = it }
 
-            if(authVM.passwordError.isNotEmpty()) {
+            if (authVM.passwordError.isNotEmpty()) {
                 Text(
                     authVM.passwordError,
                     Modifier.padding(top = errorPadding),
@@ -122,7 +122,7 @@ fun RegisterScreen(onClick: () -> Unit) {
                 )
             }
 
-            if(authVM.errorMessage.isNotEmpty()) {
+            if (authVM.errorMessage.isNotEmpty()) {
                 Text(
                     authVM.errorMessage,
                     Modifier.padding(top = errorPadding),
