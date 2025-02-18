@@ -11,9 +11,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
@@ -48,7 +50,7 @@ fun AppNavigation() {
                     onSearchClosed = { showSearchBar = false }
                 )
 
-                if (appBarTitle != "Settings") {
+                if (appBarTitle != stringResource(R.string.settings)) {
                     FilterBar(
                         selectedEventType = selectedEventType,
                         onEventTypeSelected = { selectedEventType = it },

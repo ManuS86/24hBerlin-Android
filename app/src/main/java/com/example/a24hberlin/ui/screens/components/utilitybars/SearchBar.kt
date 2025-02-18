@@ -14,8 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.example.a24hberlin.R
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -35,7 +37,7 @@ fun SearchBar(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Search"
+                    contentDescription = stringResource(R.string.search)
                 )
             }
         },
@@ -46,12 +48,12 @@ fun SearchBar(
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "Clear"
+                        contentDescription = stringResource(R.string.clear_search)
                     )
                 }
             }
         },
-        placeholder = { Text("Search...") },
+        placeholder = { Text(stringResource(R.string.search_)) },
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = regularPadding)

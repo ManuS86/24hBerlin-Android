@@ -27,8 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
@@ -50,8 +53,9 @@ fun FilterBar(
     onVenueSelected: (String?) -> Unit,
     venues: List<String>
 ) {
-    var showFilters by remember { mutableStateOf(false) }
+    val context = LocalContext.current
     val horizontalScrollState = rememberScrollState()
+    var showFilters by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -104,7 +108,7 @@ fun FilterBar(
                         )
                     ) {
                         Text(
-                            text = month.englishName,
+                            text = month.getStringResource(context),
                             fontWeight = FontWeight.SemiBold,
                             color = if (selectedMonth == month) Color.White else Color.White.copy(
                                 0.6f
@@ -117,14 +121,13 @@ fun FilterBar(
 
             Icon(
                 imageVector = Icons.Rounded.Tune,
-                contentDescription = "Show Filters",
+                contentDescription = stringResource(R.string.show_filters),
                 Modifier
                     .padding(start = mediumPadding)
                     .clickable { showFilters = !showFilters },
                 tint = Color.White
             )
         }
-
 
         if (showFilters) {
             Row(
@@ -174,7 +177,7 @@ fun FilterBar(
                     if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
                         Icon(
                             imageVector = Icons.Rounded.Clear,
-                            contentDescription = "Clear Filters",
+                            contentDescription = stringResource(R.string.clear_filters),
                             Modifier
                                 .size(48.dp)
                                 .clickable {

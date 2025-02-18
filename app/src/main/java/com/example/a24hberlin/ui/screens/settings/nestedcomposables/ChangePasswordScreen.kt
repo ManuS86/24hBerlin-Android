@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
@@ -54,7 +55,7 @@ fun ChangePasswordScreen() {
             Spacer(Modifier.padding(extraLargePadding))
 
             Text(
-                "Change your Password",
+                stringResource(R.string.change_your_password),
                 Modifier.padding(top = largePadding),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
@@ -63,47 +64,47 @@ fun ChangePasswordScreen() {
             Spacer(Modifier.weight(0.5f))
 
             PasswordField(
-                "Password",
-                "Please enter your Password",
+                stringResource(R.string.password),
+                stringResource(R.string.please_enter_your_password),
                 password
             ) { password = it }
 
             Spacer(Modifier.height(regularPadding))
 
             PasswordField(
-                "Confirm Password",
-                "Please confirm your Password",
+                stringResource(R.string.confirm_new_password),
+                stringResource(R.string.please_confirm_your_new_password),
                 confirmPassword
             ) { confirmPassword = it }
 
-            if (settingsVM.passwordError.isNotEmpty()) {
+            if (settingsVM.confirmationMessage != null) {
                 Text(
-                    settingsVM.passwordError,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (settingsVM.errorMessage.isNotEmpty()) {
-                Text(
-                    settingsVM.errorMessage,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (settingsVM.confirmationMessage.isNotEmpty()) {
-                Text(
-                    settingsVM.confirmationMessage,
+                    stringResource(settingsVM.confirmationMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Green,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton("Change Email") {
+            if (settingsVM.firebaseErrorMessage != null) {
+                Text(
+                    settingsVM.firebaseErrorMessage!!,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            if (settingsVM.passwordError != null) {
+                Text(
+                    stringResource(settingsVM.passwordError!!),
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            LargeDarkButton(stringResource(R.string.change_password)) {
                 settingsVM.changePassword(password, confirmPassword)
             }
 

@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
@@ -61,30 +62,30 @@ fun ChangeEmailScreen() {
             Spacer(Modifier.weight(0.5f))
 
             EmailField(
-                "New Email",
-                "Please enter your new email",
+                stringResource(R.string.new_email),
+                stringResource(R.string.please_enter_your_new_email),
                 email
             ) { email = it }
 
-            if (settingsVM.errorMessage.isNotEmpty()) {
+            if (settingsVM.confirmationMessage != null) {
                 Text(
-                    settingsVM.errorMessage,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (settingsVM.confirmationMessage.isNotEmpty()) {
-                Text(
-                    settingsVM.confirmationMessage,
+                    stringResource(settingsVM.confirmationMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Green,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton("Change Email") {
+            if (settingsVM.firebaseErrorMessage != null) {
+                Text(
+                    settingsVM.firebaseErrorMessage!!,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            LargeDarkButton(stringResource(R.string.change_email)) {
                 settingsVM.changeEmail(email)
             }
 

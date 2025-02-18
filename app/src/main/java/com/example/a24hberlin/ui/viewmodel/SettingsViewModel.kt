@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
@@ -22,19 +23,22 @@ class SettingsViewModel : ViewModel() {
     private val TAG = "SettingsViewModel"
     private val userRepo = UserRepository(db)
 
-    var confirmationMessage by mutableStateOf("")
+    var confirmationMessage by mutableStateOf<Int?>(null)
         private set
 
     var currentAppUser by mutableStateOf<AppUser?>(null)
         private set
 
-    var errorMessage by mutableStateOf("")
+    var errorMessage by mutableStateOf<Int?>(null)
+        private set
+
+    var firebaseErrorMessage by mutableStateOf<String?>(null)
         private set
 
     var language by mutableStateOf<Language?>(null)
         private set
 
-    var passwordError by mutableStateOf("")
+    var passwordError by mutableStateOf<Int?>(null)
         private set
 
     var pushNotificationsEnabled by mutableStateOf(false)
@@ -57,32 +61,31 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 userRepo.changeEmail(email)
-                errorMessage = ""
-                confirmationMessage = "email_changed_successfully."
+                firebaseErrorMessage = null
+                confirmationMessage = R.string.email_changed_successfully
             } catch (ex: Exception) {
-                confirmationMessage = ""
-                errorMessage = ex.localizedMessage?.toString() ?: ""
+                confirmationMessage = null
+                firebaseErrorMessage = ex.localizedMessage
                 Log.e("Change Email", ex.toString())
             }
         }
     }
 
     fun changePassword(password: String, confirmPassword: String) {
-        errorMessage = ""
-        passwordError = ""
+        firebaseErrorMessage = null
+        passwordError = null
 
         passwordError = checkPassword(password, confirmPassword)
 
-        if (errorMessage.isEmpty() && passwordError.isEmpty()) {
+        if (passwordError == null && firebaseErrorMessage == null) {
             viewModelScope.launch {
                 try {
                     userRepo.changePassword(password)
-                    errorMessage = ""
-                    passwordError = ""
-                    confirmationMessage = "password_changed_successfully."
+                    passwordError = null
+                    confirmationMessage = R.string.password_changed_successfully
                 } catch (ex: Exception) {
-                    confirmationMessage = ""
-                    errorMessage = ex.localizedMessage?.toString() ?: ""
+                    confirmationMessage = null
+                    firebaseErrorMessage = ex.localizedMessage
                     Log.e("Change Password", ex.toString())
                 }
             }
@@ -98,14 +101,14 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun reAuthenticate(password: String) {
-        errorMessage = ""
+        firebaseErrorMessage = null
 
         viewModelScope.launch {
             try {
                 userRepo.reAuthenticate(password)
                 isReauthenticated = true
             } catch (ex: Exception) {
-                errorMessage = ex.localizedMessage?.toString() ?: ""
+                firebaseErrorMessage = ex.localizedMessage
                 Log.e("Re-Authentication", ex.toString())
             }
         }
@@ -122,7 +125,7 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun removeAllPendingNotifications() {
-        // Implementation for removing notifications
+
     }
 
     fun saveSettings() {
@@ -151,9 +154,10 @@ class SettingsViewModel : ViewModel() {
     }
 
     fun clearErrorMessages() {
-        confirmationMessage = ""
-        errorMessage = ""
-        passwordError = ""
+        confirmationMessage = null
+        errorMessage = null
+        firebaseErrorMessage = null
+        passwordError = null
     }
 
     override fun onCleared() {

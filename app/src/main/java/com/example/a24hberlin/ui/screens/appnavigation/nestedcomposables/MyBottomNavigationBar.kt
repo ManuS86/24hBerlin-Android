@@ -17,8 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.Screen
 
 @Composable
@@ -31,25 +33,25 @@ fun MyBottomNavigationBar(
             route = Screen.Events.route,
             selectedIcon = Icons.Filled.Event,
             unselectedIcon = Icons.Outlined.Event,
-            label = "Events"
+            label = stringResource(R.string.events)
         ),
         NavigationItem(
             route = Screen.ClubMap.route,
             selectedIcon = Icons.Filled.Map,
             unselectedIcon = Icons.Outlined.Map,
-            label = "Club Map"
+            label = stringResource(R.string.club_map)
         ),
         NavigationItem(
             route = Screen.Favorites.route,
             selectedIcon = Icons.Rounded.Star,
             unselectedIcon = Icons.Rounded.StarOutline,
-            label = "Favorites"
+            label = stringResource(R.string.favorites)
         ),
         NavigationItem(
             route = Screen.Settings.route,
             selectedIcon = Icons.Filled.Settings,
             unselectedIcon = Icons.Outlined.Settings,
-            label = "Settings"
+            label = stringResource(R.string.settings)
         )
     )
 
@@ -80,7 +82,7 @@ fun MyBottomNavigationBar(
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = Color.White,
                     indicatorColor = Color.Transparent,
-                    unselectedIconColor = Color.Gray.copy(0.8f)
+                    unselectedIconColor = Color.Gray.copy(0.9f)
                 )
             )
         }

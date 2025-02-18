@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
@@ -54,21 +55,21 @@ fun ReAuthWrapper(from: String) {
                 Spacer(Modifier.weight(1f))
 
                 PasswordField(
-                    "Re-enter your Password",
-                    "Please re-enter your Password",
+                    stringResource(R.string.re_enter_password),
+                    stringResource(R.string.please_re_enter_your_password),
                     password
                 ) { password = it }
 
-                if (settingsVM.errorMessage.isNotEmpty()) {
+                if (settingsVM.firebaseErrorMessage != null) {
                     Text(
-                        settingsVM.errorMessage,
+                        settingsVM.firebaseErrorMessage!!,
                         Modifier.padding(top = errorPadding),
                         color = Color.Red,
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
-                LargeDarkButton("Confirm Password") {
+                LargeDarkButton(stringResource(R.string.confirm_new_password)) {
                     settingsVM.reAuthenticate(password)
                 }
 

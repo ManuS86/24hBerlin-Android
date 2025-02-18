@@ -21,10 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.a24hberlin.R
 import com.example.a24hberlin.utils.slightRounding
 import com.example.a24hberlin.utils.smallPadding
 
@@ -62,7 +64,10 @@ fun PasswordField(
             trailingIcon = {
                 val image =
                     if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                val description = if (passwordVisible) "Hide password" else "Show password"
+                val description =
+                    if (passwordVisible) stringResource(R.string.hide_password) else stringResource(
+                        R.string.show_password
+                    )
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(

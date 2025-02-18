@@ -1,5 +1,7 @@
 package com.example.a24hberlin.data.enums
 
+import android.content.Context
+import com.example.a24hberlin.R
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -24,5 +26,30 @@ enum class Month(val value: Int) {
         val allValues = entries.toTypedArray()
 
         fun fromInt(value: Int): Month? = allValues.firstOrNull { it.value == value }
+
+        private val monthResourceMap = mapOf(
+            "january" to R.string.january,
+            "february" to R.string.february,
+            "march" to R.string.march,
+            "april" to R.string.april,
+            "may" to R.string.may,
+            "june" to R.string.june,
+            "july" to R.string.july,
+            "august" to R.string.august,
+            "september" to R.string.september,
+            "october" to R.string.october,
+            "november" to R.string.november,
+            "december" to R.string.december
+        )
+    }
+
+    fun getStringResource(context: Context): String {
+        val resourceId = monthResourceMap[englishName]
+
+        return if (resourceId != null) {
+            context.getString(resourceId)
+        } else {
+            englishName
+        }
     }
 }

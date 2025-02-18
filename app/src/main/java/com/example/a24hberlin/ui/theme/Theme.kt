@@ -6,9 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.White,
-    secondary = Color.Gray,
-    tertiary = Color.Black
+    primary = Text,
+    secondary = Color.White,
+    tertiary = Color.Gray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -23,7 +23,6 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun _24hBerlinTheme(
-    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = LightColorScheme

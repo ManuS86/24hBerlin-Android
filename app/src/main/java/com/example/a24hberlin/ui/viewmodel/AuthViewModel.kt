@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.repository.UserRepository
 import com.example.a24hberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -23,16 +24,19 @@ class AuthViewModel : ViewModel() {
     private val TAG = "AuthViewModel"
     private val userRepo = UserRepository(db)
 
-    var confirmationMessage by mutableStateOf("")
+    var confirmationMessage by mutableStateOf<Int?>(null)
         private set
 
     var currentUser by mutableStateOf(auth.currentUser)
         private set
 
-    var errorMessage by mutableStateOf("")
+    var errorMessage by mutableStateOf<Int?>(null)
         private set
 
-    var passwordError by mutableStateOf("")
+    var firebaseErrorMessage by mutableStateOf<String?>(null)
+        private set
+
+    var passwordError by mutableStateOf<Int?>(null)
         private set
 
     init {
@@ -44,19 +48,20 @@ class AuthViewModel : ViewModel() {
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
-        errorMessage = ""
-        passwordError = ""
+        errorMessage = null
+        firebaseErrorMessage = null
+        passwordError = null
 
         passwordError = checkPassword(password, confirmPassword)
 
-        if (errorMessage.isEmpty() && passwordError.isEmpty()) {
+        if (errorMessage == null && passwordError == null && firebaseErrorMessage == null) {
             viewModelScope.launch {
                 try {
                     userRepo.register(email, password)
                     auth.useAppLanguage()
                     auth.currentUser?.sendEmailVerification()
                 } catch (ex: Exception) {
-                    errorMessage = ex.localizedMessage?.toString() ?: ""
+                    firebaseErrorMessage = ex.localizedMessage
                     Log.e("Registration", ex.toString())
                 }
             }
@@ -64,7 +69,7 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String) {
-        errorMessage = ""
+        errorMessage = null
 
         viewModelScope.launch {
             try {
@@ -74,7 +79,7 @@ class AuthViewModel : ViewModel() {
                     param(FirebaseAnalytics.Param.ITEM_NAME, "Email")
                 }
             } catch (ex: Exception) {
-                errorMessage = "invalid_email_or_password."
+                errorMessage = R.string.invalid_email_or_password
                 Log.e("Login", ex.toString())
             }
         }
@@ -84,19 +89,21 @@ class AuthViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 userRepo.resetPassword(email)
-                errorMessage = ""
-                confirmationMessage = "email_sent."
+                errorMessage = null
+                firebaseErrorMessage = null
+                confirmationMessage = R.string.email_sent
             } catch (ex: Exception) {
-                confirmationMessage = ""
-                errorMessage = ex.localizedMessage?.toString() ?: ""
+                confirmationMessage = null
+                firebaseErrorMessage = ex.localizedMessage
                 Log.e("Password reset requested", ex.toString())
             }
         }
     }
 
     fun clearErrorMessages() {
-        confirmationMessage = ""
-        errorMessage = ""
-        passwordError = ""
+        confirmationMessage = null
+        errorMessage = null
+        firebaseErrorMessage = null
+        passwordError = null
     }
 }

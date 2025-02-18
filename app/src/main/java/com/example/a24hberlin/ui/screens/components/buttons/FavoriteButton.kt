@@ -11,8 +11,10 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
@@ -28,7 +30,9 @@ fun FavoriteButton(event: Event) {
 
     Icon(
         imageVector = if (isFavorite) Icons.Rounded.Star else Icons.Rounded.StarBorder,
-        contentDescription = if (isFavorite) "Unfavorite" else "Favorite",
+        contentDescription = if (isFavorite) stringResource(R.string.unfavorite) else stringResource(
+            R.string.favorite
+        ),
         Modifier
             .size(28.dp)
             .clickable {

@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -72,7 +73,7 @@ fun ForgotPasswordScreen() {
             Spacer(Modifier.height(extraLargePadding))
 
             Text(
-                "Twenty Four Hours Kulturprogramm",
+                stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
                 fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center,
@@ -86,30 +87,39 @@ fun ForgotPasswordScreen() {
             Spacer(Modifier.height(regularPadding))
 
             EmailField(
-                "Email",
-                "Please enter your Email",
+                stringResource(R.string.email),
+                stringResource(R.string.please_enter_your_email),
                 email
             ) { email = it }
 
-            if (authVM.errorMessage.isNotEmpty()) {
+            if (authVM.confirmationMessage != null) {
                 Text(
-                    authVM.errorMessage,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (authVM.confirmationMessage.isNotEmpty()) {
-                Text(
-                    authVM.confirmationMessage,
+                    stringResource(authVM.confirmationMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Green,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton("Reset Password") {
+            if (authVM.errorMessage != null) {
+                Text(
+                    stringResource(authVM.errorMessage!!),
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            if (authVM.firebaseErrorMessage != null) {
+                Text(
+                    authVM.firebaseErrorMessage!!,
+                    Modifier.padding(top = errorPadding),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            LargeDarkButton(stringResource(R.string.reset_password)) {
                 authVM.resetPassword(email)
             }
         }

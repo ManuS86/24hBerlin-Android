@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Button
@@ -29,11 +31,14 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
+import com.example.a24hberlin.utils.extraLargePadding
 import com.example.a24hberlin.utils.logoSizeSmall
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
@@ -43,6 +48,7 @@ import com.example.a24hberlin.utils.smallPadding
 @Composable
 fun SettingsScreen() {
     val settingsVM: SettingsViewModel = viewModel()
+    val scrollState = rememberScrollState()
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -55,6 +61,7 @@ fun SettingsScreen() {
         Column(
             Modifier
                 .fillMaxSize()
+                .verticalScroll(scrollState)
                 .padding(regularPadding)
         ) {
             Text(
@@ -84,14 +91,14 @@ fun SettingsScreen() {
                         .padding(regularPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("change_email")
+                    Text(stringResource(R.string.change_email))
 
                     Spacer(Modifier.weight(1f))
 
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowForwardIos,
                         tint = Color.Gray,
-                        contentDescription = "Change Email",
+                        contentDescription = stringResource(R.string.change_email),
                         modifier = Modifier
                             .size(16.dp)
                             .clickable {
@@ -102,7 +109,7 @@ fun SettingsScreen() {
 
                 HorizontalDivider(
                     Modifier
-                        .padding(horizontal = mediumPadding),
+                        .padding(horizontal = regularPadding),
                     color = Color.LightGray
                 )
 
@@ -112,14 +119,14 @@ fun SettingsScreen() {
                         .padding(regularPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("change_password")
+                    Text(stringResource(R.string.change_password))
 
                     Spacer(Modifier.weight(1f))
 
                     Icon(
                         imageVector = Icons.AutoMirrored.Default.ArrowForwardIos,
                         tint = Color.Gray,
-                        contentDescription = "Change Email",
+                        contentDescription = stringResource(R.string.change_password),
                         modifier = Modifier
                             .size(16.dp)
                             .clickable {
@@ -127,6 +134,80 @@ fun SettingsScreen() {
                             }
                     )
                 }
+            }
+
+            Text(
+                stringResource(R.string.app_settings),
+                Modifier
+                    .padding(top = regularPadding)
+                    .padding(bottom = smallPadding),
+                fontWeight = FontWeight.Medium
+            )
+
+            Text(
+                "Community",
+                Modifier
+                    .padding(top = regularPadding)
+                    .padding(bottom = smallPadding),
+                fontWeight = FontWeight.Medium
+            )
+
+            Button(
+                onClick = {
+
+                },
+                Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(slightRounding),
+                        ambientColor = Color.Gray.copy(0.5f),
+                        spotColor = Color.Gray.copy(0.5f)
+                    ),
+                shape = RoundedCornerShape(slightRounding),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                )
+            ) {
+                Text(
+                    stringResource(R.string.share_24hBerlin),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = mediumPadding),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Start
+                )
+            }
+
+            Button(
+                onClick = {
+
+                },
+                Modifier
+                    .fillMaxWidth()
+                    .padding(top = mediumPadding)
+                    .padding(bottom = extraLargePadding)
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(slightRounding),
+                        ambientColor = Color.Gray.copy(0.5f),
+                        spotColor = Color.Gray.copy(0.5f)
+                    ),
+                shape = RoundedCornerShape(slightRounding),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                )
+            ) {
+                Text(
+                    stringResource(R.string.report_a_bug),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = mediumPadding),
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Start
+                )
             }
 
             Spacer(Modifier.weight(1f))
@@ -150,7 +231,7 @@ fun SettingsScreen() {
                 )
             ) {
                 Text(
-                    "Logout",
+                    stringResource(R.string.logout),
                     Modifier.padding(mediumPadding),
                     fontWeight = FontWeight.SemiBold,
                     style = MaterialTheme.typography.bodyLarge
@@ -197,7 +278,7 @@ fun SettingsScreen() {
                 )
             ) {
                 Text(
-                    "Delete Account",
+                    stringResource(R.string.delete_account),
                     Modifier.padding(mediumPadding),
                     style = MaterialTheme.typography.bodyLarge
                 )

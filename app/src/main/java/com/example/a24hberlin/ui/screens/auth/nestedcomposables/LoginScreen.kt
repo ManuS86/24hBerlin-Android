@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -79,7 +80,7 @@ fun LoginScreen(onClick: () -> Unit) {
             Spacer(Modifier.height(extraLargePadding))
 
             Text(
-                "Twenty Four Hours Kulturprogramm",
+                stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
                 fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center,
@@ -93,49 +94,49 @@ fun LoginScreen(onClick: () -> Unit) {
             Spacer(Modifier.height(regularPadding))
 
             EmailField(
-                "Email",
-                "Please enter your email",
+                stringResource(R.string.email),
+                stringResource(R.string.please_enter_your_email),
                 email
             ) { email = it }
 
             Spacer(Modifier.height(mediumPadding))
 
             PasswordField(
-                "Password",
-                "Please enter your password",
+                stringResource(R.string.password),
+                stringResource(R.string.please_confirm_your_password),
                 password
             ) { password = it }
 
-            if (authVM.errorMessage.isNotEmpty()) {
+            if (authVM.errorMessage != null) {
                 Text(
-                    authVM.errorMessage,
+                    stringResource(authVM.errorMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton("Login") {
+            LargeDarkButton(stringResource(R.string.login)) {
                 authVM.login(email, password)
             }
 
             Spacer(Modifier.height(regularPadding))
 
             AuthTextButton(
-                label = "Forgot Password?",
+                stringResource(R.string.forgot_password),
                 onClick = { navController.navigate(Screen.ForgotPassword.route) }
             )
 
             Spacer(Modifier.weight(1f))
 
             Text(
-                "Don't have an account?",
+                stringResource(R.string.dont_have_an_account),
                 color = Color.Gray,
                 textAlign = TextAlign.Center
             )
 
             AuthTextButton(
-                label = "Create Account",
+                stringResource(R.string.create_account),
                 onClick = onClick
             )
         }
