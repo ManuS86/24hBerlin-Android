@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.settings
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -37,6 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
+import com.example.a24hberlin.data.enums.Language
+import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.extraLargePadding
 import com.example.a24hberlin.utils.logoSizeSmall
@@ -47,6 +51,7 @@ import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun SettingsScreen() {
+    val context = LocalContext.current
     val settingsVM: SettingsViewModel = viewModel()
     val scrollState = rememberScrollState()
 
@@ -144,6 +149,71 @@ fun SettingsScreen() {
                 fontWeight = FontWeight.Medium
             )
 
+            Card(
+                Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(slightRounding),
+                        ambientColor = Color.Gray.copy(0.5f),
+                        spotColor = Color.Gray.copy(0.5f)
+                    ),
+                shape = RoundedCornerShape(slightRounding),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                )
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(regularPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(R.string.language_settings))
+
+                    Spacer(Modifier.weight(1f))
+
+                    LanguageDropdown(
+                        label = stringResource(R.string.system_default),
+                        selectedValue = settingsVM.language,
+                        onValueSelected = { settingsVM.updateLanguage(it) },
+                        options = Language.allValues.toList()
+                    )
+                }
+            }
+
+            Spacer(Modifier.padding(smallPadding))
+
+            Card(
+                Modifier
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 2.dp,
+                        shape = RoundedCornerShape(slightRounding),
+                        ambientColor = Color.Gray.copy(0.5f),
+                        spotColor = Color.Gray.copy(0.5f)
+                    ),
+                shape = RoundedCornerShape(slightRounding),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White,
+                    contentColor = Color.Black
+                )
+            ) {
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(regularPadding),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(stringResource(R.string.push_notifications))
+
+                    Spacer(Modifier.weight(1f))
+
+//                    Switch()
+                }
+            }
+
             Text(
                 "Community",
                 Modifier
@@ -154,7 +224,19 @@ fun SettingsScreen() {
 
             Button(
                 onClick = {
-
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(
+                            Intent.EXTRA_TEXT,
+                            "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
+                        )
+                    }
+                    context.startActivity(
+                        Intent.createChooser(
+                            intent,
+                            R.string.share_link.toString()
+                        )
+                    )
                 },
                 Modifier
                     .fillMaxWidth()

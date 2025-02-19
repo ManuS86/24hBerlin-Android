@@ -160,6 +160,10 @@ class SettingsViewModel : ViewModel() {
         passwordError = null
     }
 
+    fun updateLanguage(it: Language?) {
+        language = it
+    }
+
     override fun onCleared() {
         super.onCleared()
         listener?.remove()

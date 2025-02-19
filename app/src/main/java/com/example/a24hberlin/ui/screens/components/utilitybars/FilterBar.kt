@@ -139,7 +139,7 @@ fun FilterBar(
 
                 Row(Modifier.weight(1f)) {
                     FilterDropdown(
-                        label = "Type",
+                        label = stringResource(R.string.type),
                         selectedValue = selectedEventType,
                         onValueSelected = onEventTypeSelected,
                         options = EventType.allValues.map { it.label },
@@ -150,7 +150,7 @@ fun FilterBar(
 
                 Row(Modifier.weight(1f)) {
                     FilterDropdown(
-                        label = "Sound",
+                        label = stringResource(R.string.sound),
                         selectedValue = selectedSound,
                         onValueSelected = onSoundSelected,
                         options = Sound.allValues.map { it.label },
@@ -161,7 +161,7 @@ fun FilterBar(
 
                 Row(Modifier.weight(1f)) {
                     FilterDropdown(
-                        label = "Venue",
+                        label = stringResource(R.string.venue_),
                         selectedValue = selectedVenue,
                         onValueSelected = onVenueSelected,
                         options = venues,

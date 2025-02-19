@@ -25,8 +25,6 @@ enum class Month(val value: Int) {
     companion object {
         val allValues = entries.toTypedArray()
 
-        fun fromInt(value: Int): Month? = allValues.firstOrNull { it.value == value }
-
         private val monthResourceMap = mapOf(
             "january" to R.string.january,
             "february" to R.string.february,

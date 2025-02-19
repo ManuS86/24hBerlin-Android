@@ -74,24 +74,24 @@ fun ImageAndDate(
                     ).substring(0, 2).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Black,
-                    modifier = Modifier.offset(y = 3.dp)
+                    modifier = Modifier.offset(y = 5.dp)
                 )
 
                 Text(
                     start.format(
                         DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                     ),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Black
                 )
 
                 Text(
                     start.format(
                         DateTimeFormatter.ofPattern("MMM").withLocale(locale) // Month
-                    ).uppercase(),
+                    ).substring(0, 3).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.Black,
-                    modifier = Modifier.offset(y = (-2).dp)
+                    modifier = Modifier.offset(y = (-5).dp)
                 )
             }
 
@@ -113,11 +113,12 @@ fun ImageAndDate(
                         Column {
                             Text(
                                 end.format(
-                                    DateTimeFormatter.ofPattern("EEE")
-                                        .withLocale(locale) // Weekday
+                                    DateTimeFormatter.ofPattern("EEE") // Weekday
+                                        .withLocale(locale)
                                 ).substring(0, 2).uppercase(),
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Black,
+                                modifier = Modifier.offset(y = 1.dp)
                             )
 
                             Text(

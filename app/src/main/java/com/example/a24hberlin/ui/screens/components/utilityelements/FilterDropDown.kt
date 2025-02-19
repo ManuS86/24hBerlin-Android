@@ -89,7 +89,8 @@ fun <T> FilterDropdown(
 
         DropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { isExpanded = !isExpanded }
+            onDismissRequest = { isExpanded = !isExpanded },
+            containerColor = Color.White
         ) {
             DropdownMenuItem(
                 text = {
