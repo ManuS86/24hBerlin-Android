@@ -153,6 +153,10 @@ class SettingsViewModel : ViewModel() {
         }
     }
 
+    fun changePushNotifications() {
+        pushNotificationsEnabled = !pushNotificationsEnabled
+    }
+
     fun clearErrorMessages() {
         confirmationMessage = null
         errorMessage = null

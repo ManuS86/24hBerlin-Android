@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -167,10 +169,13 @@ fun SettingsScreen() {
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(regularPadding),
+                        .padding(horizontal = regularPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.language_settings))
+                    Text(
+                        stringResource(R.string.language_settings),
+                        Modifier.padding(vertical = regularPadding)
+                    )
 
                     Spacer(Modifier.weight(1f))
 
@@ -203,14 +208,20 @@ fun SettingsScreen() {
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(regularPadding),
+                        .padding(horizontal = regularPadding),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(stringResource(R.string.push_notifications))
+                    Text(
+                        stringResource(R.string.push_notifications),
+                        Modifier.padding(vertical = regularPadding)
+                    )
 
                     Spacer(Modifier.weight(1f))
 
-//                    Switch()
+                    Switch(
+                        checked = settingsVM.pushNotificationsEnabled,
+                        onCheckedChange = { settingsVM.changePushNotifications() }
+                    )
                 }
             }
 
@@ -234,7 +245,7 @@ fun SettingsScreen() {
                     context.startActivity(
                         Intent.createChooser(
                             intent,
-                            R.string.share_link.toString()
+                            "Share Link"
                         )
                     )
                 },
@@ -250,13 +261,12 @@ fun SettingsScreen() {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
-                )
+                ),
+                contentPadding = PaddingValues(regularPadding)
             ) {
                 Text(
                     stringResource(R.string.share_24hBerlin),
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = mediumPadding),
+                    Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start
                 )
@@ -280,13 +290,12 @@ fun SettingsScreen() {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                     contentColor = Color.Black
-                )
+                ),
+                contentPadding = PaddingValues(regularPadding)
             ) {
                 Text(
                     stringResource(R.string.report_a_bug),
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = mediumPadding),
+                    Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Start
                 )
