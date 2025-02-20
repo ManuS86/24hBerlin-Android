@@ -128,4 +128,6 @@
     <string name="show_password">Show Password</string>
     <string name="passwords_do_not_match">Passwords do not match.</string>
     <string name="share_24hBerlin">Share 24hBerlin</string>
+    <string name="back">Back</string>
+    <string name="try_logging_in_again">Try logging in again.</string>
 </resources>

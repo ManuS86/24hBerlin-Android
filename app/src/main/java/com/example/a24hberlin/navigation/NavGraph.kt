@@ -5,7 +5,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.a24hberlin.ui.screens.auth.nestedcomposables.ForgotPasswordScreen
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
@@ -29,8 +28,8 @@ fun NavGraph(navController: NavHostController, searchText: TextFieldValue) {
         composable(Screen.Settings.route) {
             SettingsScreen()
         }
-        composable(Screen.ForgotPassword.route) {
-            ForgotPasswordScreen()
-        }
+//        composable(Screen.ReAuthWrapper.route) {
+//            ReAuthWrapper()
+//        }
     }
 }

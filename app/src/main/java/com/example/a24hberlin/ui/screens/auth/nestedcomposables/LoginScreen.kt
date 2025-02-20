@@ -1,17 +1,10 @@
 package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -25,15 +18,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
-import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
@@ -48,10 +37,10 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun LoginScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()
-    val navController = rememberNavController()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var showForgotPassword by remember { mutableStateOf(false) }
 
     DisposableEffect(Unit) {
         onDispose {
@@ -59,26 +48,18 @@ fun LoginScreen(onClick: () -> Unit) {
         }
     }
 
-    Box {
-        Image(
-            painterResource(R.drawable.background),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
-
+    if (showForgotPassword) {
+        ForgotPasswordScreen {
+            showForgotPassword = !showForgotPassword
+        }
+    } else {
         Column(
             Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(regularPadding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-                ),
+                .padding(horizontal = regularPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(Modifier.height(extraLargePadding))
-
             Text(
                 stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
@@ -120,12 +101,13 @@ fun LoginScreen(onClick: () -> Unit) {
                 authVM.login(email, password)
             }
 
-            Spacer(Modifier.height(regularPadding))
+            Spacer(Modifier.height(extraLargePadding))
 
             AuthTextButton(
-                stringResource(R.string.forgot_password),
-                onClick = { navController.navigate(Screen.ForgotPassword.route) }
-            )
+                stringResource(R.string.forgot_password)
+            ) {
+                showForgotPassword = !showForgotPassword
+            }
 
             Spacer(Modifier.weight(1f))
 

@@ -1,18 +1,11 @@
 package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -26,8 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -40,7 +31,6 @@ import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.utils.errorPadding
-import com.example.a24hberlin.utils.extraLargePadding
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -58,106 +48,92 @@ fun RegisterScreen(onClick: () -> Unit) {
         }
     }
 
-    Box {
-        Image(
-            painterResource(R.drawable.background),
-            contentDescription = null,
-            contentScale = ContentScale.FillBounds,
-            modifier = Modifier.fillMaxSize()
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(horizontal = regularPadding),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            stringResource(R.string.twenty_four_hours_kulturprogramm),
+            maxLines = 2,
+            fontWeight = FontWeight.Black,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.headlineLarge
         )
 
-        Column(
-            Modifier
-                .fillMaxSize()
-                .verticalScroll(scrollState)
-                .padding(regularPadding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(WindowInsetsSides.Bottom)
-                ),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(Modifier.height(extraLargePadding))
+        Spacer(Modifier.height(regularPadding))
 
+        AppLogo()
+
+        Spacer(Modifier.height(regularPadding))
+
+        EmailField(
+            stringResource(R.string.email),
+            stringResource(R.string.please_enter_your_email),
+            email
+        ) { email = it }
+
+        Spacer(Modifier.height(mediumPadding))
+
+        PasswordField(
+            stringResource(R.string.password),
+            stringResource(R.string.please_enter_your_password),
+            password
+        ) { password = it }
+
+        Spacer(Modifier.height(mediumPadding))
+
+        PasswordField(
+            stringResource(R.string.confirm_password),
+            stringResource(R.string.please_confirm_your_password),
+            confirmPassword
+        ) { confirmPassword = it }
+
+        if (authVM.errorMessage != null) {
             Text(
-                stringResource(R.string.twenty_four_hours_kulturprogramm),
-                maxLines = 2,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineLarge
-            )
-
-            Spacer(Modifier.height(regularPadding))
-
-            AppLogo()
-
-            Spacer(Modifier.height(regularPadding))
-
-            EmailField(
-                stringResource(R.string.email),
-                stringResource(R.string.please_enter_your_email),
-                email
-            ) { email = it }
-
-            Spacer(Modifier.height(mediumPadding))
-
-            PasswordField(
-                stringResource(R.string.password),
-                stringResource(R.string.please_enter_your_password),
-                password
-            ) { password = it }
-
-            Spacer(Modifier.height(mediumPadding))
-
-            PasswordField(
-                stringResource(R.string.confirm_password),
-                stringResource(R.string.please_confirm_your_password),
-                confirmPassword
-            ) { confirmPassword = it }
-
-            if (authVM.errorMessage != null) {
-                Text(
-                    stringResource(authVM.errorMessage!!),
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (authVM.firebaseErrorMessage != null) {
-                Text(
-                    authVM.firebaseErrorMessage!!,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (authVM.passwordError != null) {
-                Text(
-                    stringResource(authVM.passwordError!!),
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            LargeDarkButton(stringResource(R.string.register)) {
-                authVM.register(email, password, confirmPassword)
-            }
-
-            Spacer(Modifier.weight(1f))
-
-            Text(
-                stringResource(R.string.already_have_an_account),
-                Modifier.fillMaxWidth(),
-                color = Color.Gray,
-                textAlign = TextAlign.Center
-            )
-
-            AuthTextButton(
-                stringResource(R.string.login),
-                onClick = onClick
+                stringResource(authVM.errorMessage!!),
+                Modifier.padding(top = errorPadding),
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
             )
         }
+
+        if (authVM.firebaseErrorMessage != null) {
+            Text(
+                authVM.firebaseErrorMessage!!,
+                Modifier.padding(top = errorPadding),
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        if (authVM.passwordError != null) {
+            Text(
+                stringResource(authVM.passwordError!!),
+                Modifier.padding(top = errorPadding),
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        LargeDarkButton(stringResource(R.string.register)) {
+            authVM.register(email, password, confirmPassword)
+        }
+
+        Spacer(Modifier.weight(1f))
+
+        Text(
+            stringResource(R.string.already_have_an_account),
+            Modifier.fillMaxWidth(),
+            color = Color.Gray,
+            textAlign = TextAlign.Center
+        )
+
+        AuthTextButton(
+            stringResource(R.string.login),
+            onClick = onClick
+        )
     }
 }

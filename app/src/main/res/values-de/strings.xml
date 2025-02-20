@@ -128,4 +128,6 @@
     <string name="show_password">Passwort verstecken</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein.</string>
     <string name="share_24hBerlin">24h Berlin teilen</string>
+    <string name="back">Zurück</string>
+    <string name="try_logging_in_again">Versuche erneut einzuloggen.</string>
 </resources>
