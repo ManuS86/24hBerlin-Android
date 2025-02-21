@@ -94,7 +94,14 @@ fun AppNavigation() {
                 modifier = Modifier.fillMaxSize()
             )
             SetSystemBarColorsToLight(false)
-            NavGraph(navController, searchText)
+            NavGraph(
+                navController,
+                searchText,
+                selectedEventType,
+                selectedMonth,
+                selectedSound,
+                selectedVenue,
+            )
         }
     }
 }

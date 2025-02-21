@@ -13,15 +13,33 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a24hberlin.data.enums.EventType
+import com.example.a24hberlin.data.enums.Month
+import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import com.example.a24hberlin.utils.filteredEvents
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
-fun FavoritesScreen(searchText: TextFieldValue) {
+fun FavoritesScreen(
+    searchText: TextFieldValue,
+    selectedEventType: EventType?,
+    selectedMonth: Month?,
+    selectedSound: Sound?,
+    selectedVenue: String?,
+) {
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
+    val filteredFavorites = filteredEvents(
+        events = eventVM.favorites ?: emptyList(),
+        selectedMonth = selectedMonth,
+        selectedEventType = selectedEventType,
+        selectedSound = selectedSound,
+        selectedVenue = selectedVenue,
+        searchText = searchText
+    )
 
     LaunchedEffect(key1 = Unit) {
         eventVM.loadEvents()
@@ -36,7 +54,7 @@ fun FavoritesScreen(searchText: TextFieldValue) {
             contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
         ) {
             items(
-                eventVM.favorites ?: emptyList(),
+                filteredFavorites,
                 { favorite -> favorite.id }
             ) { favorite ->
                 EventItem(favorite)

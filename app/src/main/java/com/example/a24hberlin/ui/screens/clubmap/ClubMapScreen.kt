@@ -7,11 +7,29 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a24hberlin.data.enums.EventType
+import com.example.a24hberlin.data.enums.Month
+import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import com.example.a24hberlin.utils.filteredEvents
 
 @Composable
-fun ClubMapScreen(searchText: TextFieldValue) {
+fun ClubMapScreen(
+    searchText: TextFieldValue,
+    selectedEventType: EventType?,
+    selectedMonth: Month?,
+    selectedSound: Sound?,
+    selectedVenue: String?,
+) {
     val eventVM: EventViewModel = viewModel()
+    val filteredEvents = filteredEvents(
+        events = eventVM.events,
+        selectedMonth = selectedMonth,
+        selectedEventType = selectedEventType,
+        selectedSound = selectedSound,
+        selectedVenue = selectedVenue,
+        searchText = searchText
+    )
 
     LaunchedEffect(key1 = Unit) {
         eventVM.loadEvents()

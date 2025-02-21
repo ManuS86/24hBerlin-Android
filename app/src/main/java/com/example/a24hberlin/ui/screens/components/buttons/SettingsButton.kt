@@ -18,7 +18,12 @@ import com.example.a24hberlin.utils.regularPadding
 import com.example.a24hberlin.utils.slightRounding
 
 @Composable
-fun SettingsButton(label: String, fontWeight: FontWeight, textAlign: TextAlign, onClick: () -> Unit) {
+fun SettingsButton(
+    label: String,
+    fontWeight: FontWeight,
+    textAlign: TextAlign,
+    onClick: () -> Unit
+) {
     Button(
         onClick = onClick,
         Modifier

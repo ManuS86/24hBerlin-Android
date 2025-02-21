@@ -15,9 +15,7 @@ import com.example.a24hberlin.data.repository.UserRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
-import java.time.Instant
 import java.time.LocalDate
-import java.time.ZoneId
 
 class EventViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
@@ -60,34 +58,39 @@ class EventViewModel : ViewModel() {
             try {
                 val eventResponse = eventRepo.loadEvents()
 
-                eventResponse.let { eventsMap ->
-                    eventsMap.map { (id, event) -> // Set event IDs
+                eventResponse.let { eventsMap -> // Set event IDs
+                    eventsMap.map { (id, event) ->
                         event.id = id
                         event
                     }
-                }.let { eventsWithIDs ->
-                    eventsWithIDs.flatMap { event -> // Create repeat copies
-                        listOf(event) + (event.repeats?.mapIndexed { index, repeatData ->
-                            event.copy(
-                                id = "${event.id}-${index}",
-                                start = repeatData[0].let {
-                                    Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
-                                        .toLocalDateTime()
-                                },
-                                end = repeatData.getOrNull(1)?.let {
-                                    Instant.ofEpochSecond(it).atZone(ZoneId.systemDefault())
-                                        .toLocalDateTime()
-                                },
-                                repeats = null
-                            )
-                        } ?: emptyList())
+                }.let { eventsWithIDs -> // Create repeat copies
+                    eventsWithIDs.flatMap { event ->
+                        buildList {
+                            add(event)
+
+                            event.repeats?.forEachIndexed { index, repeatData ->
+                                if (index == 0) return@forEachIndexed
+
+                                val startTimeSeconds = repeatData.getOrNull(0)
+                                val endTimeSeconds = repeatData.getOrNull(1)
+
+                                add(
+                                    event.copy(
+                                        id = "${event.id}-${index}",
+                                        startSecs = startTimeSeconds?.toString() ?: event.startSecs,
+                                        endSecs = endTimeSeconds,
+                                        repeats = null
+                                    )
+                                )
+                            }
+                        }
                     }
-                }.let { expandedEvents ->
+                }.let { expandedEvents -> // Today or later
                     expandedEvents.filter { event ->
                         val now = LocalDate.now()
                         val eventDate = event.start.toLocalDate()
 
-                        eventDate.isEqual(now) || eventDate.isAfter(now) // Today or later
+                        eventDate.isEqual(now) || eventDate.isAfter(now)
                     }.sortedBy { it.start }
                 }.let { finalEvents ->
                     events = finalEvents
