@@ -2,6 +2,7 @@ package com.example.a24hberlin.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
@@ -85,7 +86,6 @@ fun filteredEvents(
         }
     }
 }
-
 
 fun String.toLanguageOrNull(): Language? {
     return Language.allValues.firstOrNull { it.label.equals(this, ignoreCase = true) }

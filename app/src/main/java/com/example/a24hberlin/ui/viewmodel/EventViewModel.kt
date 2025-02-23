@@ -21,7 +21,6 @@ class EventViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepository(EventApi)
     private var listener: ListenerRegistration? = null
-    private val TAG = "EventViewModel"
     private val userRepo = UserRepository(db)
 
     var currentAppUser by mutableStateOf<AppUser?>(null)

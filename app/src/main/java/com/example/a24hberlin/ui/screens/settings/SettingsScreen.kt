@@ -16,15 +16,25 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -41,6 +51,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
+import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.logoSizeSmall
@@ -49,12 +60,19 @@ import com.example.a24hberlin.utils.regularPadding
 import com.example.a24hberlin.utils.slightRounding
 import com.example.a24hberlin.utils.smallPadding
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
     val settingsVM: SettingsViewModel = viewModel()
     val navController = rememberNavController()
+    var alertMessage by remember { mutableStateOf("") }
+    val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
+    val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
     val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var showAlert by remember { mutableStateOf(false) }
+    var showBugReport by remember { mutableStateOf(false) }
 
     Column(
         Modifier
@@ -255,7 +273,7 @@ fun SettingsScreen() {
             FontWeight.Normal,
             TextAlign.Start
         ) {
-
+            showBugReport = !showBugReport
         }
 
         Spacer(Modifier.padding(largePadding))
@@ -295,6 +313,41 @@ fun SettingsScreen() {
             TextAlign.Center
         ) {
             settingsVM.deleteAccount()
+        }
+
+        if (showBugReport) {
+            ModalBottomSheet(
+                onDismissRequest = { showBugReport = false },
+                containerColor = Color.White,
+                sheetState = sheetState
+            ) {
+                BugReportScreen(
+                    { showAlert = !showAlert },
+                    { alertMessage = pleaseDescribeBug.value },
+                    { alertMessage = reportThankYou.value }
+                )
+            }
+        }
+
+        if (showAlert) {
+            AlertDialog(
+                onDismissRequest = { showAlert = false },
+                title = { Text(stringResource(R.string.bug_report)) },
+                text = { Text(alertMessage) },
+                containerColor = Color.White,
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showAlert = false
+                            if (alertMessage == reportThankYou.value) {
+                                showBugReport = false
+                            }
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }

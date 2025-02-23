@@ -21,7 +21,6 @@ class AuthViewModel : ViewModel() {
     private var analytics: FirebaseAnalytics
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
-    private val TAG = "AuthViewModel"
     private val userRepo = UserRepository(db)
 
     var confirmationMessage by mutableStateOf<Int?>(null)

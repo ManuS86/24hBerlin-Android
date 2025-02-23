@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 class SettingsViewModel : ViewModel() {
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null
-    private val TAG = "SettingsViewModel"
     private val userRepo = UserRepository(db)
 
     var confirmationMessage by mutableStateOf<Int?>(null)
