@@ -43,10 +43,10 @@ fun ImageAndDate(
     val locale = Locale.getDefault()
 
     Column(modifier = Modifier.padding(end = mediumPadding)) {
-        imageURL?.let { imageURL ->
+        imageURL?.let { url ->
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
-                    .data(imageURL)
+                    .data(url)
                     .crossfade(true)
                     .build(),
                 placeholder = rememberVectorPainter(image = Icons.Default.Image),

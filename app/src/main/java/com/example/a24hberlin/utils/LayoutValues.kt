@@ -4,6 +4,7 @@ import androidx.compose.ui.unit.dp
 
 // Image Sizes
 val eventImageSize = 75.dp
+val detailImageSize = 180.dp
 val logoSizeSmall = 50.dp
 val logoSize = 120.dp
 

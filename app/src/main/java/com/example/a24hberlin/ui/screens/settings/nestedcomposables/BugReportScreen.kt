@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.theme.TextColor
+import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.mediumPadding
@@ -43,7 +43,7 @@ fun BugReportScreen(
             stringResource(R.string.report_a_bug),
             Modifier.padding(bottom = mediumPadding),
             style = MaterialTheme.typography.titleMedium,
-            color = TextColor
+            color = TextOffBlack
         )
 
         OutlinedTextField(
