@@ -21,16 +21,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.Details
+import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun DetailCard(details: String) {
-    val regex = remember { "<.*?>".toRegex() }
-    val cleanedDetails = regex.replace(details, "")
-
     if (details != "") {
+        val regex = remember { "<.*?>".toRegex() }
+        val cleanedDetails = regex.replace(details, "")
+
         Card(
             Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(mediumRounding),
@@ -47,7 +48,7 @@ fun DetailCard(details: String) {
                     Icons.Default.ViewHeadline,
                     contentDescription = null,
                     Modifier.padding(end = mediumPadding),
-                    tint = Color.DarkGray
+                    tint = Party
                 )
 
                 SelectionContainer {

@@ -33,6 +33,7 @@ import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.
 import com.example.a24hberlin.ui.theme.ArtAndCulture
 import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Party
+import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
@@ -50,7 +51,7 @@ fun EventItem(event: Event) {
         Modifier
             .background(Color.White)
             .clip(RoundedCornerShape(mediumRounding))
-            .border(BorderStroke(0.5.dp, Color.Black), RoundedCornerShape(mediumRounding))
+            .border(BorderStroke(0.5.dp, TextOffBlack), RoundedCornerShape(mediumRounding))
     ) {
         CompositionLocalProvider(LocalContentColor provides Color.White) {
             Row(

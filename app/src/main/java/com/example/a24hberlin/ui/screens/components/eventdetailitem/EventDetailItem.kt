@@ -14,15 +14,25 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DetailCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DirectionsCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.EntranceFeeCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.ImageCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LearnmoreLinkCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LocationCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.MapCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
 import com.example.a24hberlin.ui.theme.Details
+import com.example.a24hberlin.ui.viewmodel.MapViewModel
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 
 @Composable
 fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> Unit) {
+    val mapVM: MapViewModel = viewModel()
+
     Column(
         Modifier
             .fillMaxWidth()
@@ -31,6 +41,17 @@ fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> U
     ) {
         ImageCard(event.imageURL)
         DetailCard(event.details)
+        TimeCard(event.start, event.end)
+        EntranceFeeCard(event.entranceFee)
+        LocationCard(event.locationName, event.address)
+        LearnmoreLinkCard(event.learnmoreLink)
+
+        event.lat?.let {
+            event.long?.let {
+                DirectionsCard { mapVM }
+                MapCard()
+            }
+        }
 
         if (showDetail) {
             Card(

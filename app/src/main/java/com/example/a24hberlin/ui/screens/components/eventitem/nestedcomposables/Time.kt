@@ -23,8 +23,6 @@ fun Time(
     start: LocalDateTime,
     end: LocalDateTime?
 ) {
-    val locale = Locale.getDefault()
-
     Row {
         Icon(
             imageVector = Icons.Filled.WatchLater,
@@ -36,7 +34,7 @@ fun Time(
 
         Text(
             start.format(
-                DateTimeFormatter.ofPattern("HH:mm").withLocale(locale)
+                DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
             ),
             style = MaterialTheme.typography.bodyMedium
         )
@@ -49,7 +47,7 @@ fun Time(
 
             Text(
                 endTime.format(
-                    DateTimeFormatter.ofPattern("HH:mm").withLocale(locale)
+                    DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
                 ),
                 style = MaterialTheme.typography.bodyMedium
             )
