@@ -35,13 +35,15 @@ import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 fun AppNavigation() {
     val eventVM: EventViewModel = viewModel()
     val navController = rememberNavController()
-    var appBarTitle by remember { mutableStateOf("Events") }
+    var appBarTitle by remember { mutableStateOf("") }
     var showSearchBar by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
     var selectedEventType by remember { mutableStateOf<EventType?>(null) }
     var selectedMonth by remember { mutableStateOf<Month?>(null) }
     var selectedSound by remember { mutableStateOf<Sound?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
+
+    appBarTitle = stringResource(R.string.events)
 
     Scaffold(
         topBar = {

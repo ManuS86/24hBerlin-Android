@@ -25,12 +25,6 @@ class SettingsViewModel : ViewModel() {
     var confirmationMessage by mutableStateOf<Int?>(null)
         private set
 
-    var currentAppUser by mutableStateOf<AppUser?>(null)
-        private set
-
-    var errorMessage by mutableStateOf<Int?>(null)
-        private set
-
     var firebaseErrorMessage by mutableStateOf<String?>(null)
         private set
 
@@ -45,6 +39,8 @@ class SettingsViewModel : ViewModel() {
 
     var isReauthenticated by mutableStateOf(false)
         private set
+
+    private var currentAppUser by mutableStateOf<AppUser?>(null)
 
     init {
         if (listener == null) {
@@ -127,7 +123,33 @@ class SettingsViewModel : ViewModel() {
 
     }
 
-    fun saveSettings() {
+    fun sendBugReport(message: String, completion: (Exception?) -> Unit) {
+        viewModelScope.launch {
+            try {
+                userRepo.sendBugReport(message, completion)
+            } catch (ex: Exception) {
+                Log.e("Send Bug Report", ex.toString())
+            }
+        }
+    }
+
+    fun changePushNotifications(it: Boolean) {
+        pushNotificationsEnabled = it
+        saveSettings()
+    }
+
+    fun clearErrorMessages() {
+        confirmationMessage = null
+        firebaseErrorMessage = null
+        passwordError = null
+    }
+
+    fun updateLanguage(it: Language?) {
+        language = it
+        saveSettings()
+    }
+
+    private fun saveSettings() {
         val settings = Settings(
             pushNotificationsEnabled = pushNotificationsEnabled,
             language = language?.label
@@ -140,31 +162,6 @@ class SettingsViewModel : ViewModel() {
                 Log.e("Save Settings", ex.toString())
             }
         }
-    }
-
-    fun sendBugReport(message: String, completion: (Exception?) -> Unit) {
-        viewModelScope.launch {
-            try {
-                userRepo.sendBugReport(message, completion)
-            } catch (ex: Exception) {
-                Log.e("Send Bug Report", ex.toString())
-            }
-        }
-    }
-
-    fun changePushNotifications() {
-        pushNotificationsEnabled = !pushNotificationsEnabled
-    }
-
-    fun clearErrorMessages() {
-        confirmationMessage = null
-        errorMessage = null
-        firebaseErrorMessage = null
-        passwordError = null
-    }
-
-    fun updateLanguage(it: Language?) {
-        language = it
     }
 
     override fun onCleared() {

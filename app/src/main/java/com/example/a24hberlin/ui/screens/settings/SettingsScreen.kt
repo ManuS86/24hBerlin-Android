@@ -1,6 +1,7 @@
 package com.example.a24hberlin.ui.screens.settings
 
 import android.content.Intent
+import android.content.res.Resources
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +54,7 @@ import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
+import com.example.a24hberlin.utils.LanguageChangeHelper
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.logoSizeSmall
 import com.example.a24hberlin.utils.mediumPadding
@@ -65,6 +67,9 @@ import com.example.a24hberlin.utils.smallPadding
 fun SettingsScreen() {
     val context = LocalContext.current
     val settingsVM: SettingsViewModel = viewModel()
+    val languageChangeHelper by lazy {
+        LanguageChangeHelper()
+    }
     val navController = rememberNavController()
     var alertMessage by remember { mutableStateOf("") }
     val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
@@ -118,7 +123,7 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .size(16.dp)
                         .clickable {
-
+//                                navController.navigate(Screen.ReAuthWrapper.route)
                         }
                 )
             }
@@ -191,7 +196,14 @@ fun SettingsScreen() {
                 LanguageDropdown(
                     label = stringResource(R.string.system_default),
                     selectedValue = settingsVM.language,
-                    onValueSelected = { settingsVM.updateLanguage(it) },
+                    onValueSelected = {
+                        settingsVM.updateLanguage(it)
+                        languageChangeHelper.setLanguage(
+                            context,
+                            settingsVM.language?.languageCode
+                                ?: Resources.getSystem().configuration.locales.get(1).language
+                        )
+                    },
                     options = Language.allValues.toList()
                 )
             }
@@ -229,7 +241,9 @@ fun SettingsScreen() {
 
                 Switch(
                     checked = settingsVM.pushNotificationsEnabled,
-                    onCheckedChange = { settingsVM.changePushNotifications() },
+                    onCheckedChange = {
+                        settingsVM.changePushNotifications(it)
+                    },
                     colors = SwitchDefaults.colors(
                         uncheckedTrackColor = Color.LightGray.copy(0.5f)
                     )

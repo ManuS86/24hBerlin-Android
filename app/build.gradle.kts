@@ -37,14 +37,14 @@ android {
         compose = true
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_19
-        targetCompatibility = JavaVersion.VERSION_19
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
     }
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "11"
     }
     packaging {
         resources {
@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.appcompat)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
