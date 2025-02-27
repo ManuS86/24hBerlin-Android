@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.appnavigation.nestedcomposables
+package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Event

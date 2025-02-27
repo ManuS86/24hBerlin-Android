@@ -127,7 +127,10 @@
     <string name="hide_password">Passwort zeigen</string>
     <string name="show_password">Passwort verstecken</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein.</string>
-    <string name="share_24hBerlin">24h Berlin teilen</string>
+    <string name="share_24hBerlin">24hBerlin teilen</string>
     <string name="back">Zurück</string>
     <string name="try_logging_in_again">Versuche erneut einzuloggen.</string>
+    <string name="yes">JA</string>
+    <string name="no">NEIN</string>
+    <string name="are_you_sure_you_want_to_log_out_q">Bist du sicher, dass du dich ausloggen willst?</string>
 </resources>

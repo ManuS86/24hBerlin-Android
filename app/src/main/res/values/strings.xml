@@ -130,4 +130,7 @@
     <string name="share_24hBerlin">Share 24hBerlin</string>
     <string name="back">Back</string>
     <string name="try_logging_in_again">Try logging in again.</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+    <string name="are_you_sure_you_want_to_log_out_q">Are you sure you want to log out?</string>
 </resources>

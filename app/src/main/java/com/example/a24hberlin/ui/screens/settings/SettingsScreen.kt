@@ -76,7 +76,9 @@ fun SettingsScreen() {
     val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var showAlert by remember { mutableStateOf(false) }
+    var showBugReportAlert by remember { mutableStateOf(false) }
+    var showDeleteAccountAlert by remember { mutableStateOf(false) }
+    var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
 
     Column(
@@ -297,7 +299,7 @@ fun SettingsScreen() {
             FontWeight.SemiBold,
             TextAlign.Center
         ) {
-            settingsVM.logout()
+            showLogOutAlert = true
         }
 
         Column(
@@ -326,7 +328,7 @@ fun SettingsScreen() {
             FontWeight.Normal,
             TextAlign.Center
         ) {
-            settingsVM.deleteAccount()
+            showDeleteAccountAlert = true
         }
 
         if (showBugReport) {
@@ -336,23 +338,85 @@ fun SettingsScreen() {
                 sheetState = sheetState
             ) {
                 BugReportScreen(
-                    { showAlert = !showAlert },
+                    { showBugReportAlert = !showBugReportAlert },
                     { alertMessage = pleaseDescribeBug.value },
                     { alertMessage = reportThankYou.value }
                 )
             }
         }
 
-        if (showAlert) {
+        if (showLogOutAlert) {
             AlertDialog(
-                onDismissRequest = { showAlert = false },
+                onDismissRequest = { showLogOutAlert = false },
+                title = { Text(stringResource(R.string.logout)) },
+                text = { Text(stringResource(R.string.are_you_sure_you_want_to_log_out_q)) },
+                containerColor = Color.White,
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showLogOutAlert = false
+                            settingsVM.logout()
+                        }
+                    ) {
+                        Text(
+                            stringResource(R.string.yes),
+                            color = Color.Red
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showLogOutAlert = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.no))
+                    }
+                }
+            )
+        }
+
+        if (showDeleteAccountAlert) {
+            AlertDialog(
+                onDismissRequest = { showDeleteAccountAlert = false },
+                title = { Text(stringResource(R.string.delete_account)) },
+                text = { Text(stringResource(R.string.are_you_sure_you_want_to_delete_your_account)) },
+                containerColor = Color.White,
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteAccountAlert = false
+                            settingsVM.deleteAccount()
+                        }
+                    ) {
+                        Text(
+                            stringResource(R.string.yes),
+                            color = Color.Red
+                        )
+                    }
+                },
+                dismissButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteAccountAlert = false
+                        }
+                    ) {
+                        Text(stringResource(R.string.no))
+                    }
+                }
+            )
+        }
+
+        if (showBugReportAlert) {
+            AlertDialog(
+                onDismissRequest = { showBugReportAlert = false },
                 title = { Text(stringResource(R.string.bug_report)) },
                 text = { Text(alertMessage) },
                 containerColor = Color.White,
                 confirmButton = {
                     TextButton(
                         onClick = {
-                            showAlert = false
+                            showBugReportAlert = false
                             if (alertMessage == reportThankYou.value) {
                                 showBugReport = false
                             }
