@@ -25,9 +25,9 @@ import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.navigation.NavGraph
+import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
-import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 

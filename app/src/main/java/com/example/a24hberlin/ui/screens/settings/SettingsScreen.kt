@@ -50,6 +50,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
+import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
@@ -346,63 +347,25 @@ fun SettingsScreen() {
         }
 
         if (showLogOutAlert) {
-            AlertDialog(
-                onDismissRequest = { showLogOutAlert = false },
-                title = { Text(stringResource(R.string.logout)) },
-                text = { Text(stringResource(R.string.are_you_sure_you_want_to_log_out_q)) },
-                containerColor = Color.White,
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showLogOutAlert = false
-                            settingsVM.logout()
-                        }
-                    ) {
-                        Text(
-                            stringResource(R.string.yes),
-                            color = Color.Red
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showLogOutAlert = false
-                        }
-                    ) {
-                        Text(stringResource(R.string.no))
-                    }
+            YesNoAlert(
+                stringResource(R.string.logout),
+                stringResource(R.string.are_you_sure_you_want_to_log_out_q),
+                { showLogOutAlert = false },
+                {
+                    showLogOutAlert = false
+                    settingsVM.logout()
                 }
             )
         }
 
         if (showDeleteAccountAlert) {
-            AlertDialog(
-                onDismissRequest = { showDeleteAccountAlert = false },
-                title = { Text(stringResource(R.string.delete_account)) },
-                text = { Text(stringResource(R.string.are_you_sure_you_want_to_delete_your_account)) },
-                containerColor = Color.White,
-                confirmButton = {
-                    TextButton(
-                        onClick = {
-                            showDeleteAccountAlert = false
-                            settingsVM.deleteAccount()
-                        }
-                    ) {
-                        Text(
-                            stringResource(R.string.yes),
-                            color = Color.Red
-                        )
-                    }
-                },
-                dismissButton = {
-                    TextButton(
-                        onClick = {
-                            showDeleteAccountAlert = false
-                        }
-                    ) {
-                        Text(stringResource(R.string.no))
-                    }
+            YesNoAlert(
+                stringResource(R.string.delete_account),
+                stringResource(R.string.are_you_sure_you_want_to_delete_your_account),
+                { showDeleteAccountAlert = false },
+                {
+                    showDeleteAccountAlert = false
+                    settingsVM.deleteAccount()
                 }
             )
         }
