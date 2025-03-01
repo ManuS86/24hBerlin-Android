@@ -1,27 +1,34 @@
 package com.example.a24hberlin.ui.viewmodel
 
+import android.Manifest
+import android.app.Application
+import android.content.pm.PackageManager
+import android.os.Build
 import android.util.Log
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.api.EventApi
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.data.repository.EventRepository
 import com.example.a24hberlin.data.repository.UserRepository
+import com.example.a24hberlin.utils.services.NotificationService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 
-class EventViewModel : ViewModel() {
+class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepository(EventApi)
     private var listener: ListenerRegistration? = null
     private val userRepo = UserRepository(db)
+    private val notificationService = NotificationService(application.applicationContext)
 
     var currentAppUser by mutableStateOf<AppUser?>(null)
         private set
@@ -36,6 +43,16 @@ class EventViewModel : ViewModel() {
             }
         }
     }
+
+    var hasNotificationPermission by
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(
+                application,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        )
+    } else mutableStateOf(true)
 
     val uniqueLocations by derivedStateOf {
         events.mapNotNull { it.locationName }
@@ -101,11 +118,16 @@ class EventViewModel : ViewModel() {
     }
 
     fun addFavoriteID(favoriteID: String) {
+        val event = events.find { it.id == favoriteID } ?: return
+
         viewModelScope.launch {
             try {
                 userRepo.updateUserInformation(favoriteID)
-                // Optionally update the events list to reflect the change locally
-                // This would require fetching the updated user data and events
+                if (currentAppUser?.settings!!.pushNotificationsEnabled) {
+                    notificationService.scheduleEventReminder(event, 3, 11)
+                    notificationService.scheduleEventReminder(event, 0, 11)
+                    notificationService.scheduleEventReminder(event, 0, 2)
+                }
             } catch (ex: Exception) {
                 Log.e("Add Favorite ID", ex.toString())
             }
@@ -113,11 +135,14 @@ class EventViewModel : ViewModel() {
     }
 
     fun removeFavoriteID(favoriteID: String) {
+        val event = events.find { it.id == favoriteID } ?: return
+
         viewModelScope.launch {
             try {
                 userRepo.removeFavoriteID(favoriteID)
-                // Optionally update the events list to reflect the change locally
-                // This would require fetching the updated user data and events
+                if (!currentAppUser?.settings!!.pushNotificationsEnabled) {
+                    notificationService.unscheduleEventReminder(event)
+                }
             } catch (ex: Exception) {
                 Log.e("Remove Favorite ID", ex.toString())
             }
@@ -125,11 +150,13 @@ class EventViewModel : ViewModel() {
     }
 
     fun addFavoritePushNotification(event: Event, dayModifier: Int, hourModifier: Int) {
+        notificationService.scheduleEventReminder(event, dayModifier, hourModifier)
 
     }
 
     fun setupAbsenceReminder() {
-
+        notificationService.updateLastAppOpenDate()
+        notificationService.schedule14DayReminder()
     }
 
     override fun onCleared() {

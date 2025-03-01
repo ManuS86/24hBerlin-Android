@@ -133,4 +133,9 @@
     <string name="yes">JA</string>
     <string name="no">NEIN</string>
     <string name="are_you_sure_you_want_to_log_out_q">Bist du sicher, dass du dich ausloggen willst?</string>
+    <string name="dont_forget_event_3days">Nicht vergessen: %1$s findet in 2 Tagen statt!</string>
+    <string name="dont_forget_event_3hours">Nicht vergessen: %1$s findet in 3 Stunden statt!</string>
+    <string name="dont_forget_event_today">Nicht vergessen: %1$s findet in Heute statt!</string>
+    <string name="channel_name">Veranstaltungserinnerungen</string>
+    <string name="channel_description">Benachrichtigungen für deine favorisierten Veranstaltungen</string>
 </resources>

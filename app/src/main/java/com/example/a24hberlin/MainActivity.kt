@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,8 +15,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.a24hberlin.ui.screens.auth.AuthWrapper
 import com.example.a24hberlin.ui.theme._24hBerlinTheme
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 class MainActivity : ComponentActivity() {
+    private val eventVM: EventViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,6 +39,17 @@ class MainActivity : ComponentActivity() {
                     AuthWrapper(innerPadding)
                 }
             }
+        }
+
+        if (eventVM.currentAppUser != null && eventVM.hasNotificationPermission) {
+            eventVM.setupAbsenceReminder()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (eventVM.currentAppUser != null && eventVM.hasNotificationPermission) {
+            eventVM.setupAbsenceReminder()
         }
     }
 }

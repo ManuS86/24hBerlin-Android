@@ -3,8 +3,10 @@ package com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcompo
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -18,6 +20,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -25,15 +28,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a24hberlin.R
+import com.example.a24hberlin.data.model.Event
+import com.example.a24hberlin.ui.theme.ArtAndCulture
+import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Details
+import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.smallPadding
 
 @Composable
-fun DirectionsCard(onClick: () -> Unit) {
+fun DirectionsCard(event: Event, onClick: () -> Unit) {
+    val eventColor = when {
+        event.eventType?.values?.contains("Konzert") ?: true -> Concert
+        event.eventType?.values?.contains("Party") ?: false -> Party
+        else -> ArtAndCulture
+    }
+
     Card(
         Modifier
             .fillMaxWidth()
@@ -46,7 +58,8 @@ fun DirectionsCard(onClick: () -> Unit) {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(regularPadding)
+                .padding(regularPadding),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 Icons.Default.Directions,
@@ -65,17 +78,31 @@ fun DirectionsCard(onClick: () -> Unit) {
 
             Spacer(Modifier.weight(1f))
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Default.ArrowForwardIos,
-                tint = Color.Gray,
-                contentDescription = stringResource(R.string.further_information),
-                modifier = Modifier
-                    .size(20.dp)
-                    .padding(top = smallPadding)
-                    .clickable {
-                        onClick()
-                    }
-            )
+            Card(
+                Modifier.size(40.dp),
+                shape = RoundedCornerShape(100),
+                colors = CardDefaults.cardColors(
+                    containerColor = eventColor
+                )
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Default.ArrowForwardIos,
+                        tint = Color.White,
+                        contentDescription = stringResource(R.string.directions),
+                        modifier = Modifier
+                            .padding(start = 2.dp)
+                            .size(20.dp)
+                            .clickable {
+                                onClick()
+                            }
+                    )
+                }
+            }
         }
     }
 }

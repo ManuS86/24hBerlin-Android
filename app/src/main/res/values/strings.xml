@@ -133,4 +133,9 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="are_you_sure_you_want_to_log_out_q">Are you sure you want to log out?</string>
+    <string name="dont_forget_event_3days">Don\'t forget: %1$s is happening in 3 days!</string>
+    <string name="dont_forget_event_3hours">Don\'t forget: %1$s is happening in 3 hours!</string>
+    <string name="dont_forget_event_today">Don\'t forget: %1$s is happening today!</string>
+    <string name="channel_name">Event Reminder</string>
+    <string name="channel_description">Reminders for favorited events</string>
 </resources>

@@ -50,10 +50,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
-import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
+import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.LanguageChangeHelper
 import com.example.a24hberlin.utils.largePadding
@@ -67,6 +68,7 @@ import com.example.a24hberlin.utils.smallPadding
 @Composable
 fun SettingsScreen() {
     val context = LocalContext.current
+    val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
     val languageChangeHelper by lazy {
         LanguageChangeHelper()
@@ -246,6 +248,16 @@ fun SettingsScreen() {
                     checked = settingsVM.pushNotificationsEnabled,
                     onCheckedChange = {
                         settingsVM.changePushNotifications(it)
+                        if (it) {
+                            eventVM.favorites?.forEach { favorite ->
+                                eventVM.addFavoritePushNotification(favorite, 3, 11)
+                                eventVM.addFavoritePushNotification(favorite, 0, 11)
+                                eventVM.addFavoritePushNotification(favorite, 0, 2)
+                                eventVM.setupAbsenceReminder()
+                            }
+                        } else {
+                            settingsVM.removeAllPendingNotifications()
+                        }
                     },
                     colors = SwitchDefaults.colors(
                         uncheckedTrackColor = Color.LightGray.copy(0.5f)
