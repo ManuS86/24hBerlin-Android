@@ -53,6 +53,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             ) == PackageManager.PERMISSION_GRANTED
         )
     } else mutableStateOf(true)
+        private set
 
     val uniqueLocations by derivedStateOf {
         events.mapNotNull { it.locationName }
