@@ -14,7 +14,7 @@ import com.google.firebase.firestore.toObject
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
-class UserRepositoryImpl(private var db: FirebaseFirestore) {
+class UserRepositoryImpl(private var db: FirebaseFirestore) : UserRepository {
     private val auth = Firebase.auth
     private val collRef = db.collection("users")
     private val userRef: DocumentReference?
@@ -24,7 +24,7 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
         userRef = auth.currentUserRef()
     }
 
-    suspend fun register(email: String, password: String) {
+    override suspend fun register(email: String, password: String) {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
 
         result.user?.let {
@@ -34,7 +34,7 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
         }?.await()
     }
 
-    fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
+    override fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
         return userRef?.let {
             userRef
             userRef.addSnapshotListener { snapshot, error ->
@@ -49,26 +49,26 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
         }
     }
 
-    suspend fun changeEmail(email: String) {
+    override suspend fun changeEmail(email: String) {
         auth.currentUser
             ?.verifyBeforeUpdateEmail(email)
             ?.await()
     }
 
-    suspend fun changePassword(password: String) {
+    override suspend fun changePassword(password: String) {
         auth.currentUser
             ?.updatePassword(password)
             ?.await()
     }
 
-    suspend fun resetPassword(email: String) {
+    override suspend fun resetPassword(email: String) {
         auth
             .sendPasswordResetEmail(email)
             .await()
     }
 
 
-    suspend fun updateUserInformation(favoriteID: String? = null, settings: Settings? = null) {
+    override suspend fun updateUserInformation(favoriteID: String?, settings: Settings?) {
         val values = mutableMapOf<String, Any>().apply {
             favoriteID?.let { this["favoriteIDs"] = FieldValue.arrayUnion(it) }
             settings?.let {
@@ -86,13 +86,13 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
             ?.await()
     }
 
-    suspend fun removeFavoriteID(favoriteID: String) {
+    override suspend fun removeFavoriteID(favoriteID: String) {
         userRef
             ?.update("favoriteIDs", FieldValue.arrayRemove(favoriteID))
             ?.await()
     }
 
-    suspend fun deleteUserDataAndAuth() {
+    override suspend fun deleteUserDataAndAuth() {
         userRef
             ?.delete()
             ?.await()
@@ -102,17 +102,17 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
             ?.await()
     }
 
-    suspend fun login(email: String, password: String) {
+    override suspend fun login(email: String, password: String) {
         auth
             .signInWithEmailAndPassword(email, password)
             .await()
     }
 
-    fun logout() {
+    override fun logout() {
         auth.signOut()
     }
 
-    suspend fun reAuthenticate(password: String) {
+    override suspend fun reAuthenticate(password: String) {
         val user = auth.currentUser
         val credential = EmailAuthProvider.getCredential(user?.email!!, password)
 
@@ -121,7 +121,7 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) {
             .await()
     }
 
-    suspend fun sendBugReport(
+    override suspend fun sendBugReport(
         message: String,
         completion: (Exception?) -> Unit
     ) {

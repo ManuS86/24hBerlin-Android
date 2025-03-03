@@ -56,7 +56,7 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScr
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
-import com.example.a24hberlin.utils.LanguageChangeHelper
+import com.example.a24hberlin.services.LanguageChangeHelper
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.logoSizeSmall
 import com.example.a24hberlin.utils.mediumPadding

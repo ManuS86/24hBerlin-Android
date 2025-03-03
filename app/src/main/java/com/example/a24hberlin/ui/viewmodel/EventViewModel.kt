@@ -117,7 +117,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                userRepo.updateUserInformation(favoriteID)
+                userRepo.updateUserInformation(favoriteID, null)
                 if (_currentAppUser.value?.settings!!.pushNotificationsEnabled) {
                     addFavoritePushNotifications(event)
                 }

@@ -162,7 +162,7 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
 
         viewModelScope.launch {
             try {
-                userRepo.updateUserInformation(settings = settings)
+                userRepo.updateUserInformation(null, settings)
             } catch (ex: Exception) {
                 Log.e("Save Settings", ex.toString())
             }
