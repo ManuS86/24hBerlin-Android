@@ -19,6 +19,7 @@ import com.example.a24hberlin.ui.screens.auth.AuthWrapper
 import com.example.a24hberlin.ui.theme._24hBerlinTheme
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -54,21 +55,10 @@ class MainActivity : ComponentActivity() {
 
     private fun observeUserStateAndPermissions() {
         lifecycleScope.launch {
-            launch {
-                eventVM.currentAppUser.collectLatest { user ->
-                    checkAndScheduleReminder(
-                        user,
-                        eventVM.hasNotificationPermission.value
-                    )
-                }
-            }
-            launch {
-                eventVM.hasNotificationPermission.collectLatest { hasNotificationPermission ->
-                    checkAndScheduleReminder(
-                        eventVM.currentAppUser.value,
-                        hasNotificationPermission
-                    )
-                }
+            combine(eventVM.currentAppUser, eventVM.hasNotificationPermission) { user, hasNotificationPermission ->
+                Pair(user, hasNotificationPermission)
+            }.collectLatest { (user, hasNotificationPermission) ->
+                checkAndScheduleReminder(user, hasNotificationPermission)
             }
         }
     }
