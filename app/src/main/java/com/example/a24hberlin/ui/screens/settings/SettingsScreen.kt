@@ -250,9 +250,7 @@ fun SettingsScreen() {
                         settingsVM.changePushNotifications(it)
                         if (it) {
                             eventVM.favorites?.forEach { favorite ->
-                                eventVM.addFavoritePushNotification(favorite, 3, 11)
-                                eventVM.addFavoritePushNotification(favorite, 0, 11)
-                                eventVM.addFavoritePushNotification(favorite, 0, 2)
+                                eventVM.addFavoritePushNotifications(favorite)
                                 eventVM.setupAbsenceReminder()
                             }
                         } else {

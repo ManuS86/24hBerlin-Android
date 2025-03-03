@@ -1,7 +1,6 @@
 package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,11 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
@@ -37,6 +35,7 @@ import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
+import com.example.a24hberlin.ui.viewmodel.PermissionViewModel
 import com.example.a24hberlin.utils.errorPadding
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
@@ -44,26 +43,16 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun RegisterScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()
-    val context = LocalContext.current
+    val permissionVM: PermissionViewModel = viewModel()
     val scrollState = rememberScrollState()
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var hasNotificationPermission by remember {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            mutableStateOf(
-                ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            )
-        } else mutableStateOf(true)
-    }
-
+    val hasNotificationPermission by permissionVM.hasNotificationPermission.collectAsState()
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
-            hasNotificationPermission = isGranted
+            permissionVM.updateNotificationPermission(isGranted)
         }
     )
 
