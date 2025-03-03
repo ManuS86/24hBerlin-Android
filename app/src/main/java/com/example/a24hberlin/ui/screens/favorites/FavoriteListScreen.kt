@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,8 +34,9 @@ fun FavoritesScreen(
 ) {
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
+    val favorites by eventVM.favorites.collectAsState()
     val filteredFavorites = filteredEvents(
-        events = eventVM.favorites ?: emptyList(),
+        events = favorites,
         selectedMonth = selectedMonth,
         selectedEventType = selectedEventType,
         selectedSound = selectedSound,

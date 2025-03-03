@@ -7,6 +7,7 @@ import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material.icons.rounded.StarBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -21,11 +22,10 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 @Composable
 fun FavoriteButton(event: Event) {
     val eventVM: EventViewModel = viewModel()
+    val currentAppUser by eventVM.currentAppUser.collectAsState()
 
     val isFavorite by remember {
-        derivedStateOf {
-            eventVM.currentAppUser?.favoriteIDs?.contains(event.id) ?: false
-        }
+        derivedStateOf { currentAppUser?.favoriteIDs?.contains(event.id) ?: false }
     }
 
     Icon(

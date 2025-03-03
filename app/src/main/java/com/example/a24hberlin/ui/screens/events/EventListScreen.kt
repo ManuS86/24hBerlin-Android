@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,8 +34,9 @@ fun EventsScreen(
 ) {
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
+    val events by eventVM.events.collectAsState()
     val filteredEvents = filteredEvents(
-        events = eventVM.events,
+        events = events,
         selectedMonth = selectedMonth,
         selectedEventType = selectedEventType,
         selectedSound = selectedSound,
@@ -41,7 +44,7 @@ fun EventsScreen(
         searchText = searchText
     )
 
-    LaunchedEffect(key1 = Unit) {
+    LaunchedEffect(Unit) {
         eventVM.loadEvents()
     }
 

@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,7 @@ fun AppNavigation() {
     var selectedMonth by remember { mutableStateOf<Month?>(null) }
     var selectedSound by remember { mutableStateOf<Sound?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
+    val uniqueLocations by eventVM.uniqueLocations.collectAsState()
 
     appBarTitle = stringResource(R.string.events)
 
@@ -67,7 +69,7 @@ fun AppNavigation() {
                         onSoundSelected = { selectedSound = it },
                         selectedVenue = selectedVenue,
                         onVenueSelected = { selectedVenue = it },
-                        venues = eventVM.uniqueLocations
+                        venues = uniqueLocations
                     )
                 }
             }

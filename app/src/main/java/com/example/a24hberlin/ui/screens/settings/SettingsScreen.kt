@@ -31,6 +31,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,13 +51,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
+import com.example.a24hberlin.services.LanguageChangeHelper
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
-import com.example.a24hberlin.services.LanguageChangeHelper
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.logoSizeSmall
 import com.example.a24hberlin.utils.mediumPadding
@@ -83,6 +84,7 @@ fun SettingsScreen() {
     var showDeleteAccountAlert by remember { mutableStateOf(false) }
     var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
+    val favorites by eventVM.favorites.collectAsState()
 
     Column(
         Modifier
@@ -249,7 +251,7 @@ fun SettingsScreen() {
                     onCheckedChange = {
                         settingsVM.changePushNotifications(it)
                         if (it) {
-                            eventVM.favorites?.forEach { favorite ->
+                            favorites.forEach { favorite ->
                                 eventVM.addFavoritePushNotifications(favorite)
                                 eventVM.setupAbsenceReminder()
                             }

@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -22,8 +24,9 @@ fun ClubMapScreen(
     selectedVenue: String?,
 ) {
     val eventVM: EventViewModel = viewModel()
+    val events by eventVM.events.collectAsState()
     val filteredEvents = filteredEvents(
-        events = eventVM.events,
+        events = events,
         selectedMonth = selectedMonth,
         selectedEventType = selectedEventType,
         selectedSound = selectedSound,

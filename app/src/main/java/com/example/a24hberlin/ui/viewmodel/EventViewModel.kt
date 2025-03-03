@@ -3,9 +3,9 @@ package com.example.a24hberlin.ui.viewmodel
 import android.app.Application
 import android.graphics.BitmapFactory
 import android.util.Log
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.api.EventApi
 import com.example.a24hberlin.data.model.AppUser
@@ -18,14 +18,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.net.URL
 import java.time.LocalDate
 
-class EventViewModel(application: Application) : AndroidViewModel(application) {
+class EventViewModel(
+    application: Application,
+    savedStateHandle: SavedStateHandle
+) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepositoryImpl(EventApi)
     private val permissionRepo = PermissionRepositoryImpl(application)
@@ -33,32 +40,33 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val userRepo = UserRepositoryImpl(db)
     private val notificationService = NotificationService(application.applicationContext)
 
-    private val _currentAppUser = MutableStateFlow<AppUser?>(null)
-    val currentAppUser: StateFlow<AppUser?> = _currentAppUser.asStateFlow()
+    val currentAppUser: StateFlow<AppUser?> =
+        savedStateHandle.getLiveData<AppUser?>("currentAppUser").asFlow()
+            .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     val events: StateFlow<List<Event>> = _events.asStateFlow()
 
     val hasNotificationPermission: StateFlow<Boolean> = permissionRepo.hasNotificationPermission
 
-    val favorites by derivedStateOf {
-        _currentAppUser.value?.let { user ->
-            _events.value.filter { event ->
-                user.favoriteIDs.contains(event.id)
+    val favorites: StateFlow<List<Event>> = combine(currentAppUser, events) { user, eventsList ->
+        user?.let {
+            eventsList.filter { event ->
+                it.favoriteIDs.contains(event.id)
             }
-        }
-    }
+        } ?: emptyList()
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
-    val uniqueLocations by derivedStateOf {
-        _events.value.mapNotNull { it.locationName }
+    val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
+        eventsList.mapNotNull { it.locationName }
             .distinct()
             .sorted()
-    }
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
 
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->
-                _currentAppUser.value = user
+                savedStateHandle["currentAppUser"] = user
             }
         }
         loadEvents()
@@ -104,7 +112,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                         eventDate.isEqual(now) || eventDate.isAfter(now)
                     }.sortedBy { it.start }
                 }.let { finalEvents ->
-                    _events.value = finalEvents
+                    _events.emit(finalEvents)
                 }
             } catch (ex: Exception) {
                 Log.e("EventsApiCall", ex.toString())
@@ -118,7 +126,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 userRepo.updateUserInformation(favoriteID, null)
-                if (_currentAppUser.value?.settings!!.pushNotificationsEnabled) {
+                if (currentAppUser.value?.settings!!.pushNotificationsEnabled) {
                     addFavoritePushNotifications(event)
                 }
             } catch (ex: Exception) {
@@ -133,7 +141,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 userRepo.removeFavoriteID(favoriteID)
-                if (_currentAppUser.value?.settings!!.pushNotificationsEnabled) {
+                if (currentAppUser.value?.settings!!.pushNotificationsEnabled) {
                     notificationService.unscheduleEventReminder(event)
                 }
             } catch (ex: Exception) {
