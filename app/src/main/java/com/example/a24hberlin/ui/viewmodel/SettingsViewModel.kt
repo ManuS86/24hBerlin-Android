@@ -11,9 +11,9 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
-import com.example.a24hberlin.data.repository.UserRepository
+import com.example.a24hberlin.data.repository.UserRepositoryImpl
+import com.example.a24hberlin.services.NotificationService
 import com.example.a24hberlin.utils.checkPassword
-import com.example.a24hberlin.utils.services.NotificationService
 import com.example.a24hberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null
-    private val userRepo = UserRepository(db)
+    private val userRepo = UserRepositoryImpl(db)
     private val notificationService = NotificationService(application.applicationContext)
 
     var confirmationMessage by mutableStateOf<Int?>(null)

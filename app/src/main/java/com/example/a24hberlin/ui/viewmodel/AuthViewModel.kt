@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.R
-import com.example.a24hberlin.data.repository.UserRepository
+import com.example.a24hberlin.data.repository.UserRepositoryImpl
 import com.example.a24hberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -21,7 +21,7 @@ class AuthViewModel : ViewModel() {
     private var analytics: FirebaseAnalytics
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
-    private val userRepo = UserRepository(db)
+    private val userRepo = UserRepositoryImpl(db)
 
     var confirmationMessage by mutableStateOf<Int?>(null)
         private set

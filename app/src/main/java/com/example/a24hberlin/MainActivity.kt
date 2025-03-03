@@ -13,9 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.lifecycle.lifecycleScope
+import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.ui.screens.auth.AuthWrapper
 import com.example.a24hberlin.ui.theme._24hBerlinTheme
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     private val eventVM: EventViewModel by viewModels()
@@ -40,15 +44,37 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        if (eventVM.currentAppUser != null && eventVM.hasNotificationPermission) {
-            eventVM.setupAbsenceReminder()
-        }
+        observeUserStateAndPermissions()
     }
 
     override fun onResume() {
         super.onResume()
-        if (eventVM.currentAppUser != null && eventVM.hasNotificationPermission) {
+        observeUserStateAndPermissions()
+    }
+
+    private fun observeUserStateAndPermissions() {
+        lifecycleScope.launch {
+            launch {
+                eventVM.currentAppUser.collectLatest { user ->
+                    checkAndScheduleReminder(
+                        user,
+                        eventVM.hasNotificationPermission.value
+                    )
+                }
+            }
+            launch {
+                eventVM.hasNotificationPermission.collectLatest { hasNotificationPermission ->
+                    checkAndScheduleReminder(
+                        eventVM.currentAppUser.value,
+                        hasNotificationPermission
+                    )
+                }
+            }
+        }
+    }
+
+    private fun checkAndScheduleReminder(user: AppUser?, hasNotificationPermission: Boolean) {
+        if (user != null && hasNotificationPermission) {
             eventVM.setupAbsenceReminder()
         }
     }
