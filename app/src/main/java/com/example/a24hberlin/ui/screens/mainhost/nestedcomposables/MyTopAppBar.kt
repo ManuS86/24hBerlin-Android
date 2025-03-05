@@ -55,7 +55,6 @@ fun MyTopAppBar(
             }
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Black,
             titleContentColor = Color.White,
             actionIconContentColor = Color.White
         )

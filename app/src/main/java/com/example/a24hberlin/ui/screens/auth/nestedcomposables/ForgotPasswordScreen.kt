@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +38,9 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
+    val confirmationMessage by authVM.confirmationMessage.collectAsState()
+    val errorMessage by authVM.errorMessage.collectAsState()
+    val firebaseError by authVM.firebaseError.collectAsState()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -71,27 +75,27 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
             email
         ) { email = it }
 
-        if (authVM.confirmationMessage != null) {
+        if (confirmationMessage != null) {
             Text(
-                stringResource(authVM.confirmationMessage!!),
+                stringResource(confirmationMessage!!),
                 Modifier.padding(top = errorPadding),
                 color = Color.Green,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
 
-        if (authVM.errorMessage != null) {
+        if (errorMessage != null) {
             Text(
-                stringResource(authVM.errorMessage!!),
+                stringResource(errorMessage!!),
                 Modifier.padding(top = errorPadding),
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
 
-        if (authVM.firebaseErrorMessage != null) {
+        if (firebaseError != null) {
             Text(
-                authVM.firebaseErrorMessage!!,
+                firebaseError!!,
                 Modifier.padding(top = errorPadding),
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium

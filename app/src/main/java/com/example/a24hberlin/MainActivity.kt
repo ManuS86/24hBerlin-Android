@@ -55,7 +55,10 @@ class MainActivity : ComponentActivity() {
 
     private fun observeUserStateAndPermissions() {
         lifecycleScope.launch {
-            combine(eventVM.currentAppUser, eventVM.hasNotificationPermission) { user, hasNotificationPermission ->
+            combine(
+                eventVM.currentAppUser,
+                eventVM.hasNotificationPermission
+            ) { user, hasNotificationPermission ->
                 Pair(user, hasNotificationPermission)
             }.collectLatest { (user, hasNotificationPermission) ->
                 checkAndScheduleReminder(user, hasNotificationPermission)

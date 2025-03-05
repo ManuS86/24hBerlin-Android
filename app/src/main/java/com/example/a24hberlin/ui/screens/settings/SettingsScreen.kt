@@ -85,6 +85,7 @@ fun SettingsScreen() {
     var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
     val favorites by eventVM.favorites.collectAsState()
+    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsState()
 
     Column(
         Modifier
@@ -247,7 +248,7 @@ fun SettingsScreen() {
                 Spacer(Modifier.weight(1f))
 
                 Switch(
-                    checked = settingsVM.pushNotificationsEnabled,
+                    checked = pushNotificationsEnabled,
                     onCheckedChange = {
                         settingsVM.changePushNotifications(it)
                         if (it) {

@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,6 +37,9 @@ fun ChangePasswordScreen() {
     val settingsVM: SettingsViewModel = viewModel()
     var confirmPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val confirmationMessage by settingsVM.confirmationMessage.collectAsState()
+    val firebaseError by settingsVM.firebaseError.collectAsState()
+    val passwordError by settingsVM.passwordError.collectAsState()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -77,27 +81,27 @@ fun ChangePasswordScreen() {
                 confirmPassword
             ) { confirmPassword = it }
 
-            if (settingsVM.confirmationMessage != null) {
+            if (confirmationMessage != null) {
                 Text(
-                    stringResource(settingsVM.confirmationMessage!!),
+                    stringResource(confirmationMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Green,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            if (settingsVM.firebaseErrorMessage != null) {
+            if (firebaseError != null) {
                 Text(
-                    settingsVM.firebaseErrorMessage!!,
+                    firebaseError!!,
                     Modifier.padding(top = errorPadding),
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            if (settingsVM.passwordError != null) {
+            if (passwordError != null) {
                 Text(
-                    stringResource(settingsVM.passwordError!!),
+                    stringResource(passwordError!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyMedium

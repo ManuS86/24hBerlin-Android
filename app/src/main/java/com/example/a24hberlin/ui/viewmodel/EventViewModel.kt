@@ -4,8 +4,6 @@ import android.app.Application
 import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.data.api.EventApi
 import com.example.a24hberlin.data.model.AppUser
@@ -29,10 +27,7 @@ import kotlinx.coroutines.withContext
 import java.net.URL
 import java.time.LocalDate
 
-class EventViewModel(
-    application: Application,
-    savedStateHandle: SavedStateHandle
-) : AndroidViewModel(application) {
+class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepositoryImpl(EventApi)
     private val permissionRepo = PermissionRepositoryImpl(application)
@@ -40,9 +35,8 @@ class EventViewModel(
     private val userRepo = UserRepositoryImpl(db)
     private val notificationService = NotificationService(application.applicationContext)
 
-    val currentAppUser: StateFlow<AppUser?> =
-        savedStateHandle.getLiveData<AppUser?>("currentAppUser").asFlow()
-            .stateIn(viewModelScope, SharingStarted.Lazily, null)
+    private val _currentAppUser = MutableStateFlow<AppUser?>(null)
+    val currentAppUser = _currentAppUser.asStateFlow()
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     val events: StateFlow<List<Event>> = _events.asStateFlow()
@@ -66,7 +60,7 @@ class EventViewModel(
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->
-                savedStateHandle["currentAppUser"] = user
+                _currentAppUser.value = user
             }
         }
         loadEvents()

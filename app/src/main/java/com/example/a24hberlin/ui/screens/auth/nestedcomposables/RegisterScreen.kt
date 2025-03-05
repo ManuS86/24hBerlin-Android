@@ -48,6 +48,9 @@ fun RegisterScreen(onClick: () -> Unit) {
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val errorMessage by authVM.errorMessage.collectAsState()
+    val firebaseError by authVM.firebaseError.collectAsState()
+    val passwordError by authVM.passwordError.collectAsState()
     val hasNotificationPermission by permissionVM.hasNotificationPermission.collectAsState()
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -105,27 +108,27 @@ fun RegisterScreen(onClick: () -> Unit) {
             confirmPassword
         ) { confirmPassword = it }
 
-        if (authVM.errorMessage != null) {
+        if (errorMessage != null) {
             Text(
-                stringResource(authVM.errorMessage!!),
+                stringResource(errorMessage!!),
                 Modifier.padding(top = errorPadding),
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
 
-        if (authVM.firebaseErrorMessage != null) {
+        if (firebaseError != null) {
             Text(
-                authVM.firebaseErrorMessage!!,
+                firebaseError!!,
                 Modifier.padding(top = errorPadding),
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium
             )
         }
 
-        if (authVM.passwordError != null) {
+        if (passwordError != null) {
             Text(
-                stringResource(authVM.passwordError!!),
+                stringResource(passwordError!!),
                 Modifier.padding(top = errorPadding),
                 color = Color.Red,
                 style = MaterialTheme.typography.bodyMedium

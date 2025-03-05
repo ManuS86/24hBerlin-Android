@@ -10,6 +10,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,6 +32,8 @@ import com.example.a24hberlin.utils.regularPadding
 fun ReAuthWrapper(from: String) {
     val settingsVM: SettingsViewModel = viewModel()
     var password by remember { mutableStateOf("") }
+    val firebaseError by settingsVM.firebaseError.collectAsState()
+    val isReauthenticated by settingsVM.isReauthenticated.collectAsState()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -44,7 +47,7 @@ fun ReAuthWrapper(from: String) {
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
-        if (settingsVM.isReauthenticated) {
+        if (isReauthenticated) {
             if (from == "email") {
                 ChangeEmailScreen()
             } else {
@@ -60,9 +63,9 @@ fun ReAuthWrapper(from: String) {
                     password
                 ) { password = it }
 
-                if (settingsVM.firebaseErrorMessage != null) {
+                if (firebaseError != null) {
                     Text(
-                        settingsVM.firebaseErrorMessage!!,
+                        firebaseError!!,
                         Modifier.padding(top = errorPadding),
                         color = Color.Red,
                         style = MaterialTheme.typography.bodyMedium

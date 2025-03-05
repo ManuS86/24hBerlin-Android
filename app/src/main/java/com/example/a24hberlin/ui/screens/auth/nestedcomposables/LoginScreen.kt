@@ -11,6 +11,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,6 +42,7 @@ fun LoginScreen(onClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showForgotPassword by remember { mutableStateOf(false) }
+    val errorMessage by authVM.errorMessage.collectAsState()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -88,9 +90,9 @@ fun LoginScreen(onClick: () -> Unit) {
                 password
             ) { password = it }
 
-            if (authVM.errorMessage != null) {
+            if (errorMessage != null) {
                 Text(
-                    stringResource(authVM.errorMessage!!),
+                    stringResource(errorMessage!!),
                     Modifier.padding(top = errorPadding),
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyMedium
