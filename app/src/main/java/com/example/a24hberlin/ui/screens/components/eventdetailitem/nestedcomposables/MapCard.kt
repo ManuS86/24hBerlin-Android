@@ -6,17 +6,38 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.utils.logoSize
 import com.example.a24hberlin.utils.mediumRounding
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
-fun MapCard() {
+fun MapCard(event: Event) {
+    val venue = LatLng(event.lat!!, event.long!!)
+    val venueMarkerState = rememberMarkerState(position = venue)
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(venue, 10f)
+    }
+
     Card(
         Modifier
             .fillMaxWidth()
             .height(logoSize),
         shape = RoundedCornerShape(mediumRounding)
     ) {
-
+        GoogleMap(
+            Modifier.fillMaxWidth(),
+            cameraPositionState = cameraPositionState
+        ) {
+            Marker(
+                state = venueMarkerState,
+                title = event.name
+            )
+        }
     }
 }

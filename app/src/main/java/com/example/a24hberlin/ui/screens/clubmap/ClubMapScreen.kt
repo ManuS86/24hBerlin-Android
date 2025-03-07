@@ -1,9 +1,7 @@
 package com.example.a24hberlin.ui.screens.clubmap
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -14,6 +12,10 @@ import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun ClubMapScreen(
@@ -23,6 +25,11 @@ fun ClubMapScreen(
     selectedSound: Sound?,
     selectedVenue: String?,
 ) {
+    val berlinLatLng = LatLng(52.5200, 13.4050)
+    val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 10f)
+    val cameraPositionState = rememberCameraPositionState {
+        position = initialCameraPosition
+    }
     val eventVM: EventViewModel = viewModel()
     val events by eventVM.events.collectAsState()
     val filteredEvents = filteredEvents(
@@ -34,11 +41,10 @@ fun ClubMapScreen(
         searchText = searchText
     )
 
-    LaunchedEffect(key1 = Unit) {
-        eventVM.loadEvents()
-    }
+    GoogleMap(
+        Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState
+    ) {
 
-    Column(Modifier.fillMaxSize()) {
-//            AndroidView()
     }
 }

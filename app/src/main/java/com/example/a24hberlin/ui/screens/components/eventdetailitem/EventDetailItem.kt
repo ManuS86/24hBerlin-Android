@@ -49,7 +49,7 @@ fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> U
         event.lat?.let {
             event.long?.let {
                 DirectionsCard(event) { mapVM }
-                MapCard()
+                MapCard(event)
             }
         }
 

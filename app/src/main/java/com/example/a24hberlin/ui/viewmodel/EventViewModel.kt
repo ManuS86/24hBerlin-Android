@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,7 +40,13 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     val currentAppUser = _currentAppUser.asStateFlow()
 
     private val _events = MutableStateFlow<List<Event>>(emptyList())
-    val events: StateFlow<List<Event>> = _events.asStateFlow()
+    val events: StateFlow<List<Event>> = _events
+        .onStart { loadEvents() }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000L),
+            emptyList()
+        )
 
     val hasNotificationPermission: StateFlow<Boolean> = permissionRepo.hasNotificationPermission
 
@@ -49,13 +56,21 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                 it.favoriteIDs.contains(event.id)
             }
         } ?: emptyList()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
 
     val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
         eventsList.mapNotNull { it.locationName }
             .distinct()
             .sorted()
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
 
     init {
         if (listener == null) {
@@ -63,10 +78,9 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                 _currentAppUser.value = user
             }
         }
-        loadEvents()
     }
 
-    fun loadEvents() {
+    private fun loadEvents() {
         viewModelScope.launch {
             try {
                 val eventResponse = eventRepo.loadEvents()
