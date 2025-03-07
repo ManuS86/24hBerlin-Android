@@ -12,6 +12,7 @@ import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
 import com.example.a24hberlin.ui.screens.settings.SettingsScreen
+import com.example.a24hberlin.ui.screens.settings.nestedcomposables.ReAuthWrapper
 
 @Composable
 fun NavGraph(
@@ -54,10 +55,14 @@ fun NavGraph(
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen()
+            SettingsScreen(navController)
         }
-//        composable(Screen.ReAuthWrapper.route) {
-//            ReAuthWrapper()
-//        }
+        composable(
+            route = Screen.ReAuthWrapper("").route,
+            arguments = Screen.ReAuthWrapper("").arguments
+        ) { backStackEntry ->
+            val from = backStackEntry.arguments?.getString("from") ?: ""
+            ReAuthWrapper(from)
+        }
     }
 }

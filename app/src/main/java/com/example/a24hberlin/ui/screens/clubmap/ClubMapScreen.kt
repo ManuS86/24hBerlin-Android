@@ -26,7 +26,7 @@ fun ClubMapScreen(
     selectedVenue: String?,
 ) {
     val berlinLatLng = LatLng(52.5200, 13.4050)
-    val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 10f)
+    val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
     val cameraPositionState = rememberCameraPositionState {
         position = initialCameraPosition
     }

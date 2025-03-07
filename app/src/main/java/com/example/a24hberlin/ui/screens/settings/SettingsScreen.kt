@@ -48,9 +48,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
+import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.services.LanguageChangeHelper
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
@@ -67,14 +68,13 @@ import com.example.a24hberlin.utils.smallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(navController: NavHostController) {
     val context = LocalContext.current
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
     val languageChangeHelper by lazy {
         LanguageChangeHelper()
     }
-    val navController = rememberNavController()
     var alertMessage by remember { mutableStateOf("") }
     val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
     val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
@@ -96,7 +96,8 @@ fun SettingsScreen() {
         Text(
             "Account Details",
             Modifier.padding(bottom = smallPadding),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
         )
 
         Card(
@@ -131,7 +132,9 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .size(16.dp)
                         .clickable {
-//                                navController.navigate(Screen.ReAuthWrapper.route)
+                            navController.navigate(
+                                Screen.ReAuthWrapper("email").createRoute("email")
+                            )
                         }
                 )
             }
@@ -159,7 +162,9 @@ fun SettingsScreen() {
                     modifier = Modifier
                         .size(16.dp)
                         .clickable {
-//                                navController.navigate(Screen.ReAuthWrapper.route)
+                            navController.navigate(
+                                Screen.ReAuthWrapper("password").createRoute("password")
+                            )
                         }
                 )
             }
@@ -170,7 +175,8 @@ fun SettingsScreen() {
             Modifier
                 .padding(top = regularPadding)
                 .padding(bottom = smallPadding),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
         )
 
         Card(
@@ -272,7 +278,8 @@ fun SettingsScreen() {
             Modifier
                 .padding(top = regularPadding)
                 .padding(bottom = smallPadding),
-            fontWeight = FontWeight.Medium
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
         )
 
         SettingsButton(

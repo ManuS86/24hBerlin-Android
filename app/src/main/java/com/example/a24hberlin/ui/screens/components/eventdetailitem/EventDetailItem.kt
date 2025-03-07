@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DetailCard
@@ -31,6 +32,7 @@ import com.example.a24hberlin.utils.mediumRounding
 
 @Composable
 fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> Unit) {
+    val context = LocalContext.current
     val mapVM: MapViewModel = viewModel()
 
     Column(
@@ -48,7 +50,13 @@ fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> U
 
         event.lat?.let {
             event.long?.let {
-                DirectionsCard(event) { mapVM }
+                DirectionsCard(event) {
+                    mapVM.navigateToGoogleMaps(
+                        context,
+                        event.lat,
+                        event.long
+                    )
+                }
                 MapCard(event)
             }
         }

@@ -15,13 +15,10 @@ private val LightColorScheme = lightColorScheme(
     primaryContainer = Color.Black,
     onBackground = TextOffBlack,
     onSurface = TextOffBlack,
-    onSurfaceVariant = TextOffBlack
-
-    /* Other default colors to override
+    onSurfaceVariant = TextOffBlack,
     onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    */
+    onSecondary = TextOffBlack,
+    onTertiary = Color.White
 )
 
 @Composable
