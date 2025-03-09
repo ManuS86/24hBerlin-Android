@@ -169,19 +169,19 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                     notificationService.scheduleEventReminder(
                         event,
                         3,
-                        11,
+                        12,
                         image
                     )
                     notificationService.scheduleEventReminder(
                         event,
                         0,
-                        11,
+                        12,
                         image
                     )
                     notificationService.scheduleEventReminder(
                         event,
                         0,
-                        2,
+                        3,
                         image
                     )
                 }

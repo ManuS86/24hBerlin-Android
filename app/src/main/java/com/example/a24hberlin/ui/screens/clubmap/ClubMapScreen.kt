@@ -15,7 +15,9 @@ import com.example.a24hberlin.utils.filteredEvents
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun ClubMapScreen(
@@ -45,6 +47,15 @@ fun ClubMapScreen(
         Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-
+        filteredEvents.forEach { event ->
+            if (event.lat != null && event.long != null) {
+                val venue = LatLng(event.lat, event.long)
+                val venueMarkerState = rememberMarkerState(position = venue)
+                Marker(
+                    state = venueMarkerState,
+                    title = event.name
+                )
+            }
+        }
     }
 }

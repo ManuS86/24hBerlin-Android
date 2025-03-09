@@ -75,8 +75,7 @@ fun <T> FilterDropdown(
                         0.6f
                     ),
                     overflow = TextOverflow.Ellipsis,
-                    maxLines = 1,
-                    modifier = Modifier.weight(1f)
+                    maxLines = 1
                 )
 
                 Icon(

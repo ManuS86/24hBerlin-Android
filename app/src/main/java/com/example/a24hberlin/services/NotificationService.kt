@@ -71,7 +71,7 @@ class NotificationService(
 
         val body = when {
             dayModifier == 3 -> context.getString(R.string.dont_forget_event_3days, event.name)
-            hourModifier == 2 -> context.getString(R.string.dont_forget_event_3hours, event.name)
+            hourModifier == 3 -> context.getString(R.string.dont_forget_event_3hours, event.name)
             else -> context.getString(R.string.dont_forget_event_today, event.name)
         }
 

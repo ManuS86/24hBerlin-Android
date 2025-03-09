@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -30,7 +29,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
@@ -55,6 +53,7 @@ fun FilterBar(
 ) {
     val context = LocalContext.current
     val horizontalScrollState = rememberScrollState()
+    val horizontalScrollState2 = rememberScrollState()
     var showFilters by remember { mutableStateOf(false) }
 
     Column(
@@ -131,13 +130,17 @@ fun FilterBar(
 
         if (showFilters) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = regularPadding),
-                horizontalArrangement = Arrangement.spacedBy(mediumPadding),
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-
-                Row(Modifier.weight(1f)) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(horizontalScrollState2)
+                        .weight(1f)
+                        .padding(horizontal = regularPadding),
+                    horizontalArrangement = Arrangement.spacedBy(mediumPadding),
+                ) {
                     FilterDropdown(
                         label = stringResource(R.string.type),
                         selectedValue = selectedEventType,
@@ -146,9 +149,7 @@ fun FilterBar(
                         stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
                         itemToLabel = { eventType -> eventType?.label }
                     )
-                }
 
-                Row(Modifier.weight(1f)) {
                     FilterDropdown(
                         label = stringResource(R.string.sound),
                         selectedValue = selectedSound,
@@ -157,9 +158,7 @@ fun FilterBar(
                         stringToItem = { str -> Sound.entries.firstOrNull { it.label == str } },
                         itemToLabel = { sound -> sound?.label }
                     )
-                }
 
-                Row(Modifier.weight(1f)) {
                     FilterDropdown(
                         label = stringResource(R.string.venue_),
                         selectedValue = selectedVenue,
@@ -170,24 +169,20 @@ fun FilterBar(
                     )
                 }
 
-                Row(
-                    modifier = Modifier
-                        .size(width = 24.dp, height = 48.dp)
-                ) {
-                    if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
-                        Icon(
-                            imageVector = Icons.Rounded.Clear,
-                            contentDescription = stringResource(R.string.clear_filters),
-                            Modifier
-                                .size(48.dp)
-                                .clickable {
-                                    onEventTypeSelected(null)
-                                    onSoundSelected(null)
-                                    onVenueSelected(null)
-                                },
-                            tint = Color.White
-                        )
-                    }
+                if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
+                    Icon(
+                        imageVector = Icons.Rounded.Clear,
+                        contentDescription = stringResource(R.string.clear_filters),
+                        Modifier
+                            .padding(start = mediumPadding)
+                            .padding(end = regularPadding)
+                            .clickable {
+                                onEventTypeSelected(null)
+                                onSoundSelected(null)
+                                onVenueSelected(null)
+                            },
+                        tint = Color.White
+                    )
                 }
             }
         }

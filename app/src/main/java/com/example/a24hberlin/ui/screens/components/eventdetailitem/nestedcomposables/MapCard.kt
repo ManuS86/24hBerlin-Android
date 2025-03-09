@@ -21,7 +21,7 @@ fun MapCard(event: Event) {
     val venue = LatLng(event.lat!!, event.long!!)
     val venueMarkerState = rememberMarkerState(position = venue)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(venue, 15f)
+        position = CameraPosition.fromLatLngZoom(venue, 14f)
     }
 
     Card(
