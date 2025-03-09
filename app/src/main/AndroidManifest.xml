@@ -5,6 +5,7 @@
     <permission
         android:name="com.example.a24hberlin.REMINDER_PERMISSION"
         android:protectionLevel="normal" />
+
     <uses-permission android:name="com.example.a24hberlin.REMINDER_PERMISSION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
