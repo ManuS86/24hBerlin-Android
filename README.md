@@ -28,10 +28,10 @@ Features:
 <table>
   <tr>
     <td>
-      <img src="login_screen.png" alt="Image 1" width="300">
+      <img src="login.png" alt="Image 1" width="300">
     </td>
     <td>
-      <img src="events_screen.png" alt="Image 2" width="300">
+      <img src="events.png" alt="Image 2" width="300">
     </td>
   </tr>
 </table>
