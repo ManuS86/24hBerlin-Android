@@ -5,7 +5,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
-import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.data.model.Event
 
 @Composable
@@ -13,7 +12,7 @@ fun filteredEvents(
     events: List<Event>,
     selectedMonth: Month?,
     selectedEventType: EventType?,
-    selectedSound: Sound?,
+    selectedSound: String?,
     selectedVenue: String?,
     searchText: TextFieldValue
 ): List<Event> {
@@ -40,7 +39,7 @@ fun filteredEvents(
 
             val soundMatches = selectedSound?.let { selectedSound ->
                 event.sounds?.values.orEmpty().any { soundValue ->
-                    soundValue == selectedSound.label
+                    soundValue == selectedSound
                 }
             } ?: true
 

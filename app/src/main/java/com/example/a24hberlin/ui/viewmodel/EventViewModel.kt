@@ -72,6 +72,18 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         emptyList()
     )
 
+    val uniqueSounds: StateFlow<List<String>> = events.map { eventsList ->
+        eventsList.flatMap { event ->
+            event.sounds?.values?.toList() ?: emptyList()
+        }
+            .distinct()
+            .sorted()
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(),
+        emptyList()
+    )
+
     init {
         if (listener == null) {
             listener = userRepo.addUserListener { user ->

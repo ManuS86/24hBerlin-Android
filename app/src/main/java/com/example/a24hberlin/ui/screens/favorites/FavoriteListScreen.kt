@@ -16,7 +16,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
-import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
@@ -28,7 +27,7 @@ fun FavoritesScreen(
     searchText: TextFieldValue,
     selectedEventType: EventType?,
     selectedMonth: Month?,
-    selectedSound: Sound?,
+    selectedSound: String?,
     selectedVenue: String?,
 ) {
     val eventVM: EventViewModel = viewModel()

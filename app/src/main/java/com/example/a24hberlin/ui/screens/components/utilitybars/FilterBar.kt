@@ -19,6 +19,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,11 +30,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
-import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdown
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
@@ -45,16 +47,18 @@ fun FilterBar(
     onEventTypeSelected: (EventType?) -> Unit,
     selectedMonth: Month?,
     onMonthSelected: (Month?) -> Unit,
-    selectedSound: Sound?,
-    onSoundSelected: (Sound?) -> Unit,
+    selectedSound: String?,
+    onSoundSelected: (String?) -> Unit,
     selectedVenue: String?,
     onVenueSelected: (String?) -> Unit,
-    venues: List<String>
 ) {
     val context = LocalContext.current
+    val eventVM: EventViewModel = viewModel()
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()
     var showFilters by remember { mutableStateOf(false) }
+    val uniqueLocations by eventVM.uniqueLocations.collectAsState()
+    val uniqueSounds by eventVM.uniqueSounds.collectAsState()
 
     Column(
         modifier = Modifier
@@ -154,18 +158,18 @@ fun FilterBar(
                         label = stringResource(R.string.sound),
                         selectedValue = selectedSound,
                         onValueSelected = onSoundSelected,
-                        options = Sound.allValues.map { it.label },
-                        stringToItem = { str -> Sound.entries.firstOrNull { it.label == str } },
-                        itemToLabel = { sound -> sound?.label }
+                        options = uniqueSounds,
+                        stringToItem = { it },
+                        itemToLabel = { uniqueSounds -> uniqueSounds }
                     )
 
                     FilterDropdown(
                         label = stringResource(R.string.venue_),
                         selectedValue = selectedVenue,
                         onValueSelected = onVenueSelected,
-                        options = venues,
+                        options = uniqueLocations,
                         stringToItem = { it },
-                        itemToLabel = { venue -> venue }
+                        itemToLabel = { uniqueLocations -> uniqueLocations }
                     )
                 }
 

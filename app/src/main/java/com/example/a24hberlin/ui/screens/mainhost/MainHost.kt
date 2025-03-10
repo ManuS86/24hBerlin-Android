@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,7 +23,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
-import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.navigation.NavGraph
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
@@ -41,9 +39,8 @@ fun AppNavigation() {
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
     var selectedEventType by remember { mutableStateOf<EventType?>(null) }
     var selectedMonth by remember { mutableStateOf<Month?>(null) }
-    var selectedSound by remember { mutableStateOf<Sound?>(null) }
+    var selectedSound by remember { mutableStateOf<String?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
-    val uniqueLocations by eventVM.uniqueLocations.collectAsState()
 
     appBarTitle = stringResource(R.string.events)
 
@@ -68,8 +65,7 @@ fun AppNavigation() {
                         selectedSound = selectedSound,
                         onSoundSelected = { selectedSound = it },
                         selectedVenue = selectedVenue,
-                        onVenueSelected = { selectedVenue = it },
-                        venues = uniqueLocations
+                        onVenueSelected = { selectedVenue = it }
                     )
                 }
             }

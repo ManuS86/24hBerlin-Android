@@ -7,7 +7,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
-import com.example.a24hberlin.data.enums.Sound
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
@@ -20,7 +19,7 @@ fun NavGraph(
     searchText: TextFieldValue,
     selectedEventType: EventType?,
     selectedMonth: Month?,
-    selectedSound: Sound?,
+    selectedSound: String?,
     selectedVenue: String?,
 ) {
     NavHost(
