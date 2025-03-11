@@ -31,7 +31,8 @@ fun EmailField(
         Text(
             title,
             fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(bottom = smallPadding)
+            modifier = Modifier.padding(bottom = smallPadding),
+            color = Color.Black
         )
 
         OutlinedTextField(

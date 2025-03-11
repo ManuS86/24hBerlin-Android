@@ -1,6 +1,7 @@
 package com.example.a24hberlin.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,6 +22,8 @@ fun NavGraph(
     selectedMonth: Month?,
     selectedSound: String?,
     selectedVenue: String?,
+    bottomBarState: MutableState<Boolean>,
+    onTitleChange: (String) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -32,7 +35,7 @@ fun NavGraph(
                 selectedEventType,
                 selectedMonth,
                 selectedSound,
-                selectedVenue,
+                selectedVenue
             )
         }
         composable(Screen.ClubMap.route) {
@@ -41,7 +44,7 @@ fun NavGraph(
                 selectedEventType,
                 selectedMonth,
                 selectedSound,
-                selectedVenue,
+                selectedVenue
             )
         }
         composable(Screen.Favorites.route) {
@@ -50,18 +53,21 @@ fun NavGraph(
                 selectedEventType,
                 selectedMonth,
                 selectedSound,
-                selectedVenue,
+                selectedVenue
             )
         }
         composable(Screen.Settings.route) {
-            SettingsScreen(navController)
+            SettingsScreen(
+                navController,
+                bottomBarState
+            )
         }
         composable(
             route = Screen.ReAuthWrapper("").route,
             arguments = Screen.ReAuthWrapper("").arguments
         ) { backStackEntry ->
             val from = backStackEntry.arguments?.getString("from") ?: ""
-            ReAuthWrapper(from)
+            ReAuthWrapper(from, onTitleChange)
         }
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,13 +20,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.errorPadding
-import com.example.a24hberlin.utils.extraLargePadding
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -35,8 +34,8 @@ import com.example.a24hberlin.utils.regularPadding
 fun ChangeEmailScreen() {
     val settingsVM: SettingsViewModel = viewModel()
     var email by remember { mutableStateOf("") }
-    val confirmationMessage by settingsVM.confirmationMessage.collectAsState()
-    val firebaseError by settingsVM.firebaseError.collectAsState()
+    val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
+    val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -53,20 +52,19 @@ fun ChangeEmailScreen() {
         )
 
         Column(Modifier.padding(horizontal = regularPadding)) {
-            Spacer(Modifier.padding(extraLargePadding))
+            Spacer(Modifier.weight(0.7f))
 
             Text(
-                "Change your Email",
-                Modifier.padding(top = largePadding),
+                stringResource(R.string.change_your_email),
+                Modifier.padding(vertical = largePadding),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
+                color = Color.Black
             )
-
-            Spacer(Modifier.weight(0.5f))
 
             EmailField(
                 stringResource(R.string.new_email),
-                stringResource(R.string.please_enter_your_new_email),
+                stringResource(R.string.enter_your_new_email),
                 email
             ) { email = it }
 

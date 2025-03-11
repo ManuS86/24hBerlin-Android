@@ -73,14 +73,14 @@
     <string name="password_must_contain_at_least_one_number">Password must contain at least one number.</string>
     <string name="password_must_contain_at_least_one_special_character">Password must contain at least one special character.</string>
     <string name="password_must_contain_at_least_one_uppercase_letter">Password must contain at least one uppercase letter.</string>
-    <string name="please_confirm_your_new_password">Please confirm your new password</string>
-    <string name="please_confirm_your_password">Please confirm your password</string>
+    <string name="confirm_your_new_password">Confirm your new password</string>
+    <string name="confirm_your_password">Confirm your password</string>
     <string name="please_describe_the_bug">Please describe the bug.</string>
-    <string name="please_enter_a_username">Please enter a username</string>
-    <string name="please_enter_your_email">Please enter your email</string>
-    <string name="please_enter_your_new_email">Please enter your new email</string>
-    <string name="please_enter_your_new_password">Please enter your new password</string>
-    <string name="please_enter_your_password">Please enter your password</string>
+    <string name="enter_a_username">Enter a username</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="enter_your_new_email">Enter your new email</string>
+    <string name="enter_your_new_password">Enter your new password</string>
+    <string name="enter_your_password">Enter your password</string>
     <string name="please_re_enter_your_password">Please re-enter your password</string>
     <string name="push_notifications">Push Notifications</string>
     <string name="re_enter_password">Re-enter password</string>
@@ -104,11 +104,9 @@
     <string name="time">Time</string>
     <string name="tue">TU</string>
     <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Event Calendar</string>
-    <string name="type">Type</string>
+    <string name="type">Event Type</string>
     <string name="types">Types</string>
-    <string name="username">Username</string>
     <string name="venue">Venue</string>
-    <string name="venue_">Venue</string>
     <string name="verify_password">Verify Password</string>
     <string name="we_miss_you">We miss you!</string>
     <string name="wed">WE</string>
@@ -128,7 +126,6 @@
     <string name="show_password">Show Password</string>
     <string name="passwords_do_not_match">Passwords do not match.</string>
     <string name="share_24hBerlin">Share 24hBerlin</string>
-    <string name="back">Back</string>
     <string name="try_logging_in_again">Try logging in again.</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
@@ -138,4 +135,9 @@
     <string name="dont_forget_event_today">Don\'t forget: %1$s is happening today!</string>
     <string name="channel_name">Event Reminder</string>
     <string name="channel_description">Reminders for favorited events</string>
+    <string name="venue_">Venue</string>
+    <string name="re_authenticate">Re-Authenticate</string>
+    <string name="back">Back</string>
+    <string name="enter_an_email">Enter an email</string>
+    <string name="create_a_password">Create a password</string>
 </resources>

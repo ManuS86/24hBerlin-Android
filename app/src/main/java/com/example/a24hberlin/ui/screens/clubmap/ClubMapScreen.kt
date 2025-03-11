@@ -9,7 +9,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
@@ -39,7 +39,7 @@ fun ClubMapScreen(
     selectedEventType: EventType?,
     selectedMonth: Month?,
     selectedSound: String?,
-    selectedVenue: String?,
+    selectedVenue: String?
 ) {
     val berlinLatLng = LatLng(52.5200, 13.4050)
     val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
@@ -49,7 +49,7 @@ fun ClubMapScreen(
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState()
     val eventVM: EventViewModel = viewModel()
-    val events by eventVM.events.collectAsState()
+    val events by eventVM.events.collectAsStateWithLifecycle()
     val filteredEvents = filteredEvents(
         events = events,
         selectedMonth = selectedMonth,

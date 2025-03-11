@@ -11,7 +11,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
@@ -38,9 +38,9 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
-    val confirmationMessage by authVM.confirmationMessage.collectAsState()
-    val errorMessage by authVM.errorMessage.collectAsState()
-    val firebaseError by authVM.firebaseError.collectAsState()
+    val confirmationMessage by authVM.confirmationMessage.collectAsStateWithLifecycle()
+    val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
+    val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
 
     DisposableEffect(Unit) {
         onDispose {
@@ -71,7 +71,7 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
 
         EmailField(
             stringResource(R.string.email),
-            stringResource(R.string.please_enter_your_email),
+            stringResource(R.string.enter_your_email),
             email
         ) { email = it }
 

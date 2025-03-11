@@ -31,7 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
@@ -68,7 +70,10 @@ import com.example.a24hberlin.utils.smallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavHostController) {
+fun SettingsScreen(
+    navController: NavHostController,
+    bottomBarState: MutableState<Boolean>
+) {
     val context = LocalContext.current
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
@@ -84,8 +89,12 @@ fun SettingsScreen(navController: NavHostController) {
     var showDeleteAccountAlert by remember { mutableStateOf(false) }
     var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
-    val favorites by eventVM.favorites.collectAsState()
-    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsState()
+    val favorites by eventVM.favorites.collectAsStateWithLifecycle()
+    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        bottomBarState.value = true
+    }
 
     Column(
         Modifier
@@ -118,7 +127,13 @@ fun SettingsScreen(navController: NavHostController) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding),
+                    .padding(regularPadding)
+                    .clickable {
+                        bottomBarState.value = false
+                        navController.navigate(
+                            Screen.ReAuthWrapper("email").createRoute("email")
+                        )
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.change_email))
@@ -131,11 +146,6 @@ fun SettingsScreen(navController: NavHostController) {
                     contentDescription = stringResource(R.string.change_email),
                     modifier = Modifier
                         .size(16.dp)
-                        .clickable {
-                            navController.navigate(
-                                Screen.ReAuthWrapper("email").createRoute("email")
-                            )
-                        }
                 )
             }
 
@@ -148,7 +158,13 @@ fun SettingsScreen(navController: NavHostController) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding),
+                    .padding(regularPadding)
+                    .clickable {
+                        bottomBarState.value = false
+                        navController.navigate(
+                            Screen.ReAuthWrapper("password").createRoute("password")
+                        )
+                    },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.change_password))
@@ -161,11 +177,6 @@ fun SettingsScreen(navController: NavHostController) {
                     contentDescription = stringResource(R.string.change_password),
                     modifier = Modifier
                         .size(16.dp)
-                        .clickable {
-                            navController.navigate(
-                                Screen.ReAuthWrapper("password").createRoute("password")
-                            )
-                        }
                 )
             }
         }

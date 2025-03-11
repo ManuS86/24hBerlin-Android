@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
@@ -57,8 +57,8 @@ fun FilterBar(
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()
     var showFilters by remember { mutableStateOf(false) }
-    val uniqueLocations by eventVM.uniqueLocations.collectAsState()
-    val uniqueSounds by eventVM.uniqueSounds.collectAsState()
+    val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
+    val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -134,7 +134,9 @@ fun FilterBar(
 
         if (showFilters) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = regularPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Row(
@@ -179,7 +181,6 @@ fun FilterBar(
                         contentDescription = stringResource(R.string.clear_filters),
                         Modifier
                             .padding(start = mediumPadding)
-                            .padding(end = regularPadding)
                             .clickable {
                                 onEventTypeSelected(null)
                                 onSoundSelected(null)

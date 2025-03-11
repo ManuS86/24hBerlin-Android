@@ -1,6 +1,7 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -14,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
 
@@ -25,7 +27,8 @@ fun MyTopAppBar(
     searchText: TextFieldValue,
     onSearchIconClick: () -> Unit,
     onSearchTextChanged: (TextFieldValue) -> Unit,
-    onSearchClosed: () -> Unit
+    onSearchClosed: () -> Unit,
+    navController: NavHostController
 ) {
     TopAppBar(
         title = {
@@ -36,8 +39,27 @@ fun MyTopAppBar(
                 fontWeight = FontWeight.SemiBold
             )
         },
+        navigationIcon = {
+            if (
+                title == stringResource(R.string.re_authenticate) ||
+                title == stringResource(R.string.change_email) ||
+                title == stringResource(R.string.change_password)
+            ) {
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = stringResource(R.string.back)
+                    )
+                }
+            }
+        },
         actions = {
-            if (title != stringResource(R.string.settings)) {
+            if (
+                title != stringResource(R.string.settings) &&
+                title != stringResource(R.string.re_authenticate) &&
+                title != stringResource(R.string.change_email) &&
+                title != stringResource(R.string.change_password)
+            ) {
                 if (!showSearchBar) {
                     IconButton(onClick = onSearchIconClick) {
                         Icon(
@@ -56,6 +78,7 @@ fun MyTopAppBar(
         },
         colors = TopAppBarDefaults.topAppBarColors(
             titleContentColor = Color.White,
+            navigationIconContentColor = Color.White,
             actionIconContentColor = Color.White
         )
     )

@@ -9,10 +9,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
@@ -28,11 +28,11 @@ fun EventsScreen(
     selectedEventType: EventType?,
     selectedMonth: Month?,
     selectedSound: String?,
-    selectedVenue: String?,
+    selectedVenue: String?
 ) {
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
-    val events by eventVM.events.collectAsState()
+    val events by eventVM.events.collectAsStateWithLifecycle()
     val filteredEvents = filteredEvents(
         events = events,
         selectedMonth = selectedMonth,
