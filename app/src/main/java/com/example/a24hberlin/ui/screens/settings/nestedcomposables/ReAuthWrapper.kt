@@ -90,7 +90,7 @@ fun ReAuthWrapper(
                     )
                 }
 
-                LargeDarkButton(stringResource(R.string.confirm_new_password)) {
+                LargeDarkButton(stringResource(R.string.verify_password)) {
                     settingsVM.reAuthenticate(password)
                 }
 

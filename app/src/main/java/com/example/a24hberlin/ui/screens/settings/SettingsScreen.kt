@@ -127,13 +127,13 @@ fun SettingsScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding)
                     .clickable {
                         bottomBarState.value = false
                         navController.navigate(
                             Screen.ReAuthWrapper("email").createRoute("email")
                         )
-                    },
+                    }
+                    .padding(regularPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.change_email))
@@ -158,13 +158,13 @@ fun SettingsScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding)
                     .clickable {
                         bottomBarState.value = false
                         navController.navigate(
                             Screen.ReAuthWrapper("password").createRoute("password")
                         )
-                    },
+                    }
+                    .padding(regularPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(stringResource(R.string.change_password))
