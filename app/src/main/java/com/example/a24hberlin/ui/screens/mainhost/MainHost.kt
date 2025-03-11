@@ -49,7 +49,7 @@ fun AppNavigation() {
             appBarTitle = when (destination.route) {
                 "events" -> context.getString(R.string.events)
                 "club_map" -> context.getString(R.string.club_map)
-                "favorites" -> context.getString(R.string.favorites)
+                "favorites" -> context.getString(R.string.my_events)
                 "settings" -> context.getString(R.string.settings)
                 else -> context.getString(R.string.re_authenticate)
             }

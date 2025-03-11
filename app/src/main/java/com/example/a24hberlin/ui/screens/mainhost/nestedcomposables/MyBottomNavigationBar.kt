@@ -45,7 +45,7 @@ fun MyBottomNavigationBar(
             route = Screen.Favorites.route,
             selectedIcon = Icons.Rounded.Star,
             unselectedIcon = Icons.Rounded.StarOutline,
-            label = stringResource(R.string.favorites)
+            label = stringResource(R.string.my_events)
         ),
         NavigationItem(
             route = Screen.Settings.route,
