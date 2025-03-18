@@ -1,14 +1,12 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Event
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Event
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Map
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material.icons.rounded.StarOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -18,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.a24hberlin.R
@@ -31,8 +30,8 @@ fun MyBottomNavigationBar(
     val items = listOf(
         NavigationItem(
             route = Screen.Events.route,
-            selectedIcon = Icons.Filled.Event,
-            unselectedIcon = Icons.Outlined.Event,
+            selectedIcon = Icons.Filled.CalendarMonth,
+            unselectedIcon = Icons.Outlined.CalendarMonth,
             label = stringResource(R.string.events)
         ),
         NavigationItem(
@@ -43,8 +42,8 @@ fun MyBottomNavigationBar(
         ),
         NavigationItem(
             route = Screen.Favorites.route,
-            selectedIcon = Icons.Rounded.Star,
-            unselectedIcon = Icons.Rounded.StarOutline,
+            selectedIcon = ImageVector.vectorResource(R.drawable.calendar_clock_filled),
+            unselectedIcon = ImageVector.vectorResource(R.drawable.calendar_clock),
             label = stringResource(R.string.my_events)
         ),
         NavigationItem(
