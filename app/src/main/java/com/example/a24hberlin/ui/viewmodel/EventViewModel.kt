@@ -11,7 +11,7 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.data.repository.EventRepositoryImpl
 import com.example.a24hberlin.data.repository.PermissionRepositoryImpl
 import com.example.a24hberlin.data.repository.UserRepositoryImpl
-import com.example.a24hberlin.services.NotificationService
+import com.example.a24hberlin.services.AndroidReminderScheduler
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +34,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val permissionRepo = PermissionRepositoryImpl(application)
     private var listener: ListenerRegistration? = null
     private val userRepo = UserRepositoryImpl(db)
-    private val notificationService = NotificationService(application.applicationContext)
+    private val notificationService = AndroidReminderScheduler(application.applicationContext)
 
     private val _currentAppUser = MutableStateFlow<AppUser?>(null)
     val currentAppUser = _currentAppUser.asStateFlow()
@@ -162,7 +162,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 userRepo.removeFavoriteID(favoriteID)
                 if (currentAppUser.value?.settings!!.pushNotificationsEnabled) {
-                    notificationService.unscheduleEventReminder(event)
+                    notificationService.cancelEventReminder(event)
                 }
             } catch (ex: Exception) {
                 Log.e("Remove Favorite ID", ex.toString())

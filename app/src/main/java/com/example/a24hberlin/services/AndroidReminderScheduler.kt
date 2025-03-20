@@ -1,0 +1,170 @@
+package com.example.a24hberlin.services
+
+import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import coil3.Bitmap
+import com.example.a24hberlin.R
+import com.example.a24hberlin.data.model.Event
+import com.example.a24hberlin.receivers.ReminderReceiver
+import java.io.ByteArrayOutputStream
+import java.time.LocalDateTime
+import java.time.ZoneId
+
+class AndroidReminderScheduler(
+    private val context: Context
+) : ReminderScheduler {
+    private val alarmManager = context.getSystemService(AlarmManager::class.java)
+
+    @SuppressLint("MissingPermission")
+    override fun schedule14DayReminder() {
+        val triggerDateTime = LocalDateTime.now().plusDays(14)
+        val userTimeZone = ZoneId.systemDefault()
+        val zonedTriggerDateTime = triggerDateTime.atZone(userTimeZone)
+        val triggerMillis = zonedTriggerDateTime.toInstant().toEpochMilli()
+
+        val notificationId = 1.hashCode()
+
+        val intent = createIntent(
+            notificationId,
+            context.getString(R.string.we_miss_you),
+            context.getString(R.string.come_back_and_check_out_the_latest_events)
+        )
+
+        val pendingIntent = createPendingIntent(
+            notificationId,
+            intent
+        )
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerMillis,
+            pendingIntent
+        )
+
+        println("14-day reminder scheduled for $triggerDateTime")
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun scheduleEventReminder(
+        event: Event,
+        dayModifier: Int,
+        hourModifier: Int,
+        image: Bitmap?
+    ) {
+        val triggerDateTime = event.start
+            .minusDays(dayModifier.toLong())
+            .let {
+                if (hourModifier > 0) it.minusHours(hourModifier.toLong()) else {
+                    val eventTime = event.start.toLocalTime()
+                    it.withHour(eventTime.hour).withMinute(eventTime.minute).withSecond(0)
+                }
+            }
+        val userTimeZone = ZoneId.systemDefault()
+        val zonedDateTime = triggerDateTime.atZone(userTimeZone)
+        val triggerMillis = zonedDateTime.toInstant().toEpochMilli()
+
+        val notificationId = event.id.hashCode()
+
+        val body = when {
+            dayModifier == 3 -> context.getString(R.string.dont_forget_event_3days, event.name)
+            hourModifier == 3 -> context.getString(R.string.dont_forget_event_3hours, event.name)
+            else -> context.getString(R.string.dont_forget_event_today, event.name)
+        }
+
+        val intent = createIntent(
+            notificationId,
+            context.getString(R.string.event_reminder),
+            body,
+            image
+        )
+
+        val pendingIntent = createPendingIntent(
+            notificationId,
+            intent
+        )
+
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            triggerMillis,
+            pendingIntent
+        )
+
+        println("Notification scheduled for ${event.name} at $triggerDateTime")
+    }
+
+
+    override fun cancelAllPendingReminders(favorites: List<Event>) {
+        alarmManager.cancel(
+            createPendingIntent(
+                1.hashCode(),
+                Intent(context, ReminderReceiver::class.java)
+            )
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            alarmManager.cancelAll()
+        } else {
+            favorites.forEach { favorite ->
+                alarmManager.cancel(
+                    createPendingIntent(
+                        favorite.id.hashCode(),
+                        Intent(context, ReminderReceiver::class.java)
+                    )
+                )
+            }
+        }
+        println("All pending reminders removed")
+    }
+
+    override fun cancelEventReminder(event: Event) {
+        alarmManager.cancel(
+            createPendingIntent(
+                event.id.hashCode(),
+                Intent(context, ReminderReceiver::class.java)
+            )
+        )
+        println("Reminders unscheduled for ${event.name}")
+    }
+
+    private fun createPendingIntent(
+        notificationId: Int,
+        intent: Intent
+    ): PendingIntent {
+        return PendingIntent.getBroadcast(
+            context,
+            notificationId,
+            intent,
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            } else {
+                PendingIntent.FLAG_UPDATE_CURRENT
+            }
+        )
+    }
+
+    private fun createIntent(
+        notificationId: Int,
+        title: String,
+        body: String,
+        image: Bitmap? = null
+    ): Intent {
+        val intent = Intent(context, ReminderReceiver::class.java).apply {
+            putExtra("notificationId", notificationId)
+            putExtra("title", title)
+            putExtra("body", body)
+
+        }
+
+        if (image != null) {
+            val stream = ByteArrayOutputStream()
+            image.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream)
+            val byteArray = stream.toByteArray()
+            intent.putExtra("imageByteArray", byteArray)
+        }
+        return intent
+    }
+}

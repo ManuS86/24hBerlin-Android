@@ -11,9 +11,10 @@ import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.AppUser
+import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.data.model.Settings
 import com.example.a24hberlin.data.repository.UserRepositoryImpl
-import com.example.a24hberlin.services.NotificationService
+import com.example.a24hberlin.services.AndroidReminderScheduler
 import com.example.a24hberlin.utils.checkPassword
 import com.example.a24hberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,7 +28,7 @@ class SettingsViewModel(
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null
     private val userRepo = UserRepositoryImpl(db)
-    private val notificationService = NotificationService(application.applicationContext)
+    private val notificationService = AndroidReminderScheduler(application.applicationContext)
 
     val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
 
@@ -76,7 +77,7 @@ class SettingsViewModel(
 
         savedStateHandle["passwordError"] = checkPassword(password, confirmPassword)
 
-        if (passwordError == null && firebaseError == null) {
+        if (passwordError == null) {
             viewModelScope.launch {
                 try {
                     userRepo.changePassword(password)
@@ -123,9 +124,9 @@ class SettingsViewModel(
         }
     }
 
-    fun removeAllPendingNotifications() {
+    fun removeAllPendingNotifications(favorites: List<Event>) {
         viewModelScope.launch {
-            notificationService.removeAllPendingNotifications()
+            notificationService.cancelAllPendingReminders(favorites)
         }
     }
 

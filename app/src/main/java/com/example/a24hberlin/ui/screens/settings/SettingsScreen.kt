@@ -274,7 +274,7 @@ fun SettingsScreen(
                                 eventVM.setupAbsenceReminder()
                             }
                         } else {
-                            settingsVM.removeAllPendingNotifications()
+                            settingsVM.removeAllPendingNotifications(favorites)
                         }
                     },
                     colors = SwitchDefaults.colors(

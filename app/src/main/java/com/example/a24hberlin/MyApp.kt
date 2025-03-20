@@ -3,9 +3,9 @@ package com.example.a24hberlin
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.content.Context
+import androidx.core.app.NotificationManagerCompat
 
-class MyApplication : Application() {
+class MyApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
@@ -20,8 +20,7 @@ class MyApplication : Application() {
             NotificationChannel(getString(R.string.event_reminder), name, importance).apply {
                 description = descriptionText
             }
-        val notificationManager: NotificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = NotificationManagerCompat.from(applicationContext)
         notificationManager.createNotificationChannel(channel)
     }
 }
