@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.WifiOff
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
+import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
 import com.example.a24hberlin.utils.mediumPadding
@@ -30,9 +36,11 @@ fun EventsScreen(
     selectedSound: String?,
     selectedVenue: String?
 ) {
+    val connectivityVM: ConnectivityViewModel = viewModel()
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
     val events by eventVM.events.collectAsStateWithLifecycle()
+    val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
     val filteredEvents = filteredEvents(
         events = events,
         selectedMonth = selectedMonth,
@@ -43,20 +51,31 @@ fun EventsScreen(
     )
 
     Column {
-        LazyColumn(
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = regularPadding),
-            verticalArrangement = Arrangement.spacedBy(mediumPadding),
-            state = listState,
-            contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
-        ) {
-            items(
-                filteredEvents,
-                { event -> event.id }
-            ) { event ->
-                EventItem(event)
+        if (isNetworkAvailable) {
+            LazyColumn(
+                Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
+            ) {
+                items(
+                    filteredEvents,
+                    { event -> event.id }
+                ) { event ->
+                    EventItem(event)
+                }
             }
+        } else {
+            Icon(
+                Icons.Rounded.WifiOff,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(120.dp),
+                tint = Color.Gray
+            )
         }
     }
 }

@@ -43,13 +43,12 @@ class AuthViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
-        savedStateHandle["errorMessage"] = null
         savedStateHandle["firebaseError"] = null
         savedStateHandle["passwordError"] = null
 
         savedStateHandle["passwordError"] = checkPassword(password, confirmPassword)
 
-        if (errorMessage == null && passwordError == null && firebaseError == null) {
+        if (passwordError == null) {
             viewModelScope.launch {
                 try {
                     userRepo.register(email, password)
@@ -84,7 +83,6 @@ class AuthViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
         viewModelScope.launch {
             try {
                 userRepo.resetPassword(email)
-                savedStateHandle["errorMessage"] = null
                 savedStateHandle["firebaseError"] = null
                 savedStateHandle["confirmationMessage"] = R.string.email_sent
             } catch (ex: Exception) {

@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class PermissionRepositoryImpl(application: Application) : PermissionRepository {
@@ -18,7 +17,7 @@ class PermissionRepositoryImpl(application: Application) : PermissionRepository 
             ) == PackageManager.PERMISSION_GRANTED
         } else true
     )
-    override val hasNotificationPermission: StateFlow<Boolean> =
+    val hasNotificationPermission =
         _hasNotificationPermission.asStateFlow()
 
     override fun updateNotificationPermission(isGranted: Boolean) {

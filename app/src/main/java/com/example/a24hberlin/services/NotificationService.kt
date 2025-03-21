@@ -49,10 +49,6 @@ class NotificationService(
     }
 
     companion object {
-        lateinit var REMINDER_CHANNEL_ID: String
-    }
-
-    init {
-        REMINDER_CHANNEL_ID = context.getString(R.string.event_reminder)
+        const val REMINDER_CHANNEL_ID = "Event Reminder"
     }
 }

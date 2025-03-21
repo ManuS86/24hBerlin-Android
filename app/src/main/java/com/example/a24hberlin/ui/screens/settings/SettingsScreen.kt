@@ -90,6 +90,7 @@ fun SettingsScreen(
     var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
+    val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -220,12 +221,12 @@ fun SettingsScreen(
 
                 LanguageDropdown(
                     label = stringResource(R.string.system_default),
-                    selectedValue = settingsVM.language,
+                    selectedValue = language,
                     onValueSelected = {
                         settingsVM.updateLanguage(it)
                         languageChangeHelper.setLanguage(
                             context,
-                            settingsVM.language?.languageCode
+                            language?.languageCode
                                 ?: Resources.getSystem().configuration.locales.get(1).language
                         )
                     },

@@ -8,15 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.WifiOff
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
+import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
 import com.example.a24hberlin.utils.mediumPadding
@@ -30,9 +36,11 @@ fun FavoritesScreen(
     selectedSound: String?,
     selectedVenue: String?
 ) {
+    val connectivityVM: ConnectivityViewModel = viewModel()
     val eventVM: EventViewModel = viewModel()
     val listState = rememberLazyListState()
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
+    val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
     val filteredFavorites = filteredEvents(
         events = favorites,
         selectedMonth = selectedMonth,
@@ -43,19 +51,30 @@ fun FavoritesScreen(
     )
 
     Column(Modifier.fillMaxSize()) {
-        LazyColumn(
-            Modifier
-                .padding(horizontal = regularPadding),
-            verticalArrangement = Arrangement.spacedBy(mediumPadding),
-            state = listState,
-            contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
-        ) {
-            items(
-                filteredFavorites,
-                { favorite -> favorite.id }
-            ) { favorite ->
-                EventItem(favorite)
+        if (isNetworkAvailable) {
+            LazyColumn(
+                Modifier
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = Arrangement.spacedBy(mediumPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
+            ) {
+                items(
+                    filteredFavorites,
+                    { favorite -> favorite.id }
+                ) { favorite ->
+                    EventItem(favorite)
+                }
             }
+        } else {
+            Icon(
+                Icons.Rounded.WifiOff,
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(120.dp),
+                tint = Color.Gray
+            )
         }
     }
 }
