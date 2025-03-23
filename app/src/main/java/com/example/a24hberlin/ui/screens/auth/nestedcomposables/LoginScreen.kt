@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -37,6 +39,7 @@ import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun LoginScreen(onClick: () -> Unit) {
+    val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
     val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
@@ -44,14 +47,9 @@ fun LoginScreen(onClick: () -> Unit) {
     var showForgotPassword by remember { mutableStateOf(false) }
     val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
 
-    DisposableEffect(Unit) {
-        onDispose {
-            authVM.clearErrorMessages()
-        }
-    }
-
     if (showForgotPassword) {
         ForgotPasswordScreen {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
             showForgotPassword = !showForgotPassword
         }
     } else {
@@ -100,6 +98,7 @@ fun LoginScreen(onClick: () -> Unit) {
             }
 
             LargeDarkButton(stringResource(R.string.login)) {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
                 authVM.login(email, password)
             }
 
@@ -108,6 +107,7 @@ fun LoginScreen(onClick: () -> Unit) {
             AuthTextButton(
                 stringResource(R.string.forgot_password)
             ) {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
                 showForgotPassword = !showForgotPassword
             }
 
@@ -123,6 +123,12 @@ fun LoginScreen(onClick: () -> Unit) {
                 stringResource(R.string.create_account),
                 onClick = onClick
             )
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            authVM.clearErrorMessages()
         }
     }
 }

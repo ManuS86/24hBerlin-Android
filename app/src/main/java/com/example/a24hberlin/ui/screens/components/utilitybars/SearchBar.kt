@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -27,11 +29,14 @@ fun SearchBar(
     onSearchTextChanged: (TextFieldValue) -> Unit,
     onSearchClosed: () -> Unit
 ) {
+    val view = LocalView.current
+
     OutlinedTextField(
         value = searchText,
         onValueChange = onSearchTextChanged,
         leadingIcon = {
             IconButton(onClick = {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
                 onSearchClosed()
             }
             ) {
@@ -44,6 +49,7 @@ fun SearchBar(
         trailingIcon = {
             if (searchText.text.isNotEmpty()) {
                 IconButton(onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     onSearchTextChanged(TextFieldValue(""))
                 }) {
                     Icon(

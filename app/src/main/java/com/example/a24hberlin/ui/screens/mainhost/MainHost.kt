@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.mainhost
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -26,6 +28,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.navigation.NavGraph
+import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
@@ -34,6 +37,7 @@ import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 @Composable
 fun AppNavigation() {
     val context = LocalContext.current
+    val view = LocalView.current
     val navController = rememberNavController()
     var appBarTitle by remember { mutableStateOf("") }
     val bottomBarState = remember { mutableStateOf(true) }
@@ -44,22 +48,6 @@ fun AppNavigation() {
     var selectedSound by remember { mutableStateOf<String?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
 
-    DisposableEffect(navController) {
-        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
-            appBarTitle = when (destination.route) {
-                "events" -> context.getString(R.string.events)
-                "club_map" -> context.getString(R.string.club_map)
-                "favorites" -> context.getString(R.string.my_events)
-                "settings" -> context.getString(R.string.settings)
-                else -> context.getString(R.string.re_authenticate)
-            }
-        }
-        navController.addOnDestinationChangedListener(listener)
-        onDispose {
-            navController.removeOnDestinationChangedListener(listener)
-        }
-    }
-
     Scaffold(
         topBar = {
             Column {
@@ -67,9 +55,15 @@ fun AppNavigation() {
                     title = appBarTitle,
                     showSearchBar = showSearchBar,
                     searchText = searchText,
-                    onSearchIconClick = { showSearchBar = !showSearchBar },
+                    onSearchIconClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        showSearchBar = !showSearchBar
+                    },
                     onSearchTextChanged = { searchText = it },
-                    onSearchClosed = { showSearchBar = false },
+                    onSearchClosed = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        showSearchBar = false
+                    },
                     navController = navController
                 )
 
@@ -127,6 +121,28 @@ fun AppNavigation() {
                 selectedVenue,
                 bottomBarState,
             ) { appBarTitle = it }
+        }
+    }
+
+    DisposableEffect(navController) {
+        val listener = NavController.OnDestinationChangedListener { _, destination, _ ->
+            appBarTitle = when (destination.route) {
+                "events" -> context.getString(R.string.events)
+                "club_map" -> context.getString(R.string.club_map)
+                "favorites" -> context.getString(R.string.my_events)
+                "settings" -> context.getString(R.string.settings)
+                else -> context.getString(R.string.re_authenticate)
+            }
+
+            bottomBarState.value = when (destination.route) {
+                Screen.Settings.route -> true
+                Screen.ReAuthWrapper("").route -> false
+                else -> bottomBarState.value
+            }
+        }
+        navController.addOnDestinationChangedListener(listener)
+        onDispose {
+            navController.removeOnDestinationChangedListener(listener)
         }
     }
 }

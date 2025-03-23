@@ -29,8 +29,8 @@ class SettingsViewModel(
 ) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
     private var listener: ListenerRegistration? = null
-    private val userRepo = UserRepositoryImpl(db)
     private val notificationService = AndroidReminderScheduler(application.applicationContext)
+    private val userRepo = UserRepositoryImpl(db)
 
     val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
 
@@ -147,8 +147,18 @@ class SettingsViewModel(
     }
 
     fun changePushNotifications(it: Boolean) {
-        savedStateHandle["pushNotificationsEnabled"] = it
-        saveSettings()
+        val settings = Settings(
+            pushNotificationsEnabled = it,
+            language = _language.value?.label
+        )
+
+        viewModelScope.launch {
+            try {
+                userRepo.updateUserInformation(null, settings)
+            } catch (ex: Exception) {
+                Log.e("Change Push Notifications", ex.toString())
+            }
+        }
     }
 
     fun clearErrorMessages() {
@@ -158,22 +168,17 @@ class SettingsViewModel(
         savedStateHandle["passwordError"] = null
     }
 
-    fun updateLanguage(it: Language?) {
-        _language.value = it
-        saveSettings()
-    }
-
-    private fun saveSettings() {
+    fun changeLanguage(it: Language?) {
         val settings = Settings(
             pushNotificationsEnabled = pushNotificationsEnabled.value,
-            language = _language.value?.label
+            language = it?.label
         )
 
         viewModelScope.launch {
             try {
                 userRepo.updateUserInformation(null, settings)
             } catch (ex: Exception) {
-                Log.e("Save Settings", ex.toString())
+                Log.e("Change Language", ex.toString())
             }
         }
     }

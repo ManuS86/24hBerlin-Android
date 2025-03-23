@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,18 +35,13 @@ import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun ChangePasswordScreen() {
+    val view = LocalView.current
     val settingsVM: SettingsViewModel = viewModel()
     var confirmPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val passwordError by settingsVM.passwordError.collectAsStateWithLifecycle()
-
-    DisposableEffect(Unit) {
-        onDispose {
-            settingsVM.clearErrorMessages()
-        }
-    }
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -107,10 +104,17 @@ fun ChangePasswordScreen() {
             }
 
             LargeDarkButton(stringResource(R.string.change_password)) {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
                 settingsVM.changePassword(password, confirmPassword)
             }
 
             Spacer(Modifier.weight(1f))
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            settingsVM.clearErrorMessages()
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.utilityelements
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.utils.mediumPadding
@@ -39,6 +41,7 @@ fun <T> FilterDropdown(
     stringToItem: (String) -> T?,
     itemToLabel: (T?) -> String?
 ) {
+    val view = LocalView.current
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
@@ -100,6 +103,7 @@ fun <T> FilterDropdown(
                     )
                 },
                 onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     onValueSelected(null)
                     isExpanded = !isExpanded
                 }
@@ -116,6 +120,7 @@ fun <T> FilterDropdown(
                         )
                     },
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         onValueSelected(stringToItem(option))
                         isExpanded = !isExpanded
                     }

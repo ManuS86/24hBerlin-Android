@@ -2,8 +2,10 @@ package com.example.a24hberlin.ui.screens.settings
 
 import android.content.Intent
 import android.content.res.Resources
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,8 +45,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -75,6 +79,7 @@ fun SettingsScreen(
     bottomBarState: MutableState<Boolean>
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
     val languageChangeHelper by lazy {
@@ -82,6 +87,7 @@ fun SettingsScreen(
     }
     var alertMessage by remember { mutableStateOf("") }
     val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
+    var previousLanguageCode by remember { mutableStateOf("") }
     val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -92,10 +98,6 @@ fun SettingsScreen(
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsStateWithLifecycle()
-
-    LaunchedEffect(Unit) {
-        bottomBarState.value = true
-    }
 
     Column(
         Modifier
@@ -128,12 +130,18 @@ fun SettingsScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        bottomBarState.value = false
-                        navController.navigate(
-                            Screen.ReAuthWrapper("email").createRoute("email")
-                        )
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        role = Role.Button,
+                        onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            bottomBarState.value = false
+                            navController.navigate(
+                                Screen.ReAuthWrapper("email").createRoute("email")
+                            )
+                        }
+                    )
                     .padding(regularPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -159,12 +167,18 @@ fun SettingsScreen(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        bottomBarState.value = false
-                        navController.navigate(
-                            Screen.ReAuthWrapper("password").createRoute("password")
-                        )
-                    }
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        role = Role.Button,
+                        onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            bottomBarState.value = false
+                            navController.navigate(
+                                Screen.ReAuthWrapper("password").createRoute("password")
+                            )
+                        }
+                    )
                     .padding(regularPadding),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -223,12 +237,7 @@ fun SettingsScreen(
                     label = stringResource(R.string.system_default),
                     selectedValue = language,
                     onValueSelected = {
-                        settingsVM.updateLanguage(it)
-                        languageChangeHelper.setLanguage(
-                            context,
-                            language?.languageCode
-                                ?: Resources.getSystem().configuration.locales.get(1).language
-                        )
+                        settingsVM.changeLanguage(it)
                     },
                     options = Language.allValues.toList()
                 )
@@ -268,7 +277,9 @@ fun SettingsScreen(
                 Switch(
                     checked = pushNotificationsEnabled,
                     onCheckedChange = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         settingsVM.changePushNotifications(it)
+
                         if (it) {
                             favorites.forEach { favorite ->
                                 eventVM.addFavoritePushNotifications(favorite)
@@ -299,6 +310,8 @@ fun SettingsScreen(
             FontWeight.Normal,
             TextAlign.Start
         ) {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
+
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(
@@ -322,6 +335,7 @@ fun SettingsScreen(
             FontWeight.Normal,
             TextAlign.Start
         ) {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
             showBugReport = !showBugReport
         }
 
@@ -332,6 +346,7 @@ fun SettingsScreen(
             FontWeight.SemiBold,
             TextAlign.Center
         ) {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
             showLogOutAlert = true
         }
 
@@ -361,6 +376,7 @@ fun SettingsScreen(
             FontWeight.Normal,
             TextAlign.Center
         ) {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
             showDeleteAccountAlert = true
         }
 
@@ -382,8 +398,12 @@ fun SettingsScreen(
             YesNoAlert(
                 stringResource(R.string.logout),
                 stringResource(R.string.are_you_sure_you_want_to_log_out_q),
-                { showLogOutAlert = false },
                 {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    showLogOutAlert = false
+                },
+                {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     showLogOutAlert = false
                     settingsVM.logout()
                 }
@@ -394,8 +414,12 @@ fun SettingsScreen(
             YesNoAlert(
                 stringResource(R.string.delete_account),
                 stringResource(R.string.are_you_sure_you_want_to_delete_your_account),
-                { showDeleteAccountAlert = false },
                 {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    showDeleteAccountAlert = false
+                },
+                {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     showDeleteAccountAlert = false
                     settingsVM.deleteAccount()
                 }
@@ -411,7 +435,9 @@ fun SettingsScreen(
                 confirmButton = {
                     TextButton(
                         onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
                             showBugReportAlert = false
+
                             if (alertMessage == reportThankYou.value) {
                                 showBugReport = false
                             }
@@ -421,6 +447,21 @@ fun SettingsScreen(
                     }
                 }
             )
+        }
+
+        LaunchedEffect(Unit) {
+            previousLanguageCode = language?.languageCode
+                ?: Resources.getSystem().configuration.locales.get(1).language
+        }
+
+        LaunchedEffect(language) {
+            val languageCode = language?.languageCode
+                ?: Resources.getSystem().configuration.locales.get(1).language
+
+            if (languageCode != previousLanguageCode) {
+                previousLanguageCode = languageCode
+                languageChangeHelper.setLanguage(context, languageCode)
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -35,6 +37,7 @@ fun BugReportScreen(
     alertMessageDescribe: () -> Unit,
     alertMessageThankYou: () -> Unit
 ) {
+    val view = LocalView.current
     val settingsVM: SettingsViewModel = viewModel()
     var bugReport by remember { mutableStateOf("") }
 
@@ -63,6 +66,7 @@ fun BugReportScreen(
         )
 
         LargeDarkButton(stringResource(R.string.send_bug_report)) {
+            view.playSoundEffect(SoundEffectConstants.CLICK)
             if (bugReport.isEmpty()) {
                 alertMessageDescribe()
                 alertToggle()

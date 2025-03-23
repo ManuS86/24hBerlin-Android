@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
+import android.view.SoundEffectConstants
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Map
@@ -15,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavHostController
@@ -22,11 +24,19 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.Screen
 
+data class NavigationItem(
+    val route: String,
+    val selectedIcon: ImageVector,
+    val unselectedIcon: ImageVector,
+    val label: String
+)
+
 @Composable
 fun MyBottomNavigationBar(
     navController: NavHostController,
     onTitleChange: (String) -> Unit
 ) {
+    val view = LocalView.current
     val items = listOf(
         NavigationItem(
             route = Screen.Events.route,
@@ -72,6 +82,7 @@ fun MyBottomNavigationBar(
                 },
                 selected = selected,
                 onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
                     onTitleChange(item.label)
                     navController.navigate(item.route) {
                         launchSingleTop = true
@@ -87,10 +98,3 @@ fun MyBottomNavigationBar(
         }
     }
 }
-
-data class NavigationItem(
-    val route: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val label: String
-)

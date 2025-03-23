@@ -1,8 +1,10 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +30,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -53,6 +58,7 @@ fun FilterBar(
     onVenueSelected: (String?) -> Unit,
 ) {
     val context = LocalContext.current
+    val view = LocalView.current
     val eventVM: EventViewModel = viewModel()
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()
@@ -78,7 +84,10 @@ fun FilterBar(
                 horizontalArrangement = Arrangement.spacedBy(mediumPadding)
             ) {
                 Button(
-                    onClick = { onMonthSelected(null) },
+                    onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        onMonthSelected(null)
+                    },
                     shape = RoundedCornerShape(mediumRounding),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = if (selectedMonth == null) Color.DarkGray.copy(
@@ -100,7 +109,10 @@ fun FilterBar(
 
                 Month.allValues.forEach { month ->
                     Button(
-                        onClick = { onMonthSelected(month) },
+                        onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            onMonthSelected(month)
+                        },
                         shape = RoundedCornerShape(mediumRounding),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (selectedMonth == month) Color.DarkGray.copy(
@@ -127,7 +139,15 @@ fun FilterBar(
                 contentDescription = stringResource(R.string.show_filters),
                 Modifier
                     .padding(start = mediumPadding)
-                    .clickable { showFilters = !showFilters },
+                    .clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = ripple(),
+                        role = Role.Button,
+                        onClick = {
+                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            showFilters = !showFilters
+                        }
+                    ),
                 tint = Color.White
             )
         }
@@ -181,11 +201,17 @@ fun FilterBar(
                         contentDescription = stringResource(R.string.clear_filters),
                         Modifier
                             .padding(start = mediumPadding)
-                            .clickable {
-                                onEventTypeSelected(null)
-                                onSoundSelected(null)
-                                onVenueSelected(null)
-                            },
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(),
+                                role = Role.Button,
+                                onClick = {
+                                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                                    onEventTypeSelected(null)
+                                    onSoundSelected(null)
+                                    onVenueSelected(null)
+                                }
+                            ),
                         tint = Color.White
                     )
                 }
