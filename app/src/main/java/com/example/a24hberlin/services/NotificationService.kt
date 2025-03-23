@@ -4,23 +4,22 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.BitmapFactory
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import coil3.Bitmap
 import com.example.a24hberlin.MainActivity
 import com.example.a24hberlin.R
 
 class NotificationService(
     private val context: Context
 ) {
-
     private val notificationManager = NotificationManagerCompat.from(context)
 
     @SuppressLint("MissingPermission")
     fun showNotification(
         title: String,
         body: String,
-        imageByteArray: ByteArray?,
+        image: Bitmap?,
         notificationId: Int
     ) {
         val activityIntent = Intent(context, MainActivity::class.java)
@@ -40,8 +39,7 @@ class NotificationService(
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-        if (imageByteArray != null) {
-            val image = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+        if (image != null) {
             notification.setLargeIcon(image)
         }
 

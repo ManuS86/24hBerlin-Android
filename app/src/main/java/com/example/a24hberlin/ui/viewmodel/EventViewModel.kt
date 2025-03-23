@@ -1,7 +1,6 @@
 package com.example.a24hberlin.ui.viewmodel
 
 import android.app.Application
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -24,8 +23,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.net.URL
 import java.time.LocalDate
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
@@ -162,7 +159,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 userRepo.removeFavoriteID(favoriteID)
                 if (currentAppUser.value?.settings!!.pushNotificationsEnabled) {
-                    notificationService.cancelEventReminder(event)
+                    notificationService.cancelEventReminders(event)
                 }
             } catch (ex: Exception) {
                 Log.e("Remove Favorite ID", ex.toString())
@@ -171,36 +168,24 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun addFavoritePushNotifications(event: Event) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val url = URL(event.imageURL)
-                val input = url.openStream()
-                val image = BitmapFactory.decodeStream(input)
-
-                withContext(Dispatchers.Main) {
-                    notificationService.scheduleEventReminder(
-                        event,
-                        3,
-                        12,
-                        image
-                    )
-                    notificationService.scheduleEventReminder(
-                        event,
-                        0,
-                        12,
-                        image
-                    )
-                    notificationService.scheduleEventReminder(
-                        event,
-                        0,
-                        3,
-                        image
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
+        notificationService.scheduleEventReminder(
+            event,
+            3,
+            12,
+            event.imageURL
+        )
+        notificationService.scheduleEventReminder(
+            event,
+            0,
+            12,
+            event.imageURL
+        )
+        notificationService.scheduleEventReminder(
+            event,
+            0,
+            3,
+            event.imageURL
+        )
     }
 
     fun setupAbsenceReminder() {

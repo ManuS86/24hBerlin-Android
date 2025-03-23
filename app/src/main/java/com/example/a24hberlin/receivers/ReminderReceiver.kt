@@ -4,17 +4,30 @@ import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.example.a24hberlin.services.NotificationService
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import com.example.a24hberlin.workers.ImageNotificationWorker
 
 class ReminderReceiver : BroadcastReceiver() {
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationService = NotificationService(context)
         val notificationId = intent.getIntExtra("notificationId", 0)
         val title = intent.getStringExtra("title") ?: ""
         val body = intent.getStringExtra("body") ?: ""
-        val imageByteArray = intent.getByteArrayExtra("imageByteArray")
+        val imageURL = intent.getStringExtra("imageURL")
 
-        notificationService.showNotification(title, body, imageByteArray, notificationId)
+        val inputData = Data.Builder()
+            .putString("title", title)
+            .putString("body", body)
+            .putString("imageURL", imageURL)
+            .putInt("notificationId", notificationId)
+            .build()
+
+        val workRequest = OneTimeWorkRequestBuilder<ImageNotificationWorker>()
+            .setInputData(inputData)
+            .build()
+
+        WorkManager.getInstance(context).enqueue(workRequest)
     }
 }

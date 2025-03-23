@@ -6,11 +6,10 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import coil3.Bitmap
+import android.util.Log
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.receivers.ReminderReceiver
-import java.io.ByteArrayOutputStream
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -45,7 +44,10 @@ class AndroidReminderScheduler(
             pendingIntent
         )
 
-        println("14-day reminder scheduled for $triggerDateTime")
+        Log.d(
+            "AlarmScheduling",
+            "14-day reminder scheduled for $triggerDateTime"
+        )
     }
 
     @SuppressLint("MissingPermission")
@@ -53,8 +55,9 @@ class AndroidReminderScheduler(
         event: Event,
         dayModifier: Int,
         hourModifier: Int,
-        image: Bitmap?
+        imageURL: String?
     ) {
+        val currentTime = System.currentTimeMillis()
         val triggerDateTime = event.start
             .minusDays(dayModifier.toLong())
             .let {
@@ -67,7 +70,7 @@ class AndroidReminderScheduler(
         val zonedDateTime = triggerDateTime.atZone(userTimeZone)
         val triggerMillis = zonedDateTime.toInstant().toEpochMilli()
 
-        val notificationId = event.id.hashCode()
+        val alarmId = (event.id.hashCode() * 10) + dayModifier + hourModifier
 
         val body = when {
             dayModifier == 3 -> context.getString(R.string.dont_forget_event_3days, event.name)
@@ -75,25 +78,35 @@ class AndroidReminderScheduler(
             else -> context.getString(R.string.dont_forget_event_today, event.name)
         }
 
-        val intent = createIntent(
-            notificationId,
-            context.getString(R.string.event_reminder),
-            body,
-            image
-        )
+        if (triggerMillis > currentTime) {
+            val intent = createIntent(
+                alarmId,
+                context.getString(R.string.event_reminder),
+                body,
+                imageURL
+            )
 
-        val pendingIntent = createPendingIntent(
-            notificationId,
-            intent
-        )
+            val pendingIntent = createPendingIntent(
+                alarmId,
+                intent
+            )
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerMillis,
-            pendingIntent
-        )
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerMillis,
+                pendingIntent
+            )
 
-        println("Notification scheduled for ${event.name} at $triggerDateTime")
+            Log.d(
+                "AlarmScheduling",
+                "Notification scheduled for ${event.name} at $triggerDateTime"
+            )
+        } else {
+            Log.w(
+                "AlarmScheduling",
+                "Alarm time is in the past, skipping alarm for event: ${event.name}, alarmId: $alarmId"
+            )
+        }
     }
 
 
@@ -117,17 +130,35 @@ class AndroidReminderScheduler(
                 )
             }
         }
-        println("All pending reminders removed")
+        Log.d(
+            "AlarmCancelling",
+            "All pending reminders removed"
+        )
     }
 
-    override fun cancelEventReminder(event: Event) {
+    override fun cancelEventReminders(event: Event) {
         alarmManager.cancel(
             createPendingIntent(
-                event.id.hashCode(),
+                (event.id.hashCode() * 10) + 3 + 12,
                 Intent(context, ReminderReceiver::class.java)
             )
         )
-        println("Reminders unscheduled for ${event.name}")
+        alarmManager.cancel(
+            createPendingIntent(
+                (event.id.hashCode() * 10) + 0 + 12,
+                Intent(context, ReminderReceiver::class.java)
+            )
+        )
+        alarmManager.cancel(
+            createPendingIntent(
+                (event.id.hashCode() * 10) + 0 + 3,
+                Intent(context, ReminderReceiver::class.java)
+            )
+        )
+        Log.d(
+            "AlarmCancelling",
+            "Reminders unscheduled for ${event.name}"
+        )
     }
 
     private fun createPendingIntent(
@@ -150,7 +181,7 @@ class AndroidReminderScheduler(
         notificationId: Int,
         title: String,
         body: String,
-        image: Bitmap? = null
+        imageURL: String? = null
     ): Intent {
         val intent = Intent(context, ReminderReceiver::class.java).apply {
             putExtra("notificationId", notificationId)
@@ -159,11 +190,8 @@ class AndroidReminderScheduler(
 
         }
 
-        if (image != null) {
-            val stream = ByteArrayOutputStream()
-            image.compress(android.graphics.Bitmap.CompressFormat.PNG, 100, stream)
-            val byteArray = stream.toByteArray()
-            intent.putExtra("imageByteArray", byteArray)
+        if (imageURL != null) {
+            intent.putExtra("imageURL", imageURL)
         }
         return intent
     }
