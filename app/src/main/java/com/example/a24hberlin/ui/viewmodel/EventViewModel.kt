@@ -124,9 +124,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                 }.let { expandedEvents -> // Today or later
                     expandedEvents.filter { event ->
                         val now = LocalDate.now()
-                        val eventDate = event.start.toLocalDate()
+                        val eventDate =
+                            if (event.end != null) event.end!!.toLocalDate() else event.start.toLocalDate()
 
                         eventDate.isEqual(now) || eventDate.isAfter(now)
+
                     }.sortedBy { it.start }
                 }.let { finalEvents ->
                     _events.emit(finalEvents)

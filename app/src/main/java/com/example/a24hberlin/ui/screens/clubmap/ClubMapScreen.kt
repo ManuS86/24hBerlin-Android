@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.clubmap
 
+import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -15,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -41,6 +43,7 @@ fun ClubMapScreen(
     selectedSound: String?,
     selectedVenue: String?
 ) {
+    val view = LocalView.current
     val berlinLatLng = LatLng(52.5200, 13.4050)
     val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
     val cameraPositionState = rememberCameraPositionState {
@@ -73,6 +76,7 @@ fun ClubMapScreen(
                     state = venueMarkerState,
                     title = event.name,
                     onClick = {
+                        view.playSoundEffect(SoundEffectConstants.CLICK)
                         selectedEvent = event
                         showEventSheet = !showEventSheet
                         true
