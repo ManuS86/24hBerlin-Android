@@ -23,7 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 
 class EventViewModel(application: Application) : AndroidViewModel(application) {
     private val db = FirebaseFirestore.getInstance()
@@ -123,11 +123,11 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }.let { expandedEvents -> // Today or later
                     expandedEvents.filter { event ->
-                        val now = LocalDate.now()
-                        val eventDate =
-                            if (event.end != null) event.end!!.toLocalDate() else event.start.toLocalDate()
+                        val now = LocalDateTime.now()
+                        val eventDateTime =
+                            if (event.end != null) event.end!! else event.start
 
-                        eventDate.isEqual(now) || eventDate.isAfter(now)
+                        eventDateTime.isEqual(now) || eventDateTime.isAfter(now)
 
                     }.sortedBy { it.start }
                 }.let { finalEvents ->
