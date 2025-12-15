@@ -1,11 +1,13 @@
 package com.example.a24hberlin.ui.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.repository.UserRepositoryImpl
+import com.example.a24hberlin.managers.AndroidPermissionManager
 import com.example.a24hberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
@@ -14,41 +16,56 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel() {
-    private var analytics: FirebaseAnalytics
+class AuthViewModel(
+    application: Application,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
     private val userRepo = UserRepositoryImpl(db)
-
-    val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
+    private var analytics: FirebaseAnalytics = Firebase.analytics
+    private val permissionManager = AndroidPermissionManager(application)
 
     private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser = _currentUser.asStateFlow()
 
+    val hasNotificationPermission: StateFlow<Boolean> =
+        permissionManager.hasNotificationPermission.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5000),
+            permissionManager.hasNotificationPermission.value
+        )
+
+    val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
     val errorMessage = savedStateHandle.getStateFlow("errorMessage", null as Int?)
-
     val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
-
     val passwordError = savedStateHandle.getStateFlow("passwordError", null as Int?)
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
             _currentUser.value = firebaseAuth.currentUser
         }
+    }
 
-        analytics = Firebase.analytics
+    fun updateNotificationPermission(isGranted: Boolean) {
+        permissionManager.updateNotificationPermission(isGranted)
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
         savedStateHandle["firebaseError"] = null
         savedStateHandle["passwordError"] = null
 
-        savedStateHandle["passwordError"] = checkPassword(password, confirmPassword)
+        val errorResId = checkPassword(password, confirmPassword)
 
-        if (passwordError == null) {
+        savedStateHandle["passwordError"] = errorResId
+
+        if (errorResId == null) {
             viewModelScope.launch {
                 try {
                     userRepo.register(email, password)
@@ -94,7 +111,11 @@ class AuthViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(
     }
 
     fun clearErrorMessages() {
+        clearErrorStates()
         savedStateHandle["confirmationMessage"] = null
+    }
+
+    private fun clearErrorStates() {
         savedStateHandle["errorMessage"] = null
         savedStateHandle["firebaseError"] = null
         savedStateHandle["passwordError"] = null

@@ -37,7 +37,6 @@ import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
-import com.example.a24hberlin.ui.viewmodel.PermissionViewModel
 import com.example.a24hberlin.utils.errorPadding
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
@@ -46,19 +45,22 @@ import com.example.a24hberlin.utils.regularPadding
 fun RegisterScreen(onClick: () -> Unit) {
     val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
-    val permissionVM: PermissionViewModel = viewModel()
     val scrollState = rememberScrollState()
+
     var confirmPassword by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
     val passwordError by authVM.passwordError.collectAsStateWithLifecycle()
-    val hasNotificationPermission by permissionVM.hasNotificationPermission.collectAsStateWithLifecycle()
+    val hasNotificationPermission by authVM.hasNotificationPermission.collectAsStateWithLifecycle()
+
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
-            permissionVM.updateNotificationPermission(isGranted)
+            authVM.updateNotificationPermission(isGranted)
+            authVM.register(email, password, confirmPassword)
         }
     )
 
@@ -137,8 +139,9 @@ fun RegisterScreen(onClick: () -> Unit) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                authVM.register(email, password, confirmPassword)
             }
-            authVM.register(email, password, confirmPassword)
         }
 
         Spacer(Modifier.weight(1f))
