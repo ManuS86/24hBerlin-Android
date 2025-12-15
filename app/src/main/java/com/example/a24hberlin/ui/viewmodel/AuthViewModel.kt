@@ -2,6 +2,7 @@ package com.example.a24hberlin.ui.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,7 +26,8 @@ import kotlinx.coroutines.launch
 class AuthViewModel(
     application: Application,
     private val savedStateHandle: SavedStateHandle
-) : ViewModel() {
+) : AndroidViewModel(application) {
+
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
     private val userRepo = UserRepositoryImpl(db)
