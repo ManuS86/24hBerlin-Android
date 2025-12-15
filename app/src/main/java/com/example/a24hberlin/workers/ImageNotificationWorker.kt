@@ -1,50 +1,59 @@
 package com.example.a24hberlin.workers
 
 import android.content.Context
-import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.a24hberlin.services.NotificationService
-import kotlinx.coroutines.CoroutineScope
+import coil3.imageLoader
+import coil3.request.ImageRequest
+import coil3.request.SuccessResult
+import coil3.request.allowHardware
+import coil3.toBitmap
+import com.example.a24hberlin.notifications.NotificationService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.net.URL
 
 class ImageNotificationWorker(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
+    private val TAG = "ImageNotificationWorker"
 
-    override suspend fun doWork(): Result {
-        val title = inputData.getString("title") ?: return Result.failure()
-        val body = inputData.getString("body") ?: return Result.failure()
-        val imageURL = inputData.getString("imageURL")
+    private val notificationService = NotificationService(applicationContext)
+
+    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+        val title = inputData.getString("title")
+        val body = inputData.getString("body")
         val notificationId = inputData.getInt("notificationId", 0)
+        val imageURL = inputData.getString("imageURL")
 
-        val notificationService = NotificationService(applicationContext)
+        if (title == null || body == null) {
+            return@withContext Result.failure()
+        }
 
-        if (imageURL != null) {
-            CoroutineScope(Dispatchers.IO).launch {
-                try {
-                    val url = URL(imageURL)
-                    val input = url.openStream()
-                    val image = BitmapFactory.decodeStream(input)
+        var image: Bitmap? = null
 
-                    withContext(Dispatchers.Main) {
-                        notificationService.showNotification(title, body, image, notificationId)
-                    }
+        imageURL?.takeIf { it.isNotEmpty() }?.let { url ->
+            try {
+                val request = ImageRequest.Builder(applicationContext)
+                    .data(url)
+                    .allowHardware(false)
+                    .build()
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    withContext(Dispatchers.Main) {
-                        notificationService.showNotification(title, body, null, notificationId)
-                    }
+                val result = applicationContext.imageLoader.execute(request)
+
+                if (result is SuccessResult) {
+                    image = result.image.toBitmap()
+                } else {
+                    Log.w(TAG, "Image load was not successful: $result")
                 }
-            }
-        } else {
-            withContext(Dispatchers.Main) {
-                notificationService.showNotification(title, body, null, notificationId)
+            } catch (e: Exception) {
+                Log.e(TAG, "Coil image loading exception for URL: $url", e)
+                e.printStackTrace()
             }
         }
-        return Result.success()
+
+        notificationService.showNotification(title, body, image, notificationId)
+
+        return@withContext Result.success()
     }
 }
