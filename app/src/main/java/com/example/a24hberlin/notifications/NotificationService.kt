@@ -1,6 +1,8 @@
-package com.example.a24hberlin.services
+package com.example.a24hberlin.notifications
 
 import android.annotation.SuppressLint
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -10,10 +12,31 @@ import coil3.Bitmap
 import com.example.a24hberlin.MainActivity
 import com.example.a24hberlin.R
 
-class NotificationService(
-    private val context: Context
-) {
+class NotificationService(private val context: Context) {
+
+    companion object {
+        const val REMINDER_CHANNEL_ID = "EVENT_REMINDER_CHANNEL_ID"
+    }
+
     private val notificationManager = NotificationManagerCompat.from(context)
+
+    init {
+        createNotificationChannel()
+    }
+
+    private fun createNotificationChannel() {
+        val name = context.getString(R.string.channel_name)
+        val descriptionText = context.getString(R.string.channel_description)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+
+        val channel = NotificationChannel(REMINDER_CHANNEL_ID, name, importance).apply {
+            description = descriptionText
+        }
+
+        val notificationManager =
+            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
 
     @SuppressLint("MissingPermission")
     fun showNotification(
@@ -25,7 +48,7 @@ class NotificationService(
         val activityIntent = Intent(context, MainActivity::class.java)
         val activityPendingIntent = PendingIntent.getActivity(
             context,
-            1,
+            notificationId,
             activityIntent,
             PendingIntent.FLAG_IMMUTABLE
         )
@@ -44,9 +67,5 @@ class NotificationService(
         }
 
         notificationManager.notify(notificationId, notification.build())
-    }
-
-    companion object {
-        const val REMINDER_CHANNEL_ID = "Event Reminder"
     }
 }

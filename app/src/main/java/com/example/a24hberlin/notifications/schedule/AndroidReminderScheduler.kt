@@ -1,4 +1,4 @@
-package com.example.a24hberlin.services
+package com.example.a24hberlin.notifications.schedule
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -8,15 +8,24 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.example.a24hberlin.R
+import com.example.a24hberlin.data.enums.EventReminderType
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.receivers.ReminderReceiver
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-class AndroidReminderScheduler(
-    private val context: Context
-) : ReminderScheduler {
+object ReminderConstants {
+    const val ABSENCE_REMINDER_ID = 9999
+}
+
+class AndroidReminderScheduler(private val context: Context) : ReminderScheduler {
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
+
+    private val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    } else {
+        PendingIntent.FLAG_UPDATE_CURRENT
+    }
 
     @SuppressLint("MissingPermission")
     override fun schedule14DayReminder() {
@@ -25,7 +34,7 @@ class AndroidReminderScheduler(
         val zonedTriggerDateTime = triggerDateTime.atZone(userTimeZone)
         val triggerMillis = zonedTriggerDateTime.toInstant().toEpochMilli()
 
-        val notificationId = 1.hashCode()
+        val notificationId = ReminderConstants.ABSENCE_REMINDER_ID
 
         val intent = createIntent(
             notificationId,
@@ -53,29 +62,38 @@ class AndroidReminderScheduler(
     @SuppressLint("MissingPermission")
     override fun scheduleEventReminder(
         event: Event,
-        dayModifier: Int,
-        hourModifier: Int,
+        type: EventReminderType,
         imageURL: String?
     ) {
         val currentTime = System.currentTimeMillis()
-        val triggerDateTime = event.start
-            .minusDays(dayModifier.toLong())
-            .let {
-                if (hourModifier > 0) it.minusHours(hourModifier.toLong()) else {
-                    val eventTime = event.start.toLocalTime()
-                    it.withHour(eventTime.hour).withMinute(eventTime.minute).withSecond(0)
-                }
-            }
+
+        val triggerDateTime = when (type) {
+            EventReminderType.THREE_DAYS_BEFORE -> event.start.minusDays(3)
+            EventReminderType.TWELVE_HOURS_BEFORE -> event.start.minusHours(12)
+            EventReminderType.THREE_HOURS_BEFORE -> event.start.minusHours(3)
+        }
+
         val userTimeZone = ZoneId.systemDefault()
         val zonedDateTime = triggerDateTime.atZone(userTimeZone)
         val triggerMillis = zonedDateTime.toInstant().toEpochMilli()
 
-        val alarmId = (event.id.hashCode() * 10) + dayModifier + hourModifier
+        val alarmId = type.createAlarmId(event.id)
 
-        val body = when {
-            dayModifier == 3 -> context.getString(R.string.dont_forget_event_3days, event.name)
-            hourModifier == 3 -> context.getString(R.string.dont_forget_event_3hours, event.name)
-            else -> context.getString(R.string.dont_forget_event_today, event.name)
+        val body = when (type) {
+            EventReminderType.THREE_DAYS_BEFORE -> context.getString(
+                R.string.dont_forget_event_3days,
+                event.name
+            )
+
+            EventReminderType.TWELVE_HOURS_BEFORE -> context.getString(
+                R.string.dont_forget_event_today,
+                event.name
+            )
+
+            EventReminderType.THREE_HOURS_BEFORE -> context.getString(
+                R.string.dont_forget_event_3hours,
+                event.name
+            )
         }
 
         if (triggerMillis > currentTime) {
@@ -113,23 +131,15 @@ class AndroidReminderScheduler(
     override fun cancelAllPendingReminders(favorites: List<Event>) {
         alarmManager.cancel(
             createPendingIntent(
-                1.hashCode(),
+                ReminderConstants.ABSENCE_REMINDER_ID,
                 Intent(context, ReminderReceiver::class.java)
             )
         )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            alarmManager.cancelAll()
-        } else {
-            favorites.forEach { favorite ->
-                alarmManager.cancel(
-                    createPendingIntent(
-                        favorite.id.hashCode(),
-                        Intent(context, ReminderReceiver::class.java)
-                    )
-                )
-            }
+        favorites.forEach { favorite ->
+            cancelEventReminders(favorite)
         }
+
         Log.d(
             "AlarmCancelling",
             "All pending reminders removed"
@@ -137,24 +147,17 @@ class AndroidReminderScheduler(
     }
 
     override fun cancelEventReminders(event: Event) {
-        alarmManager.cancel(
-            createPendingIntent(
-                (event.id.hashCode() * 10) + 3 + 12,
-                Intent(context, ReminderReceiver::class.java)
+        EventReminderType.entries.forEach { type ->
+            val alarmId = type.createAlarmId(event.id)
+
+            alarmManager.cancel(
+                createPendingIntent(
+                    alarmId,
+                    Intent(context, ReminderReceiver::class.java)
+                )
             )
-        )
-        alarmManager.cancel(
-            createPendingIntent(
-                (event.id.hashCode() * 10) + 0 + 12,
-                Intent(context, ReminderReceiver::class.java)
-            )
-        )
-        alarmManager.cancel(
-            createPendingIntent(
-                (event.id.hashCode() * 10) + 0 + 3,
-                Intent(context, ReminderReceiver::class.java)
-            )
-        )
+        }
+
         Log.d(
             "AlarmCancelling",
             "Reminders unscheduled for ${event.name}"
@@ -169,11 +172,7 @@ class AndroidReminderScheduler(
             context,
             notificationId,
             intent,
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            } else {
-                PendingIntent.FLAG_UPDATE_CURRENT
-            }
+            pendingIntentFlags
         )
     }
 
