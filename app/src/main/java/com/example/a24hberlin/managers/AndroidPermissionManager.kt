@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class PermissionRepositoryImpl(application: Application) : PermissionRepository {
+class AndroidPermissionManager(application: Application) {
     private val _hasNotificationPermission = MutableStateFlow(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
@@ -17,10 +17,11 @@ class PermissionRepositoryImpl(application: Application) : PermissionRepository 
             ) == PackageManager.PERMISSION_GRANTED
         } else true
     )
+
     val hasNotificationPermission =
         _hasNotificationPermission.asStateFlow()
 
-    override fun updateNotificationPermission(isGranted: Boolean) {
+    fun updateNotificationPermission(isGranted: Boolean) {
         _hasNotificationPermission.value = isGranted
     }
 }
