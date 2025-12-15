@@ -1,0 +1,20 @@
+package com.example.a24hberlin.ui.screens.components
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
+
+@Composable
+fun ScheduleReminderEffect(eventVM: EventViewModel = viewModel()) {
+    val user = eventVM.currentAppUser.collectAsStateWithLifecycle(initialValue = null).value
+    val hasPermission =
+        eventVM.hasNotificationPermission.collectAsStateWithLifecycle(initialValue = false).value
+
+    LaunchedEffect(user, hasPermission) {
+        if (user != null && hasPermission) {
+            eventVM.setupAbsenceReminder()
+        }
+    }
+}

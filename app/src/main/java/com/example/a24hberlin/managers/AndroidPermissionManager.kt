@@ -1,4 +1,4 @@
-package com.example.a24hberlin.data.repository
+package com.example.a24hberlin.managers
 
 import android.Manifest
 import android.app.Application
