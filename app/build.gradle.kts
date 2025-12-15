@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.example.a24hberlin"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.a24hberlin"

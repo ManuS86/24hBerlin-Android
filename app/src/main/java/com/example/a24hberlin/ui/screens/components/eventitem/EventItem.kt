@@ -43,15 +43,15 @@ fun EventItem(event: Event) {
     var showDetail by remember { mutableStateOf(false) }
     val eventColor = when {
         event.eventType?.values?.contains("Konzert") ?: true -> Concert
-        event.eventType?.values?.contains("Party") ?: false -> Party
+        event.eventType.values.contains("Party") -> Party
         else -> ArtAndCulture
     }
 
     Column(
         Modifier
-            .background(Color.White)
             .clip(RoundedCornerShape(mediumRounding))
             .border(BorderStroke(0.5.dp, TextOffBlack), RoundedCornerShape(mediumRounding))
+            .background(Color.White)
     ) {
         CompositionLocalProvider(LocalContentColor provides Color.White) {
             Row(
