@@ -44,15 +44,14 @@ fun ClubMapScreen(
     selectedVenue: String?
 ) {
     val view = LocalView.current
-    val berlinLatLng = LatLng(52.5200, 13.4050)
-    val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
-    val cameraPositionState = rememberCameraPositionState {
-        position = initialCameraPosition
-    }
-    val scrollState = rememberScrollState()
-    val sheetState = rememberModalBottomSheetState()
     val eventVM: EventViewModel = viewModel()
+
+    val berlinLatLng = LatLng(52.5200, 13.4050)
+
     val events by eventVM.events.collectAsStateWithLifecycle()
+    var selectedEvent: Event? by remember { mutableStateOf(null) }
+    var showEventSheet by remember { mutableStateOf(false) }
+
     val filteredEvents = filteredEvents(
         events = events,
         selectedMonth = selectedMonth,
@@ -61,8 +60,13 @@ fun ClubMapScreen(
         selectedVenue = selectedVenue,
         searchText = searchText
     )
-    var selectedEvent: Event? by remember { mutableStateOf(null) }
-    var showEventSheet by remember { mutableStateOf(false) }
+
+    val initialCameraPosition = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
+    val cameraPositionState = rememberCameraPositionState {
+        position = initialCameraPosition
+    }
+    val scrollState = rememberScrollState()
+    val sheetState = rememberModalBottomSheetState()
 
     GoogleMap(
         Modifier.fillMaxSize(),
@@ -70,10 +74,9 @@ fun ClubMapScreen(
     ) {
         filteredEvents.forEach { event ->
             if (event.lat != null && event.long != null) {
-                val venue = LatLng(event.lat, event.long)
-                val venueMarkerState = rememberMarkerState(position = venue)
+                val venuePosition = LatLng(event.lat, event.long)
                 Marker(
-                    state = venueMarkerState,
+                    state = rememberMarkerState(position = venuePosition),
                     title = event.name,
                     onClick = {
                         view.playSoundEffect(SoundEffectConstants.CLICK)

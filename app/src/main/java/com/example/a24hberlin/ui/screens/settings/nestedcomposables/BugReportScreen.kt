@@ -38,7 +38,9 @@ fun BugReportScreen(
     alertMessageThankYou: () -> Unit
 ) {
     val view = LocalView.current
+
     val settingsVM: SettingsViewModel = viewModel()
+
     var bugReport by remember { mutableStateOf("") }
 
     Column(Modifier.padding(horizontal = regularPadding)) {

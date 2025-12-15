@@ -40,7 +40,9 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
     val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
     val scrollState = rememberScrollState()
+
     var email by remember { mutableStateOf("") }
+
     val confirmationMessage by authVM.confirmationMessage.collectAsStateWithLifecycle()
     val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()

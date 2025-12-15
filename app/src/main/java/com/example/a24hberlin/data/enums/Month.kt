@@ -6,6 +6,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 enum class Month(val value: Int) {
+
     JANUARY(1),
     FEBRUARY(2),
     MARCH(3),
@@ -19,7 +20,7 @@ enum class Month(val value: Int) {
     NOVEMBER(11),
     DECEMBER(12);
 
-    val englishName: String
+    private val englishName: String
         get() = java.time.Month.of(value).getDisplayName(TextStyle.FULL, Locale.US).lowercase()
 
     companion object {

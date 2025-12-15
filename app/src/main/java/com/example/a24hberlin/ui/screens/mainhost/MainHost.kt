@@ -39,16 +39,21 @@ fun AppNavigation() {
     val context = LocalContext.current
     val view = LocalView.current
     val navController = rememberNavController()
+
     var appBarTitle by remember { mutableStateOf("") }
-    val bottomBarState = remember { mutableStateOf(true) }
     var showSearchBar by remember { mutableStateOf(false) }
     var searchText by remember { mutableStateOf(TextFieldValue("")) }
+
     var selectedEventType by remember { mutableStateOf<EventType?>(null) }
     var selectedMonth by remember { mutableStateOf<Month?>(null) }
     var selectedSound by remember { mutableStateOf<String?>(null) }
     var selectedVenue by remember { mutableStateOf<String?>(null) }
 
+    val bottomBarState = remember { mutableStateOf(true) }
+
     Scaffold(
+        contentWindowInsets = WindowInsets.safeDrawing,
+
         topBar = {
             Column {
                 MyTopAppBar(
@@ -86,6 +91,7 @@ fun AppNavigation() {
                 }
             }
         },
+
         bottomBar = {
             if (bottomBarState.value) {
                 MyBottomNavigationBar(
@@ -97,8 +103,7 @@ fun AppNavigation() {
                     }
                 )
             }
-        },
-        contentWindowInsets = WindowInsets.safeDrawing
+        }
     ) { paddingValues ->
         Surface(
             Modifier
@@ -111,7 +116,7 @@ fun AppNavigation() {
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize()
             )
-            SetSystemBarColorsToLight(false)
+
             NavGraph(
                 navController,
                 searchText,
@@ -123,6 +128,8 @@ fun AppNavigation() {
             ) { appBarTitle = it }
         }
     }
+
+    SetSystemBarColorsToLight(false)
 
     DisposableEffect(navController) {
         val listener = NavController.OnDestinationChangedListener { _, destination, _ ->

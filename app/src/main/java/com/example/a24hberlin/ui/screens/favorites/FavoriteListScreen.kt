@@ -38,9 +38,12 @@ fun FavoritesScreen(
 ) {
     val connectivityVM: ConnectivityViewModel = viewModel()
     val eventVM: EventViewModel = viewModel()
-    val listState = rememberLazyListState()
+
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
+
+    val listState = rememberLazyListState()
+
     val filteredFavorites = filteredEvents(
         events = favorites,
         selectedMonth = selectedMonth,
@@ -60,8 +63,8 @@ fun FavoritesScreen(
                 contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
             ) {
                 items(
-                    filteredFavorites,
-                    { favorite -> favorite.id }
+                    items = filteredFavorites,
+                    key = { favorite -> favorite.id }
                 ) { favorite ->
                     EventItem(favorite)
                 }

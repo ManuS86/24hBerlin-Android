@@ -35,8 +35,11 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun ChangeEmailScreen() {
     val view = LocalView.current
+
     val settingsVM: SettingsViewModel = viewModel()
+
     var email by remember { mutableStateOf("") }
+
     val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
 

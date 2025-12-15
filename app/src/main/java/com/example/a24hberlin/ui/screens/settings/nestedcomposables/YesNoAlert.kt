@@ -15,6 +15,7 @@ fun YesNoAlert(title: String, text: String, onDismiss: () -> Unit, onConfirm: ()
         title = { Text(title) },
         text = { Text(text) },
         containerColor = Color.White,
+
         confirmButton = {
             TextButton(
                 onClick = onConfirm
@@ -26,6 +27,7 @@ fun YesNoAlert(title: String, text: String, onDismiss: () -> Unit, onConfirm: ()
                 )
             }
         },
+
         dismissButton = {
             TextButton(
                 onClick = onDismiss

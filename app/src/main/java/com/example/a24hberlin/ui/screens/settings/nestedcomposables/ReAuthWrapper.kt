@@ -38,8 +38,11 @@ fun ReAuthWrapper(
     onTitleChange: (String) -> Unit
 ) {
     val view = LocalView.current
+
     val settingsVM: SettingsViewModel = viewModel()
+
     var password by remember { mutableStateOf("") }
+
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val isReauthenticated by settingsVM.isReauthenticated.collectAsStateWithLifecycle()
 

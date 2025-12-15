@@ -1,4 +1,4 @@
-package com.example.a24hberlin.services
+package com.example.a24hberlin.managers
 
 import android.app.Activity
 import android.app.LocaleManager

@@ -10,12 +10,19 @@ import androidx.work.WorkManager
 import com.example.a24hberlin.workers.ImageNotificationWorker
 
 class ReminderReceiver : BroadcastReceiver() {
+    companion object {
+        const val EXTRA_NOTIFICATION_ID = "notificationId"
+        const val EXTRA_TITLE = "title"
+        const val EXTRA_BODY = "body"
+        const val EXTRA_IMAGE_URL = "imageURL"
+    }
+
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
-        val notificationId = intent.getIntExtra("notificationId", 0)
-        val title = intent.getStringExtra("title") ?: ""
-        val body = intent.getStringExtra("body") ?: ""
-        val imageURL = intent.getStringExtra("imageURL")
+        val notificationId = intent.getIntExtra(EXTRA_NOTIFICATION_ID, 0)
+        val title = intent.getStringExtra(EXTRA_TITLE) ?: ""
+        val body = intent.getStringExtra(EXTRA_BODY) ?: ""
+        val imageURL = intent.getStringExtra(EXTRA_IMAGE_URL)
 
         val inputData = Data.Builder()
             .putString("title", title)

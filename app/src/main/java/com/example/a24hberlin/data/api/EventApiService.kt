@@ -1,5 +1,6 @@
 package com.example.a24hberlin.data.api
 
+import com.example.a24hberlin.BuildConfig
 import com.example.a24hberlin.data.model.ServerResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -12,7 +13,11 @@ import retrofit2.http.GET
 const val BASE_URL = "https://www.twenty-four-hours.info/"
 
 private val logger: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-    level = HttpLoggingInterceptor.Level.BODY
+    level = if (BuildConfig.DEBUG) {
+        HttpLoggingInterceptor.Level.BODY
+    } else {
+        HttpLoggingInterceptor.Level.NONE
+    }
 }
 
 private val httpClient = OkHttpClient.Builder()
@@ -21,7 +26,7 @@ private val httpClient = OkHttpClient.Builder()
 
 private val moshi = Moshi
     .Builder()
-    .add(KotlinJsonAdapterFactory())
+    .addLast(KotlinJsonAdapterFactory())
     .build()
 
 private val retrofit = Retrofit

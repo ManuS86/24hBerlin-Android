@@ -42,9 +42,11 @@ fun LoginScreen(onClick: () -> Unit) {
     val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
     val scrollState = rememberScrollState()
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showForgotPassword by remember { mutableStateOf(false) }
+
     val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
 
     if (showForgotPassword) {

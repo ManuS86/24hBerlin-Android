@@ -38,9 +38,12 @@ fun EventsScreen(
 ) {
     val connectivityVM: ConnectivityViewModel = viewModel()
     val eventVM: EventViewModel = viewModel()
-    val listState = rememberLazyListState()
+
     val events by eventVM.events.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
+
+    val listState = rememberLazyListState()
+
     val filteredEvents = filteredEvents(
         events = events,
         selectedMonth = selectedMonth,
@@ -61,8 +64,8 @@ fun EventsScreen(
                 contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
             ) {
                 items(
-                    filteredEvents,
-                    { event -> event.id }
+                    items = filteredEvents,
+                    key = { event -> event.id }
                 ) { event ->
                     EventItem(event)
                 }

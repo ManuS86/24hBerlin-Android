@@ -36,9 +36,12 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun ChangePasswordScreen() {
     val view = LocalView.current
+
     val settingsVM: SettingsViewModel = viewModel()
+
     var confirmPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
     val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val passwordError by settingsVM.passwordError.collectAsStateWithLifecycle()
