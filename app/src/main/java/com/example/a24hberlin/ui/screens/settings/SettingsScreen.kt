@@ -57,8 +57,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
+import com.example.a24hberlin.managers.LanguageChangeHelper
 import com.example.a24hberlin.navigation.Screen
-import com.example.a24hberlin.services.LanguageChangeHelper
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
@@ -80,24 +80,31 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
+
     val languageChangeHelper by lazy {
         LanguageChangeHelper()
     }
-    var alertMessage by remember { mutableStateOf("") }
-    val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
-    var previousLanguageCode by remember { mutableStateOf("") }
-    val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
+
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
     var showBugReportAlert by remember { mutableStateOf(false) }
     var showDeleteAccountAlert by remember { mutableStateOf(false) }
     var showLogOutAlert by remember { mutableStateOf(false) }
     var showBugReport by remember { mutableStateOf(false) }
+
+    var alertMessage by remember { mutableStateOf("") }
+    var previousLanguageCode by remember { mutableStateOf("") }
+
+    val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
+    val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
+
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()
-    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabled.collectAsStateWithLifecycle()
+    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
 
     Column(
         Modifier
@@ -105,6 +112,7 @@ fun SettingsScreen(
             .verticalScroll(scrollState)
             .padding(regularPadding)
     ) {
+        // --- A. Account Details ---
         Text(
             "Account Details",
             Modifier.padding(bottom = smallPadding),
@@ -127,6 +135,7 @@ fun SettingsScreen(
                 contentColor = Color.Black
             )
         ) {
+            // Change Email
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -164,6 +173,7 @@ fun SettingsScreen(
                 color = Color.LightGray
             )
 
+            // Change Password
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -196,6 +206,7 @@ fun SettingsScreen(
             }
         }
 
+        // --- B. App Settings ---
         Text(
             stringResource(R.string.app_settings),
             Modifier
@@ -205,6 +216,7 @@ fun SettingsScreen(
             color = Color.Black
         )
 
+        // Language Settings
         Card(
             Modifier
                 .fillMaxWidth()
@@ -246,6 +258,7 @@ fun SettingsScreen(
 
         Spacer(Modifier.padding(mediumPadding))
 
+        // Push Notifications
         Card(
             Modifier
                 .fillMaxWidth()
@@ -283,8 +296,8 @@ fun SettingsScreen(
                         if (it) {
                             favorites.forEach { favorite ->
                                 eventVM.addFavoritePushNotifications(favorite)
-                                eventVM.setupAbsenceReminder()
                             }
+                            eventVM.setupAbsenceReminder()
                         } else {
                             settingsVM.removeAllPendingNotifications(favorites)
                         }
@@ -296,6 +309,7 @@ fun SettingsScreen(
             }
         }
 
+        // --- C. Community & Utility ---
         Text(
             "Community",
             Modifier
@@ -305,6 +319,7 @@ fun SettingsScreen(
             color = Color.Black
         )
 
+        // Share App
         SettingsButton(
             stringResource(R.string.share_24hBerlin),
             FontWeight.Normal,
@@ -330,6 +345,7 @@ fun SettingsScreen(
 
         Spacer(Modifier.padding(mediumPadding))
 
+        // Report a Bug
         SettingsButton(
             stringResource(R.string.report_a_bug),
             FontWeight.Normal,
@@ -341,6 +357,7 @@ fun SettingsScreen(
 
         Spacer(Modifier.padding(largePadding))
 
+        // Log Out
         SettingsButton(
             stringResource(R.string.logout),
             FontWeight.SemiBold,
@@ -350,6 +367,7 @@ fun SettingsScreen(
             showLogOutAlert = true
         }
 
+        // --- D. Footer and Version ---
         Column(
             Modifier
                 .fillMaxWidth()
@@ -371,6 +389,7 @@ fun SettingsScreen(
             )
         }
 
+        // Delete Account
         SettingsButton(
             stringResource(R.string.delete_account),
             FontWeight.Normal,

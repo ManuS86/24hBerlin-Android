@@ -16,5 +16,5 @@ interface UserRepository {
     suspend fun login(email: String, password: String)
     fun logout()
     suspend fun reAuthenticate(password: String)
-    suspend fun sendBugReport(message: String, completion: (Exception?) -> Unit)
+    fun sendBugReport(message: String, completion: (Exception?) -> Unit)
 }

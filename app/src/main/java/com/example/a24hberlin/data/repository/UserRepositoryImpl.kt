@@ -1,43 +1,48 @@
 package com.example.a24hberlin.data.repository
 
+import com.example.a24hberlin.BuildConfig
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
+import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.BuildConfig
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.toObject
-import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
-class UserRepositoryImpl(private var db: FirebaseFirestore) : UserRepository {
+class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
+
     private val auth = Firebase.auth
     private val collRef = db.collection("users")
-    private val userRef: DocumentReference?
 
-    init {
-        db = FirebaseFirestore.getInstance()
-        userRef = auth.currentUserRef()
+    private fun FirebaseAuth.getUserDocumentRef(): DocumentReference? {
+        val uid = this.currentUser?.uid ?: return null
+        return collRef.document(uid)
     }
 
     override suspend fun register(email: String, password: String) {
-        val result = auth.createUserWithEmailAndPassword(email, password).await()
+        withContext(Dispatchers.IO) {
+            val result = auth.createUserWithEmailAndPassword(email, password).await()
 
-        result.user?.let {
-            collRef
-                .document(result.user!!.uid)
-                .set(AppUser())
-        }?.await()
+            result.user?.let { user ->
+                collRef
+                    .document(user.uid)
+                    .set(AppUser())
+                    .await()
+            }
+        }
     }
 
     override fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
-        return userRef?.let {
-            userRef
-            userRef.addSnapshotListener { snapshot, error ->
+        val userRef = auth.getUserDocumentRef()
+        return userRef?.let { ref ->
+            ref.addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     println("Error listening for user updates: ${error.message}")
                     onChange(null)
@@ -50,62 +55,75 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) : UserRepository {
     }
 
     override suspend fun changeEmail(email: String) {
-        auth.currentUser
-            ?.verifyBeforeUpdateEmail(email)
-            ?.await()
+        withContext(Dispatchers.IO) {
+            auth.currentUser
+                ?.verifyBeforeUpdateEmail(email)
+                ?.await()
+        }
     }
 
     override suspend fun changePassword(password: String) {
-        auth.currentUser
-            ?.updatePassword(password)
-            ?.await()
+        withContext(Dispatchers.IO) {
+            auth.currentUser
+                ?.updatePassword(password)
+                ?.await()
+        }
     }
 
     override suspend fun resetPassword(email: String) {
-        auth
-            .sendPasswordResetEmail(email)
-            .await()
+        withContext(Dispatchers.IO) {
+            auth
+                .sendPasswordResetEmail(email)
+                .await()
+        }
     }
 
-
     override suspend fun updateUserInformation(favoriteID: String?, settings: Settings?) {
-        val values = mutableMapOf<String, Any>().apply {
-            favoriteID?.let { this["favoriteIDs"] = FieldValue.arrayUnion(it) }
-            settings?.let {
-                this["settings"] = mapOf(
-                    "pushNotificationsEnabled" to it.pushNotificationsEnabled,
-                    "language" to it.language
-                )
+        withContext(Dispatchers.IO) {
+            val values = mutableMapOf<String, Any>().apply {
+                favoriteID?.let { this["favoriteIDs"] = FieldValue.arrayUnion(it) }
+                settings?.let {
+                    this["settings"] = mapOf(
+                        "pushNotificationsEnabled" to it.pushNotificationsEnabled,
+                        "language" to it.language
+                    )
+                }
             }
+
+            if (values.isEmpty()) return@withContext
+
+            auth.getUserDocumentRef()
+                ?.update(values)
+                ?.await()
         }
-
-        if (values.isEmpty()) return
-
-        userRef
-            ?.update(values)
-            ?.await()
     }
 
     override suspend fun removeFavoriteID(favoriteID: String) {
-        userRef
-            ?.update("favoriteIDs", FieldValue.arrayRemove(favoriteID))
-            ?.await()
+        withContext(Dispatchers.IO) {
+            auth.getUserDocumentRef()
+                ?.update("favoriteIDs", FieldValue.arrayRemove(favoriteID))
+                ?.await()
+        }
     }
 
     override suspend fun deleteUserDataAndAuth() {
-        userRef
-            ?.delete()
-            ?.await()
+        withContext(Dispatchers.IO) {
+            auth.getUserDocumentRef()
+                ?.delete()
+                ?.await()
 
-        auth.currentUser
-            ?.delete()
-            ?.await()
+            auth.currentUser
+                ?.delete()
+                ?.await()
+        }
     }
 
     override suspend fun login(email: String, password: String) {
-        auth
-            .signInWithEmailAndPassword(email, password)
-            .await()
+        withContext(Dispatchers.IO) {
+            auth
+                .signInWithEmailAndPassword(email, password)
+                .await()
+        }
     }
 
     override fun logout() {
@@ -113,15 +131,22 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) : UserRepository {
     }
 
     override suspend fun reAuthenticate(password: String) {
-        val user = auth.currentUser
-        val credential = EmailAuthProvider.getCredential(user?.email!!, password)
+        withContext(Dispatchers.IO) {
+            val user = auth.currentUser
+                ?: throw IllegalStateException("User must be logged in to re-authenticate.")
 
-        user
-            .reauthenticate(credential)
-            .await()
+            val email = user.email
+                ?: throw IllegalStateException("User account is missing an email address.")
+
+            val credential = EmailAuthProvider.getCredential(email, password)
+
+            user
+                .reauthenticate(credential)
+                .await()
+        }
     }
 
-    override suspend fun sendBugReport(
+    override fun sendBugReport(
         message: String,
         completion: (Exception?) -> Unit
     ) {
@@ -143,11 +168,6 @@ class UserRepositoryImpl(private var db: FirebaseFirestore) : UserRepository {
                 } else {
                     completion(task.exception)
                 }
-            }.await()
-    }
-
-    private fun FirebaseAuth.currentUserRef(): DocumentReference? {
-        val uid = this.currentUser?.uid ?: return null
-        return collRef.document(uid)
+            }
     }
 }
