@@ -36,7 +36,6 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun ChangePasswordScreen() {
     val view = LocalView.current
-
     val settingsVM: SettingsViewModel = viewModel()
 
     var confirmPassword by remember { mutableStateOf("") }
@@ -58,58 +57,38 @@ fun ChangePasswordScreen() {
             Spacer(Modifier.weight(0.7f))
 
             Text(
-                stringResource(R.string.change_your_password),
-                Modifier.padding(vertical = largePadding),
+                text = stringResource(R.string.change_your_password),
+                modifier = Modifier.padding(vertical = largePadding),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
 
             PasswordField(
-                stringResource(R.string.new_password),
-                stringResource(R.string.enter_your_new_password),
-                password
-            ) { password = it }
+                label = stringResource(R.string.new_password),
+                placeholder = stringResource(R.string.enter_your_new_password),
+                password = password,
+                onPasswordChanged = { password = it }
+            )
 
             Spacer(Modifier.height(regularPadding))
 
             PasswordField(
-                stringResource(R.string.confirm_new_password),
-                stringResource(R.string.confirm_your_new_password),
-                confirmPassword
-            ) { confirmPassword = it }
+                label = stringResource(R.string.confirm_new_password),
+                placeholder = stringResource(R.string.confirm_your_new_password),
+                password = confirmPassword,
+                onPasswordChanged = { password = it }
+            )
 
-            if (confirmationMessage != null) {
-                Text(
-                    stringResource(confirmationMessage!!),
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Green,
-                    style = MaterialTheme.typography.bodyMedium
+            ErrorMessages(confirmationMessage, firebaseError, passwordError)
+
+            LargeDarkButton(
+                label = stringResource(R.string.change_password),
+                onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    settingsVM.changePassword(password, confirmPassword)
+                }
                 )
-            }
-
-            if (firebaseError != null) {
-                Text(
-                    firebaseError!!,
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (passwordError != null) {
-                Text(
-                    stringResource(passwordError!!),
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            LargeDarkButton(stringResource(R.string.change_password)) {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                settingsVM.changePassword(password, confirmPassword)
-            }
 
             Spacer(Modifier.weight(1f))
         }
@@ -119,5 +98,39 @@ fun ChangePasswordScreen() {
         onDispose {
             settingsVM.clearErrorMessages()
         }
+    }
+}
+
+@Composable
+private fun ErrorMessages(
+    confirmationMessage: Int?,
+    firebaseError: String?,
+    passwordError: Int?
+) {
+    if (confirmationMessage != null) {
+        Text(
+            stringResource(confirmationMessage),
+            Modifier.padding(top = errorPadding),
+            color = Color.Green,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    if (firebaseError != null) {
+        Text(
+            firebaseError,
+            Modifier.padding(top = errorPadding),
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    if (passwordError != null) {
+        Text(
+            stringResource(passwordError),
+            Modifier.padding(top = errorPadding),
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

@@ -35,7 +35,6 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun ChangeEmailScreen() {
     val view = LocalView.current
-
     val settingsVM: SettingsViewModel = viewModel()
 
     var email by remember { mutableStateOf("") }
@@ -55,23 +54,24 @@ fun ChangeEmailScreen() {
             Spacer(Modifier.weight(0.7f))
 
             Text(
-                stringResource(R.string.change_your_email),
-                Modifier.padding(vertical = largePadding),
+                text = stringResource(R.string.change_your_email),
+                modifier = Modifier.padding(vertical = largePadding),
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black
             )
 
             EmailField(
-                stringResource(R.string.new_email),
-                stringResource(R.string.enter_your_new_email),
-                email
-            ) { email = it }
+                label = stringResource(R.string.new_email),
+                placeholder = stringResource(R.string.enter_your_new_email),
+                email = email,
+                onEmailChanged = { email = it }
+            )
 
             if (confirmationMessage != null) {
                 Text(
-                    stringResource(confirmationMessage!!),
-                    Modifier.padding(top = errorPadding),
+                    text = stringResource(confirmationMessage!!),
+                    modifier = Modifier.padding(top = errorPadding),
                     color = Color.Green,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -79,17 +79,20 @@ fun ChangeEmailScreen() {
 
             if (firebaseError != null) {
                 Text(
-                    firebaseError!!,
-                    Modifier.padding(top = errorPadding),
+                    text = firebaseError!!,
+                    modifier = Modifier.padding(top = errorPadding),
                     color = Color.Red,
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
 
-            LargeDarkButton(stringResource(R.string.change_email)) {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                settingsVM.changeEmail(email)
-            }
+            LargeDarkButton(
+                label = stringResource(R.string.change_email),
+                onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    settingsVM.changeEmail(email)
+                }
+            )
 
             Spacer(Modifier.weight(1f))
         }

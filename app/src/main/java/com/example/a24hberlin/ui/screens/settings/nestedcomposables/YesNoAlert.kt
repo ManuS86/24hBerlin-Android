@@ -17,21 +17,16 @@ fun YesNoAlert(title: String, text: String, onDismiss: () -> Unit, onConfirm: ()
         containerColor = Color.White,
 
         confirmButton = {
-            TextButton(
-                onClick = onConfirm
-
-            ) {
+            TextButton(onClick = onConfirm) {
                 Text(
-                    stringResource(R.string.yes),
+                    text = stringResource(R.string.yes),
                     color = Color.Red
                 )
             }
         },
 
         dismissButton = {
-            TextButton(
-                onClick = onDismiss
-            ) {
+            TextButton(onClick = onDismiss) {
                 Text(stringResource(R.string.no))
             }
         }

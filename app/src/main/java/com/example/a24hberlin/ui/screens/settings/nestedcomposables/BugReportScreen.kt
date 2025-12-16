@@ -38,21 +38,20 @@ fun BugReportScreen(
     alertMessageThankYou: () -> Unit
 ) {
     val view = LocalView.current
-
     val settingsVM: SettingsViewModel = viewModel()
 
     var bugReport by remember { mutableStateOf("") }
 
     Column(Modifier.padding(horizontal = regularPadding)) {
         Text(
-            stringResource(R.string.report_a_bug),
-            Modifier.padding(bottom = mediumPadding),
+            text = stringResource(R.string.report_a_bug),
+            modifier = Modifier.padding(bottom = mediumPadding),
             style = MaterialTheme.typography.titleMedium,
             color = TextOffBlack
         )
 
         OutlinedTextField(
-            bugReport,
+            value = bugReport,
             onValueChange = { bugReport = it },
             modifier = Modifier
                 .fillMaxWidth()
@@ -67,26 +66,29 @@ fun BugReportScreen(
             )
         )
 
-        LargeDarkButton(stringResource(R.string.send_bug_report)) {
-            view.playSoundEffect(SoundEffectConstants.CLICK)
-            if (bugReport.isEmpty()) {
-                alertMessageDescribe()
-                alertToggle()
-            } else {
-                settingsVM.sendBugReport(
-                    bugReport,
-                    completion = { error ->
-                        if (error != null) {
-                            alertToggle()
-                        } else {
-                            alertMessageThankYou()
-                            alertToggle()
-                            bugReport = ""
+        LargeDarkButton(
+            label = stringResource(R.string.send_bug_report),
+            onClick = {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
+                if (bugReport.isEmpty()) {
+                    alertMessageDescribe()
+                    alertToggle()
+                } else {
+                    settingsVM.sendBugReport(
+                        bugReport,
+                        completion = { error ->
+                            if (error != null) {
+                                alertToggle()
+                            } else {
+                                alertMessageThankYou()
+                                alertToggle()
+                                bugReport = ""
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
-        }
+            )
 
         Spacer(Modifier.padding(largePadding))
     }

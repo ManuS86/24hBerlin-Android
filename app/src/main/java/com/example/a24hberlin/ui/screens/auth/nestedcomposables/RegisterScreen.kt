@@ -8,7 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -107,32 +106,7 @@ fun RegisterScreen(onClick: () -> Unit) {
             confirmPassword
         ) { confirmPassword = it }
 
-        if (errorMessage != null) {
-            Text(
-                stringResource(errorMessage!!),
-                Modifier.padding(top = errorPadding),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        if (firebaseError != null) {
-            Text(
-                firebaseError!!,
-                Modifier.padding(top = errorPadding),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        if (passwordError != null) {
-            Text(
-                stringResource(passwordError!!),
-                Modifier.padding(top = errorPadding),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        RegisterErrorMessages(errorMessage, firebaseError, passwordError)
 
         LargeDarkButton(stringResource(R.string.register)) {
             view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -146,17 +120,7 @@ fun RegisterScreen(onClick: () -> Unit) {
 
         Spacer(Modifier.weight(1f))
 
-        Text(
-            stringResource(R.string.already_have_an_account),
-            Modifier.fillMaxWidth(),
-            color = Color.Gray,
-            textAlign = TextAlign.Center
-        )
-
-        AuthTextButton(
-            stringResource(R.string.login),
-            onClick = onClick
-        )
+        LoginPrompt(onClick = onClick)
     }
 
     DisposableEffect(Unit) {
@@ -164,4 +128,56 @@ fun RegisterScreen(onClick: () -> Unit) {
             authVM.clearErrorMessages()
         }
     }
+}
+
+@Composable
+private fun RegisterErrorMessages(
+    errorMessage: Int?,
+    firebaseError: String?,
+    passwordError: Int?
+) {
+    val errorModifier = Modifier.padding(top = errorPadding)
+    val errorStyle = MaterialTheme.typography.bodyMedium
+    val errorColor = Color.Red
+
+    if (errorMessage != null) {
+        Text(
+            stringResource(errorMessage),
+            errorModifier,
+            color = errorColor,
+            style = errorStyle
+        )
+    }
+
+    if (firebaseError != null) {
+        Text(
+            firebaseError,
+            errorModifier,
+            color = errorColor,
+            style = errorStyle
+        )
+    }
+
+    if (passwordError != null) {
+        Text(
+            stringResource(passwordError),
+            errorModifier,
+            color = errorColor,
+            style = errorStyle
+        )
+    }
+}
+
+@Composable
+private fun LoginPrompt(onClick: () -> Unit) {
+    Text(
+        stringResource(R.string.already_have_an_account),
+        color = Color.Gray,
+        textAlign = TextAlign.Center
+    )
+
+    AuthTextButton(
+        stringResource(R.string.login),
+        onClick = onClick
+    )
 }

@@ -1,4 +1,5 @@
 <resources>
+    <string name="account_details">Account Details</string>
     <string name="all">Alle</string>
     <string name="already_have_an_account">Hast du bereits einen Account?</string>
     <string name="an_account_with_this_email_already_exists">Ein Account mit dieser E-Mail existiert bereits.</string>
@@ -21,6 +22,7 @@
     <string name="clear_search">Suche zurücksetzen</string>
     <string name="club_map">Clubmap</string>
     <string name="come_back_and_check_out_the_latest_events">Komm zurück und schaue dir die neuesten Veranstaltungen an.</string>
+    <string name="community">Community</string>
     <string name="concert">Konzert</string>
     <string name="confirm">Bestätigen</string>
     <string name="confirm_new_password">Neues Passwort bestätigen</string>
@@ -137,4 +139,5 @@
     <string name="wed">MI</string>
     <string name="yes">JA</string>
     <string name="your_position">Deine Position</string>
+
 </resources>

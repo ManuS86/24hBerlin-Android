@@ -74,32 +74,7 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
             email
         ) { email = it }
 
-        if (confirmationMessage != null) {
-            Text(
-                stringResource(confirmationMessage!!),
-                Modifier.padding(top = errorPadding),
-                color = Color.Green,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        if (errorMessage != null) {
-            Text(
-                stringResource(errorMessage!!),
-                Modifier.padding(top = errorPadding),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        if (firebaseError != null) {
-            Text(
-                firebaseError!!,
-                Modifier.padding(top = errorPadding),
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
+        AuthMessages(confirmationMessage, errorMessage, firebaseError)
 
         LargeDarkButton(stringResource(R.string.reset_password)) {
             view.playSoundEffect(SoundEffectConstants.CLICK)
@@ -121,5 +96,39 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
         onDispose {
             authVM.clearErrorMessages()
         }
+    }
+}
+
+@Composable
+private fun AuthMessages(
+    confirmationMessage: Int?,
+    errorMessage: Int?,
+    firebaseError: String?
+) {
+    if (confirmationMessage != null) {
+        Text(
+            stringResource(confirmationMessage),
+            Modifier.padding(top = errorPadding),
+            color = Color.Green,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    if (errorMessage != null) {
+        Text(
+            stringResource(errorMessage),
+            Modifier.padding(top = errorPadding),
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+
+    if (firebaseError != null) {
+        Text(
+            firebaseError,
+            Modifier.padding(top = errorPadding),
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }

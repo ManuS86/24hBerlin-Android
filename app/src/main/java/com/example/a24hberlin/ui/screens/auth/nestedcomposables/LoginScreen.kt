@@ -52,7 +52,7 @@ fun LoginScreen(onClick: () -> Unit) {
     if (showForgotPassword) {
         ForgotPasswordScreen {
             view.playSoundEffect(SoundEffectConstants.CLICK)
-            showForgotPassword = !showForgotPassword
+            showForgotPassword = false
         }
     } else {
         Column(
@@ -91,12 +91,7 @@ fun LoginScreen(onClick: () -> Unit) {
             ) { password = it }
 
             if (errorMessage != null) {
-                Text(
-                    stringResource(errorMessage!!),
-                    Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
+                ErrorMessageText(errorMessage!!)
             }
 
             LargeDarkButton(stringResource(R.string.login)) {
@@ -110,21 +105,12 @@ fun LoginScreen(onClick: () -> Unit) {
                 stringResource(R.string.forgot_password)
             ) {
                 view.playSoundEffect(SoundEffectConstants.CLICK)
-                showForgotPassword = !showForgotPassword
+                showForgotPassword = true
             }
 
             Spacer(Modifier.weight(1f))
 
-            Text(
-                stringResource(R.string.dont_have_an_account),
-                color = Color.Gray,
-                textAlign = TextAlign.Center
-            )
-
-            AuthTextButton(
-                stringResource(R.string.create_account),
-                onClick = onClick
-            )
+            SignupPrompt(onClick = onClick)
         }
     }
 
@@ -133,4 +119,28 @@ fun LoginScreen(onClick: () -> Unit) {
             authVM.clearErrorMessages()
         }
     }
+}
+
+@Composable
+private fun ErrorMessageText(messageResId: Int) {
+    Text(
+        stringResource(messageResId),
+        Modifier.padding(top = errorPadding),
+        color = Color.Red,
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
+
+@Composable
+private fun SignupPrompt(onClick: () -> Unit) {
+    Text(
+        stringResource(R.string.dont_have_an_account),
+        color = Color.Gray,
+        textAlign = TextAlign.Center
+    )
+
+    AuthTextButton(
+        stringResource(R.string.create_account),
+        onClick = onClick
+    )
 }

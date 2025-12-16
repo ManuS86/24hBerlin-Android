@@ -11,6 +11,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,10 +37,8 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun ReAuthWrapper(
     from: String,
-    onTitleChange: (String) -> Unit
+    onSetTitleId: (Int?) -> Unit
 ) {
-    val view = LocalView.current
-
     val settingsVM: SettingsViewModel = viewModel()
 
     var password by remember { mutableStateOf("") }
@@ -46,7 +46,15 @@ fun ReAuthWrapper(
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val isReauthenticated by settingsVM.isReauthenticated.collectAsStateWithLifecycle()
 
-    onTitleChange(stringResource(R.string.re_authenticate))
+    val targetTitleId = when {
+        isReauthenticated && from == "email" -> R.string.change_email
+        isReauthenticated && from == "password" -> R.string.change_password
+        else -> R.string.re_authenticate
+    }
+
+    LaunchedEffect(targetTitleId) {
+        onSetTitleId(targetTitleId)
+    }
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -57,46 +65,17 @@ fun ReAuthWrapper(
         )
         if (isReauthenticated) {
             if (from == "email") {
-                onTitleChange(stringResource(R.string.change_email))
                 ChangeEmailScreen()
             } else {
-                onTitleChange(stringResource(R.string.change_password))
                 ChangePasswordScreen()
             }
         } else {
-            Column(Modifier.padding(horizontal = regularPadding)) {
-                Spacer(Modifier.weight(0.7f))
-
-                Text(
-                    stringResource(R.string.please_re_enter_your_password),
-                    Modifier.padding(vertical = largePadding),
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black
-                )
-
-                PasswordField(
-                    stringResource(R.string.password),
-                    stringResource(R.string.re_enter_password),
-                    password
-                ) { password = it }
-
-                if (firebaseError != null) {
-                    Text(
-                        firebaseError!!,
-                        Modifier.padding(top = errorPadding),
-                        color = Color.Red,
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
-
-                LargeDarkButton(stringResource(R.string.verify_password)) {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-                    settingsVM.reAuthenticate(password)
-                }
-
-                Spacer(Modifier.weight(1f))
-            }
+            PasswordReAuthForm(
+                settingsVM = settingsVM,
+                firebaseError = firebaseError,
+                onPasswordEntered = { password = it },
+                password = password
+            )
         }
     }
 
@@ -104,5 +83,53 @@ fun ReAuthWrapper(
         onDispose {
             settingsVM.clearErrorMessages()
         }
+    }
+}
+
+@Composable
+private fun PasswordReAuthForm(
+    settingsVM: SettingsViewModel,
+    firebaseError: String?,
+    password: String,
+    onPasswordEntered: (String) -> Unit
+) {
+    val view = LocalView.current
+
+    Column(Modifier.padding(horizontal = regularPadding)) {
+        Spacer(Modifier.weight(0.7f))
+
+        Text(
+            text = stringResource(R.string.please_re_enter_your_password),
+            modifier = Modifier.padding(vertical = largePadding),
+            fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.titleLarge,
+            color = Color.Black
+        )
+
+        PasswordField(
+            label = stringResource(R.string.password),
+            placeholder = stringResource(R.string.re_enter_password),
+            password = password,
+            onPasswordChanged = onPasswordEntered
+        )
+
+        if (firebaseError != null) {
+            Text(
+                text = firebaseError,
+                modifier = Modifier.padding(top = errorPadding),
+                color = Color.Red,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+
+        LargeDarkButton(
+            label = stringResource(R.string.verify_password),
+            onClick = {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
+                settingsVM.reAuthenticate(password)
+            }
+            )
+
+        Spacer(Modifier.weight(1f))
     }
 }

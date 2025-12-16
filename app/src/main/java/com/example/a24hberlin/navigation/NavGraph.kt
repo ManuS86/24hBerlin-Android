@@ -28,7 +28,7 @@ fun NavGraph(
     selectedSound: String?,
     selectedVenue: String?,
     bottomBarState: MutableState<Boolean>,
-    onTitleChange: (String) -> Unit
+    onSetTitleId: (Int?) -> Unit
 ) {
     NavHost(
         navController = navController,
@@ -50,13 +50,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            ClubMapScreen(
-                searchText,
-                selectedEventType,
-                selectedMonth,
-                selectedSound,
-                selectedVenue
-            )
+            ClubMapScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
         }
         composable(
             route = Screen.Favorites.route,
@@ -65,13 +59,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            FavoritesScreen(
-                searchText,
-                selectedEventType,
-                selectedMonth,
-                selectedSound,
-                selectedVenue
-            )
+            FavoritesScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
         }
         composable(
             route = Screen.Settings.route,
@@ -83,13 +71,14 @@ fun NavGraph(
             SettingsScreen(navController, bottomBarState)
         }
         composable(
-            route = Screen.ReAuthWrapper("").route,
-            arguments = Screen.ReAuthWrapper("").arguments,
+            route = Screen.ReAuthWrapper.route,
+            arguments = Screen.ReAuthWrapper.arguments,
             enterTransition = { slideInHorizontally(animationSpec = tween(300)) { it } },
             popExitTransition = { slideOutHorizontally(animationSpec = tween(300)) { it } }
         ) { backStackEntry ->
-            val from = backStackEntry.arguments?.getString("from") ?: ""
-            ReAuthWrapper(from, onTitleChange)
+            val from = backStackEntry.arguments?.getString(Screen.ReAuthWrapper.ARGUMENT_KEY) ?: ""
+
+            ReAuthWrapper(from, onSetTitleId)
         }
     }
 }

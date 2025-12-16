@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,14 +39,39 @@ import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
 
+/**
+ * Single composable component to represent an Event item, supporting both collapsed/expandable
+ * and permanently expanded states.
+ *
+ * @param event The data model for the event.
+ * @param isExpandable If true, the item is clickable to toggle expansion, and the detail view
+ * will show a close button. Defaults to true (list item mode).
+ * @param isInitiallyExpanded If true, the detail view is shown on first composition.
+ */
 @Composable
-fun EventItem(event: Event) {
-    var showDetail by remember { mutableStateOf(false) }
-    val eventColor = when {
-        event.eventType?.values?.contains("Konzert") ?: true -> Concert
-        event.eventType.values.contains("Party") -> Party
-        else -> ArtAndCulture
-    }
+fun EventItem(
+    event: Event,
+    isExpandable: Boolean = true,
+    isInitiallyExpanded: Boolean = false
+) {
+    var showDetail by remember { mutableStateOf(isInitiallyExpanded) }
+    val eventColor = event.getEventColor()
+
+    val rowModifier = Modifier
+        .fillMaxWidth()
+        .background(eventColor)
+        .run {
+            if (isExpandable) {
+                clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = { showDetail = !showDetail }
+                )
+            } else {
+                this
+            }
+        }
+        .padding(regularPadding)
 
     Column(
         Modifier
@@ -54,15 +80,7 @@ fun EventItem(event: Event) {
             .background(Color.White)
     ) {
         CompositionLocalProvider(LocalContentColor provides Color.White) {
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .background(eventColor)
-                    .clickable {
-                        showDetail = !showDetail
-                    }
-                    .padding(regularPadding)
-            ) {
+            Row(modifier = rowModifier) {
                 ImageAndDate(
                     event.imageURL,
                     event.start,
@@ -105,7 +123,25 @@ fun EventItem(event: Event) {
         }
 
         if (showDetail) {
-            EventDetailItem(event, showDetail) { showDetail = !showDetail }
+            val onDetailClose: () -> Unit = {
+                if (isExpandable) {
+                    showDetail = false
+                }
+            }
+
+            EventDetailItem(
+                event = event,
+                isExpandable = isExpandable,
+                showDetailToggle = onDetailClose
+            )
         }
+    }
+}
+
+private fun Event.getEventColor(): Color {
+    return when {
+        this.eventType?.values?.contains("Konzert") == true -> Concert
+        this.eventType?.values?.contains("Party") == true -> Party
+        else -> ArtAndCulture
     }
 }

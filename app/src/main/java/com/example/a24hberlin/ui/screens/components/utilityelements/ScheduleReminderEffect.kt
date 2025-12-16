@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components
+package com.example.a24hberlin.ui.screens.components.utilityelements
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

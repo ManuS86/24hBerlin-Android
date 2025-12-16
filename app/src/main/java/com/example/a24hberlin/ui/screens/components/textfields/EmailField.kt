@@ -19,8 +19,8 @@ import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun EmailField(
-    title: String,
-    hint: String,
+    label: String,
+    placeholder: String,
     email: String,
     onEmailChanged: (String) -> Unit
 ) {
@@ -29,7 +29,7 @@ fun EmailField(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            title,
+            label,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = smallPadding),
             color = Color.Black
@@ -40,7 +40,7 @@ fun EmailField(
             onValueChange = onEmailChanged,
             placeholder = {
                 Text(
-                    hint,
+                    placeholder,
                     color = Color.Gray
                 )
             },

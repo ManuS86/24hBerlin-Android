@@ -32,8 +32,8 @@ import com.example.a24hberlin.utils.smallPadding
 
 @Composable
 fun PasswordField(
-    title: String,
-    hint: String,
+    label: String,
+    placeholder: String,
     password: String,
     onPasswordChanged: (String) -> Unit
 ) {
@@ -44,7 +44,7 @@ fun PasswordField(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            title,
+            label,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = smallPadding),
             color = Color.Black
@@ -55,7 +55,7 @@ fun PasswordField(
             onValueChange = onPasswordChanged,
             placeholder = {
                 Text(
-                    hint,
+                    placeholder,
                     color = Color.Gray
                 )
             },
@@ -66,9 +66,7 @@ fun PasswordField(
                 val image =
                     if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 val description =
-                    if (passwordVisible) stringResource(R.string.hide_password) else stringResource(
-                        R.string.show_password
-                    )
+                    if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
 
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(

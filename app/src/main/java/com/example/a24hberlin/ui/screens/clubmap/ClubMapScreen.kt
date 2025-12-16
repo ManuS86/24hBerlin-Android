@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.screens.components.eventitem.EventItemExpanded
+import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
 import com.example.a24hberlin.utils.regularPadding
@@ -103,7 +103,9 @@ fun ClubMapScreen(
                 Column(
                     Modifier.padding(bottom = regularPadding)
                 ) {
-                    selectedEvent?.let { EventItemExpanded(it) }
+                    selectedEvent?.let {
+                        EventItem(it, isExpandable = false, isInitiallyExpanded = true)
+                    }
                 }
             }
         }

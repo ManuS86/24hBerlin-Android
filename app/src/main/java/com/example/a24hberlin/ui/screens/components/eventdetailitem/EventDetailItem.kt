@@ -30,8 +30,16 @@ import com.example.a24hberlin.ui.viewmodel.MapViewModel
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 
+/**
+ * Displays the detailed information for an event, typically used inside an expandable container
+ * or a modal sheet.
+ *
+ * @param event The event data model.
+ * @param isExpandable Flag indicating if the parent container allows collapsing (used to show/hide the collapse button).
+ * @param showDetailToggle Callback function to collapse the parent container.
+ */
 @Composable
-fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> Unit) {
+fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () -> Unit) {
     val context = LocalContext.current
     val mapVM: MapViewModel = viewModel()
 
@@ -61,7 +69,7 @@ fun EventDetailItem(event: Event, showDetail: Boolean, showDetailToggle: () -> U
             }
         }
 
-        if (showDetail) {
+        if (isExpandable) {
             Card(
                 Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(mediumRounding),

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.a24hberlin.ui.screens.auth.AuthWrapper
-import com.example.a24hberlin.ui.screens.components.ScheduleReminderEffect
+import com.example.a24hberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
 import com.example.a24hberlin.ui.theme._24hBerlinTheme
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     contentWindowInsets = WindowInsets.safeDrawing
                 ) { innerPadding ->
                     Image(
-                        painterResource(R.drawable.background),
+                        painter = painterResource(R.drawable.background),
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,
                         modifier = Modifier.fillMaxSize()

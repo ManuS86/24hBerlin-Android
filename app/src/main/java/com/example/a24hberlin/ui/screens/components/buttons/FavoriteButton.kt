@@ -4,6 +4,9 @@ import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -11,10 +14,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,12 +34,8 @@ fun FavoriteButton(event: Event) {
     }
 
     Icon(
-        imageVector = if (isFavorite) ImageVector.vectorResource(R.drawable.calendar_added) else ImageVector.vectorResource(
-            R.drawable.calendar_add
-        ),
-        contentDescription = if (isFavorite) stringResource(R.string.unfavorite) else stringResource(
-            R.string.favorite
-        ),
+        imageVector = if (isFavorite) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
+        contentDescription = if (isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite),
         Modifier
             .size(28.dp)
             .clickable(
