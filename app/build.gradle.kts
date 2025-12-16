@@ -1,3 +1,10 @@
+import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
+import org.gradle.kotlin.dsl.android
+import org.gradle.kotlin.dsl.composeCompiler
+import org.gradle.kotlin.dsl.ksp
+import org.gradle.kotlin.dsl.libs
+import org.gradle.kotlin.dsl.secrets
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)

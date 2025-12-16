@@ -14,7 +14,7 @@ interface UserRepository {
     suspend fun removeFavoriteID(favoriteID: String)
     suspend fun deleteUserDataAndAuth()
     suspend fun login(email: String, password: String)
-    fun logout()
     suspend fun reAuthenticate(password: String)
+    fun logout()
     fun sendBugReport(message: String, completion: (Exception?) -> Unit)
 }

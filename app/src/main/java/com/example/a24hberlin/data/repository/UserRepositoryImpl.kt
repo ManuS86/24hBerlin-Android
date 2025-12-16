@@ -126,10 +126,6 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override fun logout() {
-        auth.signOut()
-    }
-
     override suspend fun reAuthenticate(password: String) {
         withContext(Dispatchers.IO) {
             val user = auth.currentUser
@@ -144,6 +140,10 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
                 .reauthenticate(credential)
                 .await()
         }
+    }
+
+    override fun logout() {
+        auth.signOut()
     }
 
     override fun sendBugReport(

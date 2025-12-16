@@ -1,5 +1,10 @@
 package com.example.a24hberlin.navigation
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.text.input.TextFieldValue
@@ -29,16 +34,22 @@ fun NavGraph(
         navController = navController,
         startDestination = Screen.Events.route
     ) {
-        composable(Screen.Events.route) {
-            EventsScreen(
-                searchText,
-                selectedEventType,
-                selectedMonth,
-                selectedSound,
-                selectedVenue
-            )
+        composable(
+            route = Screen.Events.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
+            EventsScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
         }
-        composable(Screen.ClubMap.route) {
+        composable(
+            Screen.ClubMap.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             ClubMapScreen(
                 searchText,
                 selectedEventType,
@@ -47,7 +58,13 @@ fun NavGraph(
                 selectedVenue
             )
         }
-        composable(Screen.Favorites.route) {
+        composable(
+            route = Screen.Favorites.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
             FavoritesScreen(
                 searchText,
                 selectedEventType,
@@ -56,15 +73,20 @@ fun NavGraph(
                 selectedVenue
             )
         }
-        composable(Screen.Settings.route) {
-            SettingsScreen(
-                navController,
-                bottomBarState
-            )
+        composable(
+            route = Screen.Settings.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None }
+        ) {
+            SettingsScreen(navController, bottomBarState)
         }
         composable(
             route = Screen.ReAuthWrapper("").route,
-            arguments = Screen.ReAuthWrapper("").arguments
+            arguments = Screen.ReAuthWrapper("").arguments,
+            enterTransition = { slideInHorizontally(animationSpec = tween(300)) { it } },
+            popExitTransition = { slideOutHorizontally(animationSpec = tween(300)) { it } }
         ) { backStackEntry ->
             val from = backStackEntry.arguments?.getString("from") ?: ""
             ReAuthWrapper(from, onTitleChange)

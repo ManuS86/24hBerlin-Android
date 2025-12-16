@@ -9,12 +9,12 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.repository.UserRepositoryImpl
 import com.example.a24hberlin.managers.AndroidPermissionManager
 import com.example.a24hberlin.utils.checkPassword
+import com.google.firebase.Firebase
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.analytics
 import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
