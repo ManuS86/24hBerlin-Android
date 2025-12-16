@@ -77,7 +77,7 @@ fun ChangePasswordScreen() {
                 label = stringResource(R.string.confirm_new_password),
                 placeholder = stringResource(R.string.confirm_your_new_password),
                 password = confirmPassword,
-                onPasswordChanged = { password = it }
+                onPasswordChanged = { confirmPassword = it }
             )
 
             ErrorMessages(confirmationMessage, firebaseError, passwordError)
