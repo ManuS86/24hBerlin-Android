@@ -33,7 +33,7 @@ fun DetailCard(details: String) {
         val cleanedDetails = regex.replace(details, "")
 
         Card(
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(mediumRounding),
             colors = CardDefaults.cardColors(
                 containerColor = Details
@@ -45,23 +45,23 @@ fun DetailCard(details: String) {
                     .padding(regularPadding)
             ) {
                 Icon(
-                    Icons.Default.ViewHeadline,
+                    imageVector = Icons.Default.ViewHeadline,
                     contentDescription = null,
-                    Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = mediumPadding),
                     tint = Party
                 )
 
                 SelectionContainer {
                     Column {
                         Text(
-                            stringResource(R.string.event_details),
-                            Modifier.padding(bottom = mediumPadding),
+                            text = stringResource(R.string.event_details),
+                            modifier = Modifier.padding(bottom = mediumPadding),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
 
                         Text(
-                            cleanedDetails,
+                            text = cleanedDetails,
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.DarkGray
                         )

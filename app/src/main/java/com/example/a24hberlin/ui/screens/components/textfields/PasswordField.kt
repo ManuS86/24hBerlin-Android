@@ -44,7 +44,7 @@ fun PasswordField(
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            label,
+            text = label,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(bottom = smallPadding),
             color = Color.Black

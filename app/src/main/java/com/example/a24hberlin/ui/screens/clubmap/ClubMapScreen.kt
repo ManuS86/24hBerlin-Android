@@ -69,7 +69,7 @@ fun ClubMapScreen(
     val sheetState = rememberModalBottomSheetState()
 
     GoogleMap(
-        Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
         filteredEvents.forEach { event ->

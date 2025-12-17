@@ -24,7 +24,7 @@ fun ShareButton(context: Context, permalink: String) {
     Icon(
         imageVector = Icons.Default.Share,
         contentDescription = stringResource(R.string.share),
-        Modifier
+        modifier = Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = ripple(),

@@ -34,7 +34,7 @@ fun EntranceFeeCard(entranceFee: EntranceFee?) {
         val cleanedEntranceFee = regex.replace(entranceFee.value.replace("<br>", "\n"), "")
 
         Card(
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(mediumRounding),
             colors = CardDefaults.cardColors(
                 containerColor = Details
@@ -48,21 +48,21 @@ fun EntranceFeeCard(entranceFee: EntranceFee?) {
                 Icon(
                     Icons.Filled.Payments,
                     contentDescription = null,
-                    Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = mediumPadding),
                     tint = Party
                 )
 
                 Column {
                     Text(
-                        stringResource(R.string.entrance_fee),
-                        Modifier.padding(bottom = mediumPadding),
+                        text = stringResource(R.string.entrance_fee),
+                        modifier = Modifier.padding(bottom = mediumPadding),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
 
                     SelectionContainer {
                         Text(
-                            cleanedEntranceFee,
+                            text = cleanedEntranceFee,
                             style = MaterialTheme.typography.bodyLarge,
                             color = Color.DarkGray
                         )

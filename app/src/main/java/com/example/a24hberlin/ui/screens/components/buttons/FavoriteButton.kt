@@ -28,6 +28,7 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 fun FavoriteButton(event: Event) {
     val view = LocalView.current
     val eventVM: EventViewModel = viewModel()
+
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
     val isFavorite by remember {
         derivedStateOf { currentAppUser?.favoriteIDs?.contains(event.id) ?: false }
@@ -36,7 +37,7 @@ fun FavoriteButton(event: Event) {
     Icon(
         imageVector = if (isFavorite) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
         contentDescription = if (isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite),
-        Modifier
+        modifier = Modifier
             .size(28.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },

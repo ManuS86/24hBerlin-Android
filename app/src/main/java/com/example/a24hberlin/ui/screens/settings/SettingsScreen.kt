@@ -474,7 +474,7 @@ private fun AppFooter() {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Image(
-            painter = painterResource(R.drawable.logo),
+            painter = painterResource(R.drawable.app_logo),
             contentDescription = null,
             modifier = Modifier
                 .size(logoSizeSmall)

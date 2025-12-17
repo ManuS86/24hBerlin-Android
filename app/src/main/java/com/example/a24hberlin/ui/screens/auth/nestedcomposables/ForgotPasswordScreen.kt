@@ -18,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -26,12 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
+import com.example.a24hberlin.ui.screens.components.textfields.AuthMessages
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
-import com.example.a24hberlin.utils.errorPadding
 import com.example.a24hberlin.utils.extraLargePadding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -43,19 +42,19 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
 
     var email by remember { mutableStateOf("") }
 
-    val confirmationMessage by authVM.confirmationMessage.collectAsStateWithLifecycle()
-    val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
+    val confirmationMessageResId by authVM.confirmationMessageResId.collectAsStateWithLifecycle()
+    val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = regularPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            stringResource(R.string.twenty_four_hours_kulturprogramm),
+            text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,
             fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center,
@@ -69,25 +68,32 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
         Spacer(Modifier.weight(0.2f))
 
         EmailField(
-            stringResource(R.string.email),
-            stringResource(R.string.enter_your_email),
-            email
-        ) { email = it }
+            label = stringResource(R.string.email),
+            placeholder = stringResource(R.string.enter_your_email),
+            email = email,
+            onEmailChanged = { email = it }
+        )
 
-        AuthMessages(confirmationMessage, errorMessage, firebaseError)
+        AuthMessages(
+            confirmationMessageResId = confirmationMessageResId,
+            errorMessageResId = errorMessageResId,
+            firebaseError = firebaseError
+        )
 
-        LargeDarkButton(stringResource(R.string.reset_password)) {
-            view.playSoundEffect(SoundEffectConstants.CLICK)
-            authVM.resetPassword(email)
-        }
+        LargeDarkButton(
+            label = stringResource(R.string.reset_password),
+            onClick = {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
+                authVM.resetPassword(email)
+            }
+        )
 
         Spacer(Modifier.height(extraLargePadding))
 
         AuthTextButton(
-            stringResource(R.string.try_logging_in_again)
-        ) {
-            onClick()
-        }
+            label = stringResource(R.string.try_logging_in_again),
+            onClick = onClick
+        )
 
         Spacer(Modifier.weight(1f))
     }
@@ -96,39 +102,5 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
         onDispose {
             authVM.clearErrorMessages()
         }
-    }
-}
-
-@Composable
-private fun AuthMessages(
-    confirmationMessage: Int?,
-    errorMessage: Int?,
-    firebaseError: String?
-) {
-    if (confirmationMessage != null) {
-        Text(
-            stringResource(confirmationMessage),
-            Modifier.padding(top = errorPadding),
-            color = Color.Green,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-
-    if (errorMessage != null) {
-        Text(
-            stringResource(errorMessage),
-            Modifier.padding(top = errorPadding),
-            color = Color.Red,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-
-    if (firebaseError != null) {
-        Text(
-            firebaseError,
-            Modifier.padding(top = errorPadding),
-            color = Color.Red,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }

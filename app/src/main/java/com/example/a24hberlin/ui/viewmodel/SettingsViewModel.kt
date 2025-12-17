@@ -35,9 +35,9 @@ class SettingsViewModel(
     private val userRepo = UserRepositoryImpl(db)
     private val notificationService = AndroidReminderScheduler(application.applicationContext)
 
-    val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
+    val confirmationMessageResId = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
     val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
-    val passwordError = savedStateHandle.getStateFlow("passwordError", null as Int?)
+    val passwordErrorResId = savedStateHandle.getStateFlow("passwordError", null as Int?)
 
     var isReauthenticated = savedStateHandle.getStateFlow("isReauthenticated", false)
         private set

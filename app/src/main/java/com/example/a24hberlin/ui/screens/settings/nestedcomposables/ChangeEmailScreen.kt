@@ -26,6 +26,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
+import com.example.a24hberlin.ui.screens.components.textfields.AuthMessages
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.errorPadding
@@ -39,7 +40,7 @@ fun ChangeEmailScreen() {
 
     var email by remember { mutableStateOf("") }
 
-    val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
+    val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
 
     Box(Modifier.fillMaxSize()) {
@@ -68,23 +69,10 @@ fun ChangeEmailScreen() {
                 onEmailChanged = { email = it }
             )
 
-            if (confirmationMessage != null) {
-                Text(
-                    text = stringResource(confirmationMessage!!),
-                    modifier = Modifier.padding(top = errorPadding),
-                    color = Color.Green,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
-
-            if (firebaseError != null) {
-                Text(
-                    text = firebaseError!!,
-                    modifier = Modifier.padding(top = errorPadding),
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodyMedium
-                )
-            }
+            AuthMessages(
+                confirmationMessageResId = confirmationMessageResId,
+                firebaseError = firebaseError
+            )
 
             LargeDarkButton(
                 label = stringResource(R.string.change_email),

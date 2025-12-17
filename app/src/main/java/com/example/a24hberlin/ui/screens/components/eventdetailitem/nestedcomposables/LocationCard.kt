@@ -30,7 +30,7 @@ import com.example.a24hberlin.utils.regularPadding
 fun LocationCard(name: String?, address: String?) {
     name?.let {
         Card(
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(mediumRounding),
             colors = CardDefaults.cardColors(
                 containerColor = Details
@@ -42,16 +42,16 @@ fun LocationCard(name: String?, address: String?) {
                     .padding(regularPadding)
             ) {
                 Icon(
-                    Icons.Filled.LocationOn,
+                    imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = mediumPadding),
                     tint = Party
                 )
 
                 Column {
                     Text(
-                        stringResource(R.string.location),
-                        Modifier.padding(bottom = mediumPadding),
+                        text = stringResource(R.string.location),
+                        modifier = Modifier.padding(bottom = mediumPadding),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -59,7 +59,7 @@ fun LocationCard(name: String?, address: String?) {
                     SelectionContainer {
                         Column {
                             Text(
-                                name,
+                                text = name,
                                 overflow = TextOverflow.Ellipsis,
                                 maxLines = 1,
                                 style = MaterialTheme.typography.bodyLarge,
@@ -69,7 +69,7 @@ fun LocationCard(name: String?, address: String?) {
                             address?.let {
                                 address.split(", ").forEach { part ->
                                     Text(
-                                        part,
+                                        text = part,
                                         overflow = TextOverflow.Ellipsis,
                                         maxLines = 1,
                                         style = MaterialTheme.typography.bodyLarge,

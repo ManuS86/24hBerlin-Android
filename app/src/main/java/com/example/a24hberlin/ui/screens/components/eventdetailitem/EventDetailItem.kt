@@ -21,7 +21,7 @@ import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcompos
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DirectionsCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.EntranceFeeCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.ImageCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LearnmoreLinkCard
+import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LearnMoreLinkCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LocationCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.MapCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
@@ -44,7 +44,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
     val mapVM: MapViewModel = viewModel()
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(mediumPadding),
         verticalArrangement = Arrangement.spacedBy(mediumPadding)
@@ -54,7 +54,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
         TimeCard(event.start, event.end)
         EntranceFeeCard(event.entranceFee)
         LocationCard(event.locationName, event.address)
-        LearnmoreLinkCard(event.learnmoreLink)
+        LearnMoreLinkCard(event.learnmoreLink)
 
         event.lat?.let {
             event.long?.let {
@@ -71,7 +71,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
 
         if (isExpandable) {
             Card(
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(mediumRounding),
                 colors = CardDefaults.cardColors(
                     containerColor = Details

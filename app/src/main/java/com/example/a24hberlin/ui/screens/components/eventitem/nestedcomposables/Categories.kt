@@ -23,15 +23,15 @@ fun Categories(
         Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
             Row {
                 Text(
-                    stringResource(R.string.types),
-                    Modifier.padding(end = mediumPadding),
+                    text = stringResource(R.string.types),
+                    modifier = Modifier.padding(end = mediumPadding),
                     fontStyle = FontStyle.Italic,
                     color = Color.White.copy(0.8f),
                     style = MaterialTheme.typography.bodyMedium
                 )
 
                 Text(
-                    eventType.values.joinToString(", "),
+                    text = eventType.values.joinToString(", "),
                     style = MaterialTheme.typography.bodyMedium
                 )
             }
@@ -39,15 +39,15 @@ fun Categories(
             sounds?.let {
                 Row {
                     Text(
-                        stringResource(R.string.sounds),
-                        Modifier.padding(end = mediumPadding),
+                        text = stringResource(R.string.sounds),
+                        modifier = Modifier.padding(end = mediumPadding),
                         fontStyle = FontStyle.Italic,
                         color = Color.White.copy(0.8f),
                         style = MaterialTheme.typography.bodyMedium
                     )
 
                     Text(
-                        sounds.values.joinToString(", "),
+                        text = sounds.values.joinToString(", "),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }

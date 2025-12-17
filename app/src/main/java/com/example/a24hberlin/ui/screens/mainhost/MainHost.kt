@@ -116,14 +116,14 @@ fun MainHost() {
 
                 if (showFilterBar) {
                     FilterBar(
-                        selectedEventType = selectedEventType,
-                        onEventTypeSelected = { selectedEventType = it },
-                        selectedMonth = selectedMonth,
-                        onMonthSelected = { selectedMonth = it },
-                        selectedSound = selectedSound,
-                        onSoundSelected = { selectedSound = it },
-                        selectedVenue = selectedVenue,
-                        onVenueSelected = { selectedVenue = it }
+                        selectedEventType,
+                        { selectedEventType = it },
+                        selectedMonth,
+                        { selectedMonth = it },
+                        selectedSound,
+                        { selectedSound = it },
+                        selectedVenue,
+                        { selectedVenue = it }
                     )
                 }
             }
@@ -161,7 +161,7 @@ fun MainHost() {
                 selectedSound,
                 selectedVenue,
                 bottomBarState,
-                onSetTitleId = onSetTitleId
+                onSetTitleId
             )
         }
     }

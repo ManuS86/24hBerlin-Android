@@ -47,7 +47,7 @@ fun LoginScreen(onClick: () -> Unit) {
     var password by remember { mutableStateOf("") }
     var showForgotPassword by remember { mutableStateOf(false) }
 
-    val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
+    val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
 
     if (showForgotPassword) {
         ForgotPasswordScreen {
@@ -56,14 +56,14 @@ fun LoginScreen(onClick: () -> Unit) {
         }
     } else {
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(horizontal = regularPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                stringResource(R.string.twenty_four_hours_kulturprogramm),
+                text = stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
                 fontWeight = FontWeight.Black,
                 textAlign = TextAlign.Center,
@@ -77,40 +77,46 @@ fun LoginScreen(onClick: () -> Unit) {
             Spacer(Modifier.height(regularPadding))
 
             EmailField(
-                stringResource(R.string.email),
-                stringResource(R.string.enter_your_email),
-                email
-            ) { email = it }
+                label = stringResource(R.string.email),
+                placeholder = stringResource(R.string.enter_your_email),
+                email = email,
+                onEmailChanged = { email = it }
+            )
 
             Spacer(Modifier.height(mediumPadding))
 
             PasswordField(
-                stringResource(R.string.password),
-                stringResource(R.string.enter_your_password),
-                password
-            ) { password = it }
+                label = stringResource(R.string.password),
+                placeholder = stringResource(R.string.enter_your_password),
+                password = password,
+                onPasswordChanged = { password = it }
+            )
 
-            if (errorMessage != null) {
-                ErrorMessageText(errorMessage!!)
+            if (errorMessageResId != null) {
+                ErrorMessage(errorMessageResId!!)
             }
 
-            LargeDarkButton(stringResource(R.string.login)) {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                authVM.login(email, password)
-            }
+            LargeDarkButton(
+                label = stringResource(R.string.login),
+                onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    authVM.login(email, password)
+                }
+            )
 
             Spacer(Modifier.height(extraLargePadding))
 
             AuthTextButton(
-                stringResource(R.string.forgot_password)
-            ) {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showForgotPassword = true
-            }
+                label = stringResource(R.string.forgot_password),
+                onClick = {
+                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    showForgotPassword = true
+                }
+            )
 
             Spacer(Modifier.weight(1f))
 
-            SignupPrompt(onClick = onClick)
+            SignupPrompt(onClick)
         }
     }
 
@@ -122,9 +128,9 @@ fun LoginScreen(onClick: () -> Unit) {
 }
 
 @Composable
-private fun ErrorMessageText(messageResId: Int) {
+private fun ErrorMessage(errorMessageResId: Int) {
     Text(
-        stringResource(messageResId),
+        stringResource(errorMessageResId),
         Modifier.padding(top = errorPadding),
         color = Color.Red,
         style = MaterialTheme.typography.bodyMedium

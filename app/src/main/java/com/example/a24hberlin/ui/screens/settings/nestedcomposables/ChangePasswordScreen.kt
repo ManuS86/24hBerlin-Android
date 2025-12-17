@@ -27,9 +27,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
+import com.example.a24hberlin.ui.screens.components.textfields.AuthMessages
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
-import com.example.a24hberlin.utils.errorPadding
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.regularPadding
 
@@ -41,9 +41,9 @@ fun ChangePasswordScreen() {
     var confirmPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val confirmationMessage by settingsVM.confirmationMessage.collectAsStateWithLifecycle()
+    val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
-    val passwordError by settingsVM.passwordError.collectAsStateWithLifecycle()
+    val passwordErrorResId by settingsVM.passwordErrorResId.collectAsStateWithLifecycle()
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -80,7 +80,11 @@ fun ChangePasswordScreen() {
                 onPasswordChanged = { confirmPassword = it }
             )
 
-            ErrorMessages(confirmationMessage, firebaseError, passwordError)
+            AuthMessages(
+                confirmationMessageResId = confirmationMessageResId,
+                errorMessageResId = passwordErrorResId,
+                firebaseError = firebaseError
+            )
 
             LargeDarkButton(
                 label = stringResource(R.string.change_password),
@@ -98,39 +102,5 @@ fun ChangePasswordScreen() {
         onDispose {
             settingsVM.clearErrorMessages()
         }
-    }
-}
-
-@Composable
-private fun ErrorMessages(
-    confirmationMessage: Int?,
-    firebaseError: String?,
-    passwordError: Int?
-) {
-    if (confirmationMessage != null) {
-        Text(
-            stringResource(confirmationMessage),
-            Modifier.padding(top = errorPadding),
-            color = Color.Green,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-
-    if (firebaseError != null) {
-        Text(
-            firebaseError,
-            Modifier.padding(top = errorPadding),
-            color = Color.Red,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-
-    if (passwordError != null) {
-        Text(
-            stringResource(passwordError),
-            Modifier.padding(top = errorPadding),
-            color = Color.Red,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }

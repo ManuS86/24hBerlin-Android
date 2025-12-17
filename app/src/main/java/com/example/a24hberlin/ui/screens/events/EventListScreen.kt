@@ -56,7 +56,7 @@ fun EventsScreen(
     Column {
         if (isNetworkAvailable) {
             LazyColumn(
-                Modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = regularPadding),
                 verticalArrangement = Arrangement.spacedBy(mediumPadding),
@@ -72,7 +72,7 @@ fun EventsScreen(
             }
         } else {
             Icon(
-                Icons.Rounded.WifiOff,
+                imageVector = Icons.Rounded.WifiOff,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

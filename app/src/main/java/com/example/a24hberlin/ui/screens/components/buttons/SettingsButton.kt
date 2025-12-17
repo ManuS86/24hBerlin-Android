@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.buttons
 
+import android.R.attr.text
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,7 +27,7 @@ fun SettingsButton(
 ) {
     Button(
         onClick = onClick,
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .shadow(
                 elevation = 2.dp,
@@ -42,8 +43,8 @@ fun SettingsButton(
         contentPadding = PaddingValues(regularPadding)
     ) {
         Text(
-            label,
-            Modifier.fillMaxWidth(),
+            text = label,
+            modifier = Modifier.fillMaxWidth(),
             fontWeight = fontWeight,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = textAlign

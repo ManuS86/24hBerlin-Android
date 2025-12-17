@@ -56,7 +56,7 @@ fun FavoritesScreen(
     Column(Modifier.fillMaxSize()) {
         if (isNetworkAvailable) {
             LazyColumn(
-                Modifier
+                modifier = Modifier
                     .padding(horizontal = regularPadding),
                 verticalArrangement = Arrangement.spacedBy(mediumPadding),
                 state = listState,
@@ -71,7 +71,7 @@ fun FavoritesScreen(
             }
         } else {
             Icon(
-                Icons.Rounded.WifiOff,
+                imageVector = Icons.Rounded.WifiOff,
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()

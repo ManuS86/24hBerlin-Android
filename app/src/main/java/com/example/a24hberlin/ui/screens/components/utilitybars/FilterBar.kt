@@ -60,8 +60,10 @@ fun FilterBar(
     val context = LocalContext.current
     val view = LocalView.current
     val eventVM: EventViewModel = viewModel()
+
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()
+
     var showFilters by remember { mutableStateOf(false) }
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
@@ -137,7 +139,7 @@ fun FilterBar(
             Icon(
                 imageVector = Icons.Rounded.Tune,
                 contentDescription = stringResource(R.string.show_filters),
-                Modifier
+                modifier = Modifier
                     .padding(start = mediumPadding)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -199,7 +201,7 @@ fun FilterBar(
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_filters),
-                        Modifier
+                        modifier = Modifier
                             .padding(start = mediumPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },

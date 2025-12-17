@@ -29,25 +29,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.theme.ArtAndCulture
-import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Details
-import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.ui.theme.TextOffBlack
+import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun DirectionsCard(event: Event, onClick: () -> Unit) {
-    val eventColor = when {
-        event.eventType?.values?.contains("Konzert") ?: true -> Concert
-        event.eventType?.values?.contains("Party") ?: false -> Party
-        else -> ArtAndCulture
-    }
+    val eventColor = event.getEventColor()
 
     Card(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .border(BorderStroke(1.dp, Details), RoundedCornerShape(mediumRounding)),
         shape = RoundedCornerShape(mediumRounding),
@@ -56,20 +50,20 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
         )
     ) {
         Row(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(regularPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                Icons.Default.Directions,
+                imageVector = Icons.Default.Directions,
                 contentDescription = null,
-                Modifier.padding(end = mediumPadding),
+                modifier = Modifier.padding(end = mediumPadding),
                 tint = TextOffBlack
             )
 
             Text(
-                stringResource(R.string.directions),
+                text = stringResource(R.string.directions),
                 style = MaterialTheme.typography.titleMedium,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold,
@@ -79,7 +73,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
             Spacer(Modifier.weight(1f))
 
             Card(
-                Modifier.size(40.dp),
+                modifier = Modifier.size(40.dp),
                 shape = RoundedCornerShape(100),
                 colors = CardDefaults.cardColors(
                     containerColor = eventColor

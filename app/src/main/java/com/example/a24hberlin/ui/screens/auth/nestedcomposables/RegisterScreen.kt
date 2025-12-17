@@ -50,9 +50,9 @@ fun RegisterScreen(onClick: () -> Unit) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val errorMessage by authVM.errorMessage.collectAsStateWithLifecycle()
+    val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
-    val passwordError by authVM.passwordError.collectAsStateWithLifecycle()
+    val passwordErrorResId by authVM.passwordErrorResId.collectAsStateWithLifecycle()
     val hasNotificationPermission by authVM.hasNotificationPermission.collectAsStateWithLifecycle()
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -64,14 +64,14 @@ fun RegisterScreen(onClick: () -> Unit) {
     )
 
     Column(
-        Modifier
+        modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
             .padding(horizontal = regularPadding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            stringResource(R.string.twenty_four_hours_kulturprogramm),
+            text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,
             fontWeight = FontWeight.Black,
             textAlign = TextAlign.Center,
@@ -85,42 +85,52 @@ fun RegisterScreen(onClick: () -> Unit) {
         Spacer(Modifier.height(regularPadding))
 
         EmailField(
-            stringResource(R.string.email),
-            stringResource(R.string.enter_an_email),
-            email
-        ) { email = it }
+            label = stringResource(R.string.email),
+            placeholder = stringResource(R.string.enter_an_email),
+            email = email,
+            onEmailChanged = { email = it }
+        )
 
         Spacer(Modifier.height(mediumPadding))
 
         PasswordField(
-            stringResource(R.string.password),
-            stringResource(R.string.create_a_password),
-            password
-        ) { password = it }
+            label = stringResource(R.string.password),
+            placeholder = stringResource(R.string.create_a_password),
+            password = password,
+            onPasswordChanged = { password = it }
+        )
 
         Spacer(Modifier.height(mediumPadding))
 
         PasswordField(
-            stringResource(R.string.confirm_password),
-            stringResource(R.string.confirm_your_password),
-            confirmPassword
-        ) { confirmPassword = it }
+            label = stringResource(R.string.confirm_password),
+            placeholder = stringResource(R.string.confirm_your_password),
+            password = confirmPassword,
+            onPasswordChanged = { confirmPassword = it }
+        )
 
-        RegisterErrorMessages(errorMessage, firebaseError, passwordError)
+        RegisterErrorMessages(
+            errorMessageResId = errorMessageResId,
+            passwordMessageResId = passwordErrorResId,
+            firebaseError = firebaseError
+        )
 
-        LargeDarkButton(stringResource(R.string.register)) {
-            view.playSoundEffect(SoundEffectConstants.CLICK)
+        LargeDarkButton(
+            label = stringResource(R.string.register),
+            onClick = {
+                view.playSoundEffect(SoundEffectConstants.CLICK)
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                authVM.register(email, password, confirmPassword)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    authVM.register(email, password, confirmPassword)
+                }
             }
-        }
+        )
 
         Spacer(Modifier.weight(1f))
 
-        LoginPrompt(onClick = onClick)
+        LoginPrompt(onClick)
     }
 
     DisposableEffect(Unit) {
@@ -132,38 +142,23 @@ fun RegisterScreen(onClick: () -> Unit) {
 
 @Composable
 private fun RegisterErrorMessages(
-    errorMessage: Int?,
-    firebaseError: String?,
-    passwordError: Int?
+    errorMessageResId: Int?,
+    passwordMessageResId: Int?,
+    firebaseError: String?
 ) {
-    val errorModifier = Modifier.padding(top = errorPadding)
-    val errorStyle = MaterialTheme.typography.bodyMedium
-    val errorColor = Color.Red
-
-    if (errorMessage != null) {
-        Text(
-            stringResource(errorMessage),
-            errorModifier,
-            color = errorColor,
-            style = errorStyle
-        )
+    val message = when {
+        errorMessageResId != null -> stringResource(errorMessageResId)
+        passwordMessageResId != null -> stringResource(passwordMessageResId)
+        firebaseError != null -> firebaseError
+        else -> null
     }
 
-    if (firebaseError != null) {
+    message?.let {
         Text(
-            firebaseError,
-            errorModifier,
-            color = errorColor,
-            style = errorStyle
-        )
-    }
-
-    if (passwordError != null) {
-        Text(
-            stringResource(passwordError),
-            errorModifier,
-            color = errorColor,
-            style = errorStyle
+            text = it,
+            modifier = Modifier.padding(top = errorPadding),
+            color = Color.Red,
+            style = MaterialTheme.typography.bodyMedium
         )
     }
 }
@@ -171,13 +166,13 @@ private fun RegisterErrorMessages(
 @Composable
 private fun LoginPrompt(onClick: () -> Unit) {
     Text(
-        stringResource(R.string.already_have_an_account),
+        text = stringResource(R.string.already_have_an_account),
         color = Color.Gray,
         textAlign = TextAlign.Center
     )
 
     AuthTextButton(
-        stringResource(R.string.login),
+        label = stringResource(R.string.login),
         onClick = onClick
     )
 }

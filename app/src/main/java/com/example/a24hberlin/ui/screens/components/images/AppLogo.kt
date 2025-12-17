@@ -15,11 +15,11 @@ import com.example.a24hberlin.utils.logoSize
 @Composable
 fun AppLogo() {
     Row(
-        Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.logo),
+            painter = painterResource(id = R.drawable.app_logo),
             contentDescription = "App Logo",
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.size(logoSize)

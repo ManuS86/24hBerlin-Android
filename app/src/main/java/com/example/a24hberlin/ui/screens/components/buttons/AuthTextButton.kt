@@ -13,7 +13,7 @@ fun AuthTextButton(
     onClick: () -> Unit
 ) {
     TextButton(
-        onClick = onClick
+        onClick
     ) {
         Text(
             text = label,

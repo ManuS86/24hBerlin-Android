@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
@@ -18,20 +19,23 @@ import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun MapCard(event: Event) {
-    val venue = LatLng(event.lat!!, event.long!!)
+    val lat = event.lat ?: 52.5207 // Default to Berlin if null
+    val lon = event.long ?: 13.4094
+
+    val venue = remember(lat, lon) { LatLng(lat, lon) }
     val venueMarkerState = rememberMarkerState(position = venue)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(venue, 14f)
     }
 
     Card(
-        Modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(160.dp),
         shape = RoundedCornerShape(mediumRounding)
     ) {
         GoogleMap(
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             cameraPositionState = cameraPositionState
         ) {
             Marker(

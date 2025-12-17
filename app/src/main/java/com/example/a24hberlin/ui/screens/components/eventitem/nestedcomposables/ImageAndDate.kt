@@ -42,7 +42,7 @@ fun ImageAndDate(
 ) {
     val locale = Locale.getDefault()
 
-    Column(modifier = Modifier.padding(end = mediumPadding)) {
+    Column(Modifier.padding(end = mediumPadding)) {
         imageURL?.let { url ->
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -69,7 +69,7 @@ fun ImageAndDate(
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(
-                    start.format(
+                    text = start.format(
                         DateTimeFormatter.ofPattern("EEE").withLocale(locale) // Weekday
                     ).substring(0, 2).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
@@ -78,7 +78,7 @@ fun ImageAndDate(
                 )
 
                 Text(
-                    start.format(
+                    text = start.format(
                         DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                     ),
                     style = MaterialTheme.typography.headlineMedium,
@@ -86,7 +86,7 @@ fun ImageAndDate(
                 )
 
                 Text(
-                    start.format(
+                    text = start.format(
                         DateTimeFormatter.ofPattern("MMM").withLocale(locale) // Month
                     ).substring(0, 3).uppercase(),
                     style = MaterialTheme.typography.labelSmall,
@@ -102,7 +102,7 @@ fun ImageAndDate(
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            "-",
+                            text = "-",
                             style = MaterialTheme.typography.titleSmall,
                             fontWeight = FontWeight.Black,
                             modifier = Modifier
@@ -112,7 +112,7 @@ fun ImageAndDate(
 
                         Column {
                             Text(
-                                end.format(
+                                text = end.format(
                                     DateTimeFormatter.ofPattern("EEE") // Weekday
                                         .withLocale(locale)
                                 ).substring(0, 2).uppercase(),
@@ -122,7 +122,7 @@ fun ImageAndDate(
                             )
 
                             Text(
-                                end.format(
+                                text = end.format(
                                     DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                                 ),
                                 style = MaterialTheme.typography.titleSmall,

@@ -56,7 +56,7 @@ fun MyTopAppBar(
     TopAppBar(
         title = {
             Text(
-                title,
+                text = title,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.SemiBold

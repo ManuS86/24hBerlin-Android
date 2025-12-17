@@ -24,21 +24,25 @@ fun Header(
 
     Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            Modifier.fillMaxWidth()
         ) {
             Text(
-                name.uppercase(),
+                text = name.uppercase(),
                 fontWeight = FontWeight.Black,
                 style = MaterialTheme.typography.titleLarge,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.weight(1f)
             )
-            ShareButton(context, permalink)
+
+            ShareButton(
+                context = context,
+                permalink = permalink
+            )
         }
 
         subtitle?.let {
             Text(
-                subtitle.uppercase(),
+                text = subtitle.uppercase(),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Medium
             )

@@ -33,13 +33,13 @@ import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
 
 @Composable
-fun LearnmoreLinkCard(link: String?) {
+fun LearnMoreLinkCard(link: String?) {
     val context = LocalContext.current
     val view = LocalView.current
 
     link?.let {
         Card(
-            Modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
@@ -63,14 +63,14 @@ fun LearnmoreLinkCard(link: String?) {
                     .padding(regularPadding)
             ) {
                 Icon(
-                    Icons.Default.Link,
+                    imageVector = Icons.Default.Link,
                     contentDescription = null,
-                    Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = mediumPadding),
                     tint = Party
                 )
 
                 Text(
-                    stringResource(R.string.further_information),
+                    text = stringResource(R.string.further_information),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.ExtraBold
                 )

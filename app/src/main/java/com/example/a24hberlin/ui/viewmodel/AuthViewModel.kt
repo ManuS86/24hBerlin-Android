@@ -43,10 +43,10 @@ class AuthViewModel(
             permissionManager.hasNotificationPermission.value
         )
 
-    val confirmationMessage = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
-    val errorMessage = savedStateHandle.getStateFlow("errorMessage", null as Int?)
+    val confirmationMessageResId = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
+    val errorMessageResId = savedStateHandle.getStateFlow("errorMessage", null as Int?)
     val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
-    val passwordError = savedStateHandle.getStateFlow("passwordError", null as Int?)
+    val passwordErrorResId = savedStateHandle.getStateFlow("passwordError", null as Int?)
 
     init {
         auth.addAuthStateListener { firebaseAuth ->

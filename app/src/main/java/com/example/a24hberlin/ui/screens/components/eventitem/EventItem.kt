@@ -35,6 +35,7 @@ import com.example.a24hberlin.ui.theme.ArtAndCulture
 import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.ui.theme.TextOffBlack
+import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
@@ -80,7 +81,7 @@ fun EventItem(
             .background(Color.White)
     ) {
         CompositionLocalProvider(LocalContentColor provides Color.White) {
-            Row(modifier = rowModifier) {
+            Row(rowModifier) {
                 ImageAndDate(
                     event.imageURL,
                     event.start,
@@ -113,7 +114,7 @@ fun EventItem(
                     )
 
                     Row(
-                        Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
                         FavoriteButton(event)
@@ -135,13 +136,5 @@ fun EventItem(
                 showDetailToggle = onDetailClose
             )
         }
-    }
-}
-
-private fun Event.getEventColor(): Color {
-    return when {
-        this.eventType?.values?.contains("Konzert") == true -> Concert
-        this.eventType?.values?.contains("Party") == true -> Party
-        else -> ArtAndCulture
     }
 }

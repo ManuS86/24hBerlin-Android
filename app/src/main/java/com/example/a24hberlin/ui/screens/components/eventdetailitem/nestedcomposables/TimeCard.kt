@@ -31,7 +31,7 @@ import java.util.Locale
 @Composable
 fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
     Card(
-        Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(mediumRounding),
         colors = CardDefaults.cardColors(
             containerColor = Details
@@ -43,24 +43,24 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
                 .padding(regularPadding)
         ) {
             Icon(
-                Icons.Default.WatchLater,
+                imageVector = Icons.Default.WatchLater,
                 contentDescription = null,
-                Modifier.padding(end = mediumPadding),
+                modifier = Modifier.padding(end = mediumPadding),
                 tint = Party
             )
 
             SelectionContainer {
                 Column {
                     Text(
-                        stringResource(R.string.time),
-                        Modifier.padding(bottom = mediumPadding),
+                        text = stringResource(R.string.time),
+                        modifier = Modifier.padding(bottom = mediumPadding),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
 
                     Row {
                         Text(
-                            start.format(
+                            text = start.format(
                                 DateTimeFormatter.ofPattern(
                                     "d MMM yyyy",
                                     Locale.getDefault()
@@ -72,13 +72,13 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
 
                         end?.let {
                             Text(
-                                " - ",
+                                text = " - ",
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = Color.DarkGray
                             )
 
                             Text(
-                                end.format(
+                                text = end.format(
                                     DateTimeFormatter.ofPattern(
                                         "d MMM yyyy",
                                         Locale.getDefault()

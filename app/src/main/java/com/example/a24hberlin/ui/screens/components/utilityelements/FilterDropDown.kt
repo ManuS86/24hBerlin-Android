@@ -49,7 +49,7 @@ fun <T> FilterDropdown(
     ) {
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
-            Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             border = BorderStroke(
                 1.dp, if (selectedValue != null) Color.White.copy(
                     0.8f
@@ -68,7 +68,7 @@ fun <T> FilterDropdown(
             )
         ) {
             Row(
-                Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
