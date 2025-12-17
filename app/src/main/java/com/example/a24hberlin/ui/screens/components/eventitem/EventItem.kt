@@ -31,10 +31,8 @@ import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.ImageAndDate
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Location
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Time
-import com.example.a24hberlin.ui.theme.ArtAndCulture
-import com.example.a24hberlin.ui.theme.Concert
-import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.ui.theme.TextOffBlack
+import com.example.a24hberlin.utils.cleanToAnnotatedString
 import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding

@@ -23,6 +23,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.EntranceFee
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
+import com.example.a24hberlin.utils.cleanToAnnotatedString
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 import com.example.a24hberlin.utils.regularPadding
@@ -30,8 +31,9 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun EntranceFeeCard(entranceFee: EntranceFee?) {
     entranceFee?.let {
-        val regex = remember { "<.*?>".toRegex() }
-        val cleanedEntranceFee = regex.replace(entranceFee.value.replace("<br>", "\n"), "")
+        val cleanedEntranceFee = remember(entranceFee) {
+            entranceFee.value.cleanToAnnotatedString()
+        }
 
         Card(
             modifier = Modifier.fillMaxWidth(),

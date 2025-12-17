@@ -33,7 +33,7 @@ fun filteredEvents(
 
             val eventTypeMatches = selectedEventType?.let { selectedEventType ->
                 event.eventType?.values.orEmpty().any { eventTypeValue ->
-                    eventTypeValue == selectedEventType.label
+                    eventTypeValue.cleanToAnnotatedString().text == selectedEventType.label
                 }
             } ?: true
 
