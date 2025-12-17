@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,14 +17,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.theme.TextOffBlack
-import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
@@ -33,13 +31,9 @@ import com.example.a24hberlin.utils.slightRounding
 
 @Composable
 fun BugReportScreen(
-    alertToggle: () -> Unit,
-    alertMessageDescribe: () -> Unit,
-    alertMessageThankYou: () -> Unit
+    onSend: (String) -> Unit
 ) {
-    val view = LocalView.current
-    val settingsVM: SettingsViewModel = viewModel()
-
+    val haptic = LocalHapticFeedback.current
     var bugReport by remember { mutableStateOf("") }
 
     Column(Modifier.padding(horizontal = regularPadding)) {
@@ -69,26 +63,15 @@ fun BugReportScreen(
         LargeDarkButton(
             label = stringResource(R.string.send_bug_report),
             onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                if (bugReport.isEmpty()) {
-                    alertMessageDescribe()
-                    alertToggle()
-                } else {
-                    settingsVM.sendBugReport(
-                        bugReport,
-                        completion = { error ->
-                            if (error != null) {
-                                alertToggle()
-                            } else {
-                                alertMessageThankYou()
-                                alertToggle()
-                                bugReport = ""
-                            }
-                        }
-                    )
+                haptic.performHapticFeedback(TextHandleMove)
+
+                onSend(bugReport)
+
+                if (bugReport.isNotBlank()) {
+                    bugReport = ""
                 }
             }
-            )
+        )
 
         Spacer(Modifier.padding(largePadding))
     }

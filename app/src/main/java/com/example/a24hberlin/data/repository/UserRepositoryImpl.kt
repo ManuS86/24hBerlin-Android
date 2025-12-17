@@ -1,5 +1,6 @@
 package com.example.a24hberlin.data.repository
 
+import android.util.Log
 import com.example.a24hberlin.BuildConfig
 import com.example.a24hberlin.data.model.AppUser
 import com.example.a24hberlin.data.model.Settings
@@ -16,6 +17,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+private const val TAG = "UserRepositoryImpl"
+
 class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
 
     private val auth = Firebase.auth
@@ -24,6 +27,14 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
     private fun FirebaseAuth.getUserDocumentRef(): DocumentReference? {
         val uid = this.currentUser?.uid ?: return null
         return collRef.document(uid)
+    }
+
+    override suspend fun login(email: String, password: String) {
+        withContext(Dispatchers.IO) {
+            auth
+                .signInWithEmailAndPassword(email, password)
+                .await()
+        }
     }
 
     override suspend fun register(email: String, password: String) {
@@ -39,18 +50,35 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
-        val userRef = auth.getUserDocumentRef()
-        return userRef?.let { ref ->
-            ref.addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    println("Error listening for user updates: ${error.message}")
-                    onChange(null)
-                    return@addSnapshotListener
-                }
-                val user = snapshot?.toObject<AppUser>()
-                onChange(user)
-            }
+    override fun logout() {
+        auth.signOut()
+    }
+
+    override suspend fun reAuthenticate(password: String) {
+        withContext(Dispatchers.IO) {
+            val user = auth.currentUser
+                ?: throw IllegalStateException("User must be logged in to re-authenticate.")
+
+            val email = user.email
+                ?: throw IllegalStateException("User account is missing an email address.")
+
+            val credential = EmailAuthProvider.getCredential(email, password)
+
+            user
+                .reauthenticate(credential)
+                .await()
+        }
+    }
+
+    override suspend fun deleteUserDataAndAuth() {
+        withContext(Dispatchers.IO) {
+            auth.getUserDocumentRef()
+                ?.delete()
+                ?.await()
+
+            auth.currentUser
+                ?.delete()
+                ?.await()
         }
     }
 
@@ -75,6 +103,21 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
             auth
                 .sendPasswordResetEmail(email)
                 .await()
+        }
+    }
+
+    override fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
+        val userRef = auth.getUserDocumentRef()
+        return userRef?.let { ref ->
+            ref.addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.e(TAG, "Error listening for user updates: ${error.message}", error)
+                    onChange(null)
+                    return@addSnapshotListener
+                }
+                val user = snapshot?.toObject<AppUser>()
+                onChange(user)
+            }
         }
     }
 
@@ -106,68 +149,20 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override suspend fun deleteUserDataAndAuth() {
+    override suspend fun sendBugReport(message: String) {
         withContext(Dispatchers.IO) {
-            auth.getUserDocumentRef()
-                ?.delete()
-                ?.await()
+            val bugReportData = mapOf(
+                "message" to message,
+                "user_uid" to auth.currentUser?.uid,
+                "user_email" to auth.currentUser?.email,
+                "timestamp" to FieldValue.serverTimestamp(),
+                "app_version" to BuildConfig.VERSION_NAME,
+                "device_info" to android.os.Build.MODEL
+            )
 
-            auth.currentUser
-                ?.delete()
-                ?.await()
-        }
-    }
-
-    override suspend fun login(email: String, password: String) {
-        withContext(Dispatchers.IO) {
-            auth
-                .signInWithEmailAndPassword(email, password)
+            db.collection("bug_reports")
+                .add(bugReportData)
                 .await()
         }
-    }
-
-    override suspend fun reAuthenticate(password: String) {
-        withContext(Dispatchers.IO) {
-            val user = auth.currentUser
-                ?: throw IllegalStateException("User must be logged in to re-authenticate.")
-
-            val email = user.email
-                ?: throw IllegalStateException("User account is missing an email address.")
-
-            val credential = EmailAuthProvider.getCredential(email, password)
-
-            user
-                .reauthenticate(credential)
-                .await()
-        }
-    }
-
-    override fun logout() {
-        auth.signOut()
-    }
-
-    override fun sendBugReport(
-        message: String,
-        completion: (Exception?) -> Unit
-    ) {
-        val bugReportData = mapOf(
-            "message" to message,
-            "user_uid" to auth.currentUser?.uid,
-            "user_email" to auth.currentUser?.email,
-            "timestamp" to FieldValue.serverTimestamp(),
-            "app_version" to BuildConfig.VERSION_NAME,
-            "device_info" to android.os.Build.MODEL
-        )
-
-        db.collection("bug_reports")
-            .add(bugReportData)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    completion(null)
-                    println("Bug report sent successfully!")
-                } else {
-                    completion(task.exception)
-                }
-            }
     }
 }

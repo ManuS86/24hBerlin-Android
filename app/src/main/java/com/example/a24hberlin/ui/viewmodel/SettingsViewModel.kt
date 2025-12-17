@@ -16,12 +16,9 @@ import com.example.a24hberlin.utils.checkPassword
 import com.example.a24hberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 private const val TAG = "SettingsViewModel"
@@ -35,7 +32,8 @@ class SettingsViewModel(
     private val userRepo = UserRepositoryImpl(db)
     private val notificationService = AndroidReminderScheduler(application.applicationContext)
 
-    val confirmationMessageResId = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
+    val confirmationMessageResId =
+        savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
     val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
     val passwordErrorResId = savedStateHandle.getStateFlow("passwordError", null as Int?)
 
@@ -43,14 +41,18 @@ class SettingsViewModel(
         private set
 
     private val _language = MutableStateFlow<Language?>(null)
-    val language: StateFlow<Language?> = _language.asStateFlow().stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        null
-    )
+    val language: StateFlow<Language?> = _language.asStateFlow()
 
     private var firebaseListener: ListenerRegistration? = null
     private var currentAppUser: AppUser? = null
+
+    val isBugReportSheetOpen = savedStateHandle.getStateFlow("isBugReportSheetOpen", false)
+    val bugReportAlertMessage = savedStateHandle.getStateFlow<String?>("bugReportAlertMessage", null)
+    val showLogoutAlert = savedStateHandle.getStateFlow("showLogoutAlert", false)
+    val showDeleteAccountAlert = savedStateHandle.getStateFlow("showDeleteAccountAlert", false)
+
+    var pushNotificationsEnabledState =
+        savedStateHandle.getStateFlow("pushNotificationsEnabled", true)
 
     init {
         if (firebaseListener == null) {
@@ -65,8 +67,25 @@ class SettingsViewModel(
         }
     }
 
-    var pushNotificationsEnabledState =
-        savedStateHandle.getStateFlow("pushNotificationsEnabled", true)
+    fun openBugReport() {
+        savedStateHandle["isBugReportSheetOpen"] = true
+    }
+
+    fun closeBugReport() {
+        savedStateHandle["isBugReportSheetOpen"] = false
+    }
+
+    fun toggleLogoutAlert(show: Boolean) {
+        savedStateHandle["showLogoutAlert"] = show
+    }
+
+    fun toggleDeleteAlert(show: Boolean) {
+        savedStateHandle["showDeleteAccountAlert"] = show
+    }
+
+    fun setBugReportAlert(message: String?) {
+        savedStateHandle["bugReportAlertMessage"] = message
+    }
 
     fun changeLanguage(newLanguage: Language?) {
         val settings = Settings(
@@ -74,7 +93,7 @@ class SettingsViewModel(
             language = newLanguage?.label
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 userRepo.updateUserInformation(null, settings)
             } catch (ex: Exception) {
@@ -89,7 +108,7 @@ class SettingsViewModel(
             language = _language.value?.label
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 userRepo.updateUserInformation(null, settings)
             } catch (ex: Exception) {
@@ -98,14 +117,49 @@ class SettingsViewModel(
         }
     }
 
+    fun sendBugReport(message: String, emptyMsg: String, successMsg: String) {
+        if (message.isBlank()) {
+            setBugReportAlert(emptyMsg)
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                userRepo.sendBugReport(message)
+
+                setBugReportAlert(successMsg)
+            } catch (ex: Exception) {
+                setBugReportAlert(ex.localizedMessage ?: "An unknown error occurred")
+            }
+        }
+    }
+
     fun removeAllPendingNotifications(favorites: List<Event>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             notificationService.cancelAllPendingReminders(favorites)
         }
     }
 
+    fun logout() {
+        try {
+            userRepo.logout()
+        } catch (ex: Exception) {
+            Log.e(TAG, "Error during logout.", ex)
+        }
+    }
+
+    fun deleteAccount() {
+        viewModelScope.launch {
+            try {
+                userRepo.deleteUserDataAndAuth()
+            } catch (ex: Exception) {
+                Log.e(TAG, "Error during account deletion.", ex)
+            }
+        }
+    }
+
     fun changeEmail(email: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 userRepo.changeEmail(email)
                 savedStateHandle["firebaseError"] = null
@@ -127,7 +181,7 @@ class SettingsViewModel(
         savedStateHandle["passwordError"] = errorResId
 
         if (errorResId == null) {
-            viewModelScope.launch(Dispatchers.IO) {
+            viewModelScope.launch {
                 try {
                     userRepo.changePassword(password)
                     savedStateHandle["passwordError"] = null
@@ -144,42 +198,13 @@ class SettingsViewModel(
     fun reAuthenticate(password: String) {
         savedStateHandle["firebaseError"] = null
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 userRepo.reAuthenticate(password)
                 savedStateHandle["isReauthenticated"] = true
             } catch (ex: Exception) {
                 savedStateHandle["firebaseError"] = ex.localizedMessage
                 Log.e(TAG, "Error during re-authentication.", ex)
-            }
-        }
-    }
-
-    fun logout() {
-        try {
-            userRepo.logout()
-        } catch (ex: Exception) {
-            Log.e(TAG, "Error during logout.", ex)
-        }
-    }
-
-    fun deleteAccount() {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                userRepo.deleteUserDataAndAuth()
-            } catch (ex: Exception) {
-                Log.e(TAG, "Error during account deletion.", ex)
-            }
-        }
-    }
-
-    fun sendBugReport(message: String, completion: (Exception?) -> Unit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                userRepo.sendBugReport(message, completion)
-            } catch (ex: Exception) {
-                Log.e(TAG, "Error sending bug report.", ex)
-                completion(ex)
             }
         }
     }

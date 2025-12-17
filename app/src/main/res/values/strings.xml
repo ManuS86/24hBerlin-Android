@@ -22,7 +22,6 @@
     <string name="clear_search">Clear Search</string>
     <string name="club_map">Club Map</string>
     <string name="come_back_and_check_out_the_latest_events">Come back and check out the latest events.</string>
-    <string name="community">Community</string>
     <string name="concert">Concert</string>
     <string name="confirm">Confirm</string>
     <string name="confirm_new_password">Confirm new Password</string>
@@ -62,6 +61,7 @@
     <string name="fri">FR</string>
     <string name="further_information">FURTHER INFORMATION</string>
     <string name="german">German</string>
+    <string name="help_and_feedback">Help and Feedback</string>
     <string name="hide_password">Hide Password</string>
     <string name="invalid_email_or_password">Invalid email or password.</string>
     <string name="january">Jan</string>
@@ -98,6 +98,7 @@
     <string name="passwords_do_not_match">Passwords do not match.</string>
     <string name="please_describe_the_bug">Please describe the bug.</string>
     <string name="please_re_enter_your_password">Please re-enter your password</string>
+    <string name="privacy_policy">Privacy Policy</string>
     <string name="push_notifications">Push Notifications</string>
     <string name="re_authenticate">Re-Authenticate</string>
     <string name="re_enter_password">Re-enter password</string>
@@ -123,6 +124,7 @@
     <string name="sounds">Sounds</string>
     <string name="sun">SU</string>
     <string name="system_default">System Default</string>
+    <string name="terms_of_service">Terms of Service</string>
     <string name="thank_you_for_your_report">Thank you for your report!</string>
     <string name="thu">TH</string>
     <string name="time">Time</string>

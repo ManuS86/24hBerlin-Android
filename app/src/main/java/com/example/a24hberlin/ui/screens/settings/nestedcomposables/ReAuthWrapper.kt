@@ -1,5 +1,7 @@
 package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
+import android.content.Context
+import android.media.AudioManager
 import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -12,14 +14,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.LongPress
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -33,18 +38,22 @@ import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.errorPadding
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.regularPadding
+import kotlinx.coroutines.delay
 
 @Composable
 fun ReAuthWrapper(
     from: String,
     onSetTitleId: (Int?) -> Unit
 ) {
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+
     val settingsVM: SettingsViewModel = viewModel()
-
-    var password by remember { mutableStateOf("") }
-
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val isReauthenticated by settingsVM.isReauthenticated.collectAsStateWithLifecycle()
+
+    var password by remember { mutableStateOf("") }
 
     val targetTitleId = when {
         isReauthenticated && from == "email" -> R.string.change_email
@@ -56,6 +65,15 @@ fun ReAuthWrapper(
         onSetTitleId(targetTitleId)
     }
 
+    LaunchedEffect(isReauthenticated) {
+        if (isReauthenticated) {
+            audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK)
+            haptic.performHapticFeedback(TextHandleMove)
+            delay(80)
+            haptic.performHapticFeedback(LongPress)
+        }
+    }
+
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background),
@@ -63,6 +81,7 @@ fun ReAuthWrapper(
             contentScale = ContentScale.FillBounds,
             modifier = Modifier.fillMaxSize()
         )
+
         if (isReauthenticated) {
             if (from == "email") {
                 ChangeEmailScreen()

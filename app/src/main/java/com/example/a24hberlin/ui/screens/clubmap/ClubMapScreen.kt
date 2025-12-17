@@ -1,6 +1,8 @@
 package com.example.a24hberlin.ui.screens.clubmap
 
 import android.view.SoundEffectConstants
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,17 +18,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
+import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.utils.smallPadding
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -98,14 +105,11 @@ fun ClubMapScreen(
             Column(
                 Modifier
                     .padding(horizontal = regularPadding)
+                    .padding(bottom = mediumPadding)
                     .verticalScroll(scrollState)
             ) {
-                Column(
-                    Modifier.padding(bottom = regularPadding)
-                ) {
-                    selectedEvent?.let {
-                        EventItem(it, isExpandable = false, isInitiallyExpanded = true)
-                    }
+                selectedEvent?.let {
+                    EventItem(it, isExpandable = false, isInitiallyExpanded = true)
                 }
             }
         }

@@ -9,15 +9,20 @@ import androidx.compose.ui.res.stringResource
 import com.example.a24hberlin.R
 
 @Composable
-fun YesNoAlert(title: String, text: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
+fun YesNoAlert(
+    title: String,
+    body: String,
+    onNo: () -> Unit,
+    onYes: () -> Unit
+) {
     AlertDialog(
-        onDismissRequest = onDismiss,
+        onDismissRequest = onNo,
         title = { Text(title) },
-        text = { Text(text) },
+        text = { Text(body) },
         containerColor = Color.White,
 
         confirmButton = {
-            TextButton(onClick = onConfirm) {
+            TextButton(onClick = onYes) {
                 Text(
                     text = stringResource(R.string.yes),
                     color = Color.Red
@@ -26,7 +31,7 @@ fun YesNoAlert(title: String, text: String, onDismiss: () -> Unit, onConfirm: ()
         },
 
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(onClick = onNo) {
                 Text(stringResource(R.string.no))
             }
         }

@@ -22,7 +22,6 @@
     <string name="clear_search">Suche zurücksetzen</string>
     <string name="club_map">Clubmap</string>
     <string name="come_back_and_check_out_the_latest_events">Komm zurück und schaue dir die neuesten Veranstaltungen an.</string>
-    <string name="community">Community</string>
     <string name="concert">Konzert</string>
     <string name="confirm">Bestätigen</string>
     <string name="confirm_new_password">Neues Passwort bestätigen</string>
@@ -62,6 +61,7 @@
     <string name="fri">FR</string>
     <string name="further_information">WEITERE INFORMATIONEN</string>
     <string name="german">Deutsch</string>
+    <string name="help_and_feedback">Hilfe und Feedback</string>
     <string name="hide_password">Passwort zeigen</string>
     <string name="invalid_email_or_password">Ungültige Email oder Passwort.</string>
     <string name="january">Jan</string>
@@ -98,6 +98,7 @@
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein.</string>
     <string name="please_describe_the_bug">Bitte beschreibe den Fehler.</string>
     <string name="please_re_enter_your_password">Bitte gib dein Passwort erneut ein</string>
+    <string name="privacy_policy">Datenschutz</string>
     <string name="push_notifications">Push Benachrichtigungen</string>
     <string name="re_authenticate">Re-authentifizieren</string>
     <string name="re_enter_password">Passwort erneut eingeben</string>
@@ -123,6 +124,7 @@
     <string name="sounds">Klänge</string>
     <string name="sun">SO</string>
     <string name="system_default">Wie System</string>
+    <string name="terms_of_service">Nutzungsbedingungen</string>
     <string name="thank_you_for_your_report">Danke für deine Meldung!</string>
     <string name="thu">DO</string>
     <string name="time">Zeit</string>
@@ -139,5 +141,4 @@
     <string name="wed">MI</string>
     <string name="yes">JA</string>
     <string name="your_position">Deine Position</string>
-
 </resources>

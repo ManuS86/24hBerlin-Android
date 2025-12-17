@@ -1,10 +1,12 @@
 package com.example.a24hberlin.ui.screens.settings
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
-import android.view.SoundEffectConstants
-import android.view.View
+import android.media.AudioManager
+import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -39,14 +41,16 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.LongPress
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -73,6 +77,7 @@ import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.regularPadding
 import com.example.a24hberlin.utils.slightRounding
 import com.example.a24hberlin.utils.smallPadding
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +86,8 @@ fun SettingsScreen(
     bottomBarState: MutableState<Boolean>
 ) {
     val context = LocalContext.current
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
+    val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
 
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
@@ -89,171 +95,27 @@ fun SettingsScreen(
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    var showBugReportAlert by remember { mutableStateOf(false) }
-    var showDeleteAccountAlert by remember { mutableStateOf(false) }
-    var showLogOutAlert by remember { mutableStateOf(false) }
-    var showBugReport by remember { mutableStateOf(false) }
-    var alertMessage by remember { mutableStateOf("") }
-
-    var previousLanguageCode by remember { mutableStateOf("") }
-    val languageChangeHelper by lazy { LanguageChangeHelper() }
-
-    val pleaseDescribeBug = rememberUpdatedState(stringResource(R.string.please_describe_the_bug))
-    val reportThankYou = rememberUpdatedState(stringResource(R.string.thank_you_for_your_report))
-
+    val isBugReportSheetOpen by settingsVM.isBugReportSheetOpen.collectAsStateWithLifecycle()
+    val bugReportAlertMessage by settingsVM.bugReportAlertMessage.collectAsStateWithLifecycle()
+    val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
+    val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
     val favorites by eventVM.favorites.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(regularPadding)
-    ) {
-        // A. Account Details
-        SettingsSectionTitle(R.string.account_details)
-        AccountDetailsCard(navController, bottomBarState, view)
+    var previousLanguageCode by remember { mutableStateOf("") }
+    val languageChangeHelper by lazy { LanguageChangeHelper() }
 
-        // B. App Settings
-        SettingsSectionTitle(R.string.app_settings)
-        AppSettingsCard(language, settingsVM, pushNotificationsEnabled, favorites, eventVM, view)
+    val pleaseDescribeBug = stringResource(R.string.please_describe_the_bug)
+    val reportThankYou = stringResource(R.string.thank_you_for_your_report)
 
-        // C. Community & Utility
-        SettingsSectionTitle(R.string.community)
-
-        // Share App
-        SettingsButton(
-            label = stringResource(R.string.share_24hBerlin),
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Start,
-            onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(
-                        Intent.EXTRA_TEXT,
-                        "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
-                    )
-                }
-                context.startActivity(
-                    Intent.createChooser(intent, "Share Link")
-                )
-            }
-        )
-
-        Spacer(Modifier.padding(mediumPadding))
-
-        // Report a Bug
-        SettingsButton(
-            label = stringResource(R.string.report_a_bug),
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Start,
-            onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showBugReport = true
-            }
-        )
-
-        Spacer(Modifier.padding(largePadding))
-
-        // Log Out
-        SettingsButton(
-            label = stringResource(R.string.logout),
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showLogOutAlert = true
-            }
-        )
-
-        // D. Footer and Version
-        AppFooter()
-
-        // Delete Account
-        SettingsButton(
-            label = stringResource(R.string.delete_account),
-            fontWeight = FontWeight.Normal,
-            textAlign = TextAlign.Center,
-            onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showDeleteAccountAlert = true
-            }
-        )
-    }
-
-    // Bug Report Modal Sheet
-    if (showBugReport) {
-        ModalBottomSheet(
-            onDismissRequest = { showBugReport = false },
-            containerColor = Color.White,
-            sheetState = sheetState
-        ) {
-            BugReportScreen(
-                { showBugReportAlert = true },
-                { alertMessage = pleaseDescribeBug.value },
-                { alertMessage = reportThankYou.value }
-            )
+    LaunchedEffect(bugReportAlertMessage) {
+        if (bugReportAlertMessage == reportThankYou) {
+            audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK)
+            haptic.performHapticFeedback(TextHandleMove)
+            delay(80)
+            haptic.performHapticFeedback(LongPress)
         }
-    }
-
-    // Log Out Alert
-    if (showLogOutAlert) {
-        YesNoAlert(
-            stringResource(R.string.logout),
-            stringResource(R.string.are_you_sure_you_want_to_log_out_q),
-            {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showLogOutAlert = false
-            },
-            {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showLogOutAlert = false
-                settingsVM.logout()
-            }
-        )
-    }
-
-    // Delete Account Alert
-    if (showDeleteAccountAlert) {
-        YesNoAlert(
-            stringResource(R.string.delete_account),
-            stringResource(R.string.are_you_sure_you_want_to_delete_your_account),
-            {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showDeleteAccountAlert = false
-            },
-            {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                showDeleteAccountAlert = false
-                settingsVM.deleteAccount()
-            }
-        )
-    }
-
-    // Bug Report Status Alert (OK only)
-    if (showBugReportAlert) {
-        AlertDialog(
-            onDismissRequest = { showBugReportAlert = false },
-            title = { Text(stringResource(R.string.bug_report)) },
-            text = { Text(alertMessage) },
-            containerColor = Color.White,
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
-                        showBugReportAlert = false
-
-                        if (alertMessage == reportThankYou.value) {
-                            showBugReport = false
-                        }
-                    }
-                ) {
-                    Text("OK")
-                }
-            }
-        )
     }
 
     LaunchedEffect(Unit) {
@@ -269,6 +131,145 @@ fun SettingsScreen(
             previousLanguageCode = languageCode
             languageChangeHelper.setLanguage(context, languageCode)
         }
+    }
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .padding(regularPadding)
+    ) {
+        // A. Account Details
+        SettingsSectionTitle(R.string.account_details)
+        AccountDetailsCard(navController, bottomBarState, haptic)
+
+        // B. App Settings
+        SettingsSectionTitle(R.string.app_settings)
+        AppSettingsCard(language, settingsVM, pushNotificationsEnabled, favorites, eventVM, haptic)
+
+        // C. Community & Utility
+        SettingsSectionTitle(R.string.help_and_feedback)
+
+        // Report a Bug
+        SettingsButton(stringResource(R.string.report_a_bug), FontWeight.Normal, TextAlign.Start) {
+            haptic.performHapticFeedback(TextHandleMove)
+            settingsVM.openBugReport()
+        }
+
+        Spacer(Modifier.padding(mediumPadding))
+
+        // Privacy Policy
+        SettingsButton(stringResource(R.string.privacy_policy), FontWeight.Normal, TextAlign.Start) {
+            haptic.performHapticFeedback(TextHandleMove)
+            val webUri = Uri.parse("https://www.twenty-four-hours.info/datenschutz/")
+            context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
+        }
+
+        Spacer(Modifier.padding(mediumPadding))
+
+        // Terms of Service
+        SettingsButton(stringResource(R.string.terms_of_service), FontWeight.Normal, TextAlign.Start) {
+            haptic.performHapticFeedback(TextHandleMove)
+            val webUri = Uri.parse("https://www.twenty-four-hours.info/nutzungsbedingungen/")
+            context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
+        }
+
+        Spacer(Modifier.padding(largePadding))
+
+        // Share App
+        SettingsButton(stringResource(R.string.share_24hBerlin), FontWeight.Normal, TextAlign.Start) {
+            haptic.performHapticFeedback(TextHandleMove)
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
+                )
+            }
+            context.startActivity(
+                Intent.createChooser(intent, "Share Link")
+            )
+        }
+
+        Spacer(Modifier.padding(largePadding))
+
+        // Log Out
+        SettingsButton(stringResource(R.string.logout), FontWeight.SemiBold, TextAlign.Center) {
+            haptic.performHapticFeedback(LongPress)
+            settingsVM.toggleLogoutAlert(true)
+        }
+
+        // D. Footer and Version
+        AppFooter()
+
+        // Delete Account
+        SettingsButton(stringResource(R.string.delete_account), FontWeight.Normal, TextAlign.Center) {
+            haptic.performHapticFeedback(LongPress)
+            settingsVM.toggleDeleteAlert(true)
+        }
+    }
+
+    // Bug Report Modal Sheet
+    if (isBugReportSheetOpen) {
+        ModalBottomSheet(
+            onDismissRequest = { settingsVM.closeBugReport() },
+            containerColor = Color.White,
+            sheetState = sheetState
+        ) {
+            BugReportScreen(
+                onSend = { report ->
+                    settingsVM.sendBugReport(report, pleaseDescribeBug, reportThankYou)
+                }
+            )
+        }
+    }
+
+    // Bug Report Status Alert (OK only)
+    bugReportAlertMessage?.let { message ->
+        AlertDialog(
+            onDismissRequest = { settingsVM.setBugReportAlert(null) },
+            title = { Text(stringResource(R.string.bug_report)) },
+            text = { Text(message) },
+            containerColor = Color.White,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        settingsVM.setBugReportAlert(null)
+                        if (message == reportThankYou) settingsVM.closeBugReport()
+                    }
+                ) { Text("OK") }
+            }
+        )
+    }
+
+    // Log Out Alert
+    if (showLogoutAlert) {
+        YesNoAlert(
+            title = stringResource(R.string.logout),
+            body = stringResource(R.string.are_you_sure_you_want_to_log_out_q),
+            onNo = {
+                settingsVM.toggleLogoutAlert(false)
+            },
+            onYes = {
+                settingsVM.toggleLogoutAlert(false)
+                settingsVM.logout()
+            }
+        )
+    }
+
+    // Delete Account Alert
+    if (showDeleteAccountAlert) {
+        YesNoAlert(
+            title = stringResource(R.string.delete_account),
+            body = stringResource(R.string.are_you_sure_you_want_to_delete_your_account),
+            onNo = {
+                settingsVM.toggleDeleteAlert(false)
+            },
+            onYes = {
+                settingsVM.toggleDeleteAlert(false)
+                settingsVM.deleteAccount()
+            }
+        )
     }
 }
 
@@ -288,7 +289,7 @@ private fun SettingsSectionTitle(titleResId: Int) {
 private fun AccountDetailsCard(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>,
-    view: View
+    haptic: HapticFeedback
 ) {
     Card(
         modifier = Modifier
@@ -309,7 +310,7 @@ private fun AccountDetailsCard(
         SettingsCardItem(
             title = stringResource(R.string.change_email),
             onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
+                haptic.performHapticFeedback(TextHandleMove)
                 bottomBarState.value = false
                 navController.navigate(Screen.ReAuthWrapper.createRoute("email"))
             }
@@ -325,7 +326,7 @@ private fun AccountDetailsCard(
         SettingsCardItem(
             title = stringResource(R.string.change_password),
             onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
+                haptic.performHapticFeedback(TextHandleMove)
                 bottomBarState.value = false
                 navController.navigate(Screen.ReAuthWrapper.createRoute("password"))
             }
@@ -340,7 +341,7 @@ private fun SettingsCardItem(title: String, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = null,
+                indication = LocalIndication.current,
                 role = Role.Button,
                 onClick = onClick
             )
@@ -368,7 +369,7 @@ private fun AppSettingsCard(
     pushNotificationsEnabled: Boolean,
     favorites: List<Event>,
     eventVM: EventViewModel,
-    view: View
+    haptic: HapticFeedback
 ) {
     Card(
         modifier = Modifier
@@ -444,9 +445,8 @@ private fun AppSettingsCard(
             Switch(
                 checked = pushNotificationsEnabled,
                 onCheckedChange = { isChecked ->
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    haptic.performHapticFeedback(TextHandleMove)
                     settingsVM.changePushNotifications(isChecked)
-
                     if (isChecked) {
                         favorites.forEach { favorite ->
                             eventVM.addFavoritePushNotifications(favorite)
