@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DetailCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DirectionsCard
@@ -26,7 +25,7 @@ import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcompos
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.MapCard
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
 import com.example.a24hberlin.ui.theme.Details
-import com.example.a24hberlin.ui.viewmodel.MapViewModel
+import com.example.a24hberlin.managers.ExternalMapNavigator
 import com.example.a24hberlin.utils.mediumPadding
 import com.example.a24hberlin.utils.mediumRounding
 
@@ -41,7 +40,6 @@ import com.example.a24hberlin.utils.mediumRounding
 @Composable
 fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () -> Unit) {
     val context = LocalContext.current
-    val mapVM: MapViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -59,7 +57,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
         event.lat?.let {
             event.long?.let {
                 DirectionsCard(event) {
-                    mapVM.navigateToGoogleMaps(
+                    ExternalMapNavigator.navigateToGoogleMaps(
                         context,
                         event.lat,
                         event.long
