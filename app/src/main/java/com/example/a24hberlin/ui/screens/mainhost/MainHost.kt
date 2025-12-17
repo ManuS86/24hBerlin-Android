@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.mainhost
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,8 +15,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -35,7 +35,7 @@ import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 
 @Composable
 fun MainHost() {
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
 
     val allScreens = remember {
@@ -44,7 +44,7 @@ fun MainHost() {
             Screen.ClubMap,
             Screen.Favorites,
             Screen.Settings,
-            Screen.ReAuthWrapper(from = "any")
+            Screen.ReAuthWrapper
         )
     }
 
@@ -69,15 +69,16 @@ fun MainHost() {
 
     DisposableEffect(currentRoute) {
         val currentScreen = allScreens.firstOrNull { it.route == currentRoute }
-
         val dynamicTitleRoute = Screen.ReAuthWrapper.route
-        val isDynamicTitleRoute = currentRoute == dynamicTitleRoute
 
-        if (!isDynamicTitleRoute) {
+        val isReAuthRoute = currentRoute == dynamicTitleRoute
+
+        if (!isReAuthRoute) {
             appBarTitleState.value = currentScreen?.titleResId
+            bottomBarState.value = true
+        } else {
+            bottomBarState.value = false
         }
-
-        bottomBarState.value = currentRoute != dynamicTitleRoute
 
         onDispose {}
     }
@@ -97,12 +98,12 @@ fun MainHost() {
                     showSearchBar = showSearchBar,
                     searchText = searchText,
                     onSearchIconClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = !showSearchBarState.value
                     },
                     onSearchTextChanged = { searchTextState.value = it },
                     onSearchClosed = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = false
                     },
                     navController = navController

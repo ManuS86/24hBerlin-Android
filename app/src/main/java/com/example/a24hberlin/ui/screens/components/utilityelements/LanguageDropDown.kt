@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.components.utilityelements
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -21,7 +20,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,7 +35,7 @@ fun LanguageDropdown(
     onValueSelected: (Language?) -> Unit,
     options: List<Language>
 ) {
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
     var isExpanded by remember { mutableStateOf(false) }
 
     Column(
@@ -78,7 +78,7 @@ fun LanguageDropdown(
                     )
                 },
                 onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    haptic.performHapticFeedback(TextHandleMove)
                     onValueSelected(null)
                     isExpanded = !isExpanded
                 }
@@ -95,7 +95,7 @@ fun LanguageDropdown(
                         )
                     },
                     onClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        haptic.performHapticFeedback(TextHandleMove)
                         onValueSelected(option)
                         isExpanded = !isExpanded
                     }

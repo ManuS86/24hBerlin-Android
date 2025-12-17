@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
 import android.content.Context
 import android.media.AudioManager
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +24,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -112,8 +110,6 @@ private fun PasswordReAuthForm(
     password: String,
     onPasswordEntered: (String) -> Unit
 ) {
-    val view = LocalView.current
-
     Column(Modifier.padding(horizontal = regularPadding)) {
         Spacer(Modifier.weight(0.7f))
 
@@ -143,10 +139,7 @@ private fun PasswordReAuthForm(
 
         LargeDarkButton(
             label = stringResource(R.string.verify_password),
-            onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-                settingsVM.reAuthenticate(password)
-            }
+            onClick = { settingsVM.reAuthenticate(password) }
             )
 
         Spacer(Modifier.weight(1f))

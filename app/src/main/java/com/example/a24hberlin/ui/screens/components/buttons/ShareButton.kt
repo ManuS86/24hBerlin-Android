@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.components.buttons
 
 import android.content.Context
 import android.content.Intent
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons
@@ -12,14 +11,15 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.example.a24hberlin.R
 
 @Composable
 fun ShareButton(context: Context, permalink: String) {
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
 
     Icon(
         imageVector = Icons.Default.Share,
@@ -30,8 +30,7 @@ fun ShareButton(context: Context, permalink: String) {
                 indication = ripple(),
                 role = Role.Button,
                 onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-
+                    haptic.performHapticFeedback(TextHandleMove)
                     val intent = Intent(Intent.ACTION_SEND).apply {
                         type = "text/plain"
                         putExtra(Intent.EXTRA_TEXT, permalink)

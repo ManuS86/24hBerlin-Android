@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.mediumPadding
@@ -20,8 +22,13 @@ fun LargeDarkButton(
     label: String,
     onClick: () -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     ElevatedButton(
-        onClick = onClick,
+        onClick = {
+            haptic.performHapticFeedback(TextHandleMove)
+            onClick()
+        },
         colors = ButtonDefaults.buttonColors(
             containerColor = Color.Black,
             contentColor = Color.White

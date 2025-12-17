@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -29,8 +28,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -58,7 +58,7 @@ fun FilterBar(
     onVenueSelected: (String?) -> Unit,
 ) {
     val context = LocalContext.current
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
     val eventVM: EventViewModel = viewModel()
 
     val horizontalScrollState = rememberScrollState()
@@ -87,7 +87,7 @@ fun FilterBar(
             ) {
                 Button(
                     onClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        haptic.performHapticFeedback(TextHandleMove)
                         onMonthSelected(null)
                     },
                     shape = RoundedCornerShape(mediumRounding),
@@ -100,7 +100,7 @@ fun FilterBar(
                     )
                 ) {
                     Text(
-                        text = "All",
+                        text = stringResource(R.string.all),
                         fontWeight = FontWeight.SemiBold,
                         color = if (selectedMonth == null) Color.White else Color.White.copy(
                             0.6f
@@ -112,7 +112,7 @@ fun FilterBar(
                 Month.allValues.forEach { month ->
                     Button(
                         onClick = {
-                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            haptic.performHapticFeedback(TextHandleMove)
                             onMonthSelected(month)
                         },
                         shape = RoundedCornerShape(mediumRounding),
@@ -146,7 +146,7 @@ fun FilterBar(
                         indication = ripple(),
                         role = Role.Button,
                         onClick = {
-                            view.playSoundEffect(SoundEffectConstants.CLICK)
+                            haptic.performHapticFeedback(TextHandleMove)
                             showFilters = !showFilters
                         }
                     ),
@@ -208,7 +208,7 @@ fun FilterBar(
                                 indication = ripple(),
                                 role = Role.Button,
                                 onClick = {
-                                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                                    haptic.performHapticFeedback(TextHandleMove)
                                     onEventTypeSelected(null)
                                     onSoundSelected(null)
                                     onVenueSelected(null)

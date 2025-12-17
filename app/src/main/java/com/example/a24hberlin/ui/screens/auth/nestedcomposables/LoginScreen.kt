@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,7 +18,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,21 +37,16 @@ import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun LoginScreen(onClick: () -> Unit) {
-    val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
-    val scrollState = rememberScrollState()
+    val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
 
+    val scrollState = rememberScrollState()
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var showForgotPassword by remember { mutableStateOf(false) }
 
-    val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
-
     if (showForgotPassword) {
-        ForgotPasswordScreen {
-            view.playSoundEffect(SoundEffectConstants.CLICK)
-            showForgotPassword = false
-        }
+        ForgotPasswordScreen { showForgotPassword = false }
     } else {
         Column(
             modifier = Modifier
@@ -98,20 +91,14 @@ fun LoginScreen(onClick: () -> Unit) {
 
             LargeDarkButton(
                 label = stringResource(R.string.login),
-                onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-                    authVM.login(email, password)
-                }
+                onClick = { authVM.login(email, password) }
             )
 
             Spacer(Modifier.height(extraLargePadding))
 
             AuthTextButton(
                 label = stringResource(R.string.forgot_password),
-                onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-                    showForgotPassword = true
-                }
+                onClick = { showForgotPassword = true }
             )
 
             Spacer(Modifier.weight(1f))

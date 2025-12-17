@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.media.AudioManager
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
@@ -78,6 +77,7 @@ import com.example.a24hberlin.utils.regularPadding
 import com.example.a24hberlin.utils.slightRounding
 import com.example.a24hberlin.utils.smallPadding
 import kotlinx.coroutines.delay
+import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,8 +103,8 @@ fun SettingsScreen(
     val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
 
+    val languageChangeHelper = remember { LanguageChangeHelper() }
     var previousLanguageCode by remember { mutableStateOf("") }
-    val languageChangeHelper by lazy { LanguageChangeHelper() }
 
     val pleaseDescribeBug = stringResource(R.string.please_describe_the_bug)
     val reportThankYou = stringResource(R.string.thank_you_for_your_report)
@@ -152,7 +152,6 @@ fun SettingsScreen(
 
         // Report a Bug
         SettingsButton(stringResource(R.string.report_a_bug), FontWeight.Normal, TextAlign.Start) {
-            haptic.performHapticFeedback(TextHandleMove)
             settingsVM.openBugReport()
         }
 
@@ -160,8 +159,7 @@ fun SettingsScreen(
 
         // Privacy Policy
         SettingsButton(stringResource(R.string.privacy_policy), FontWeight.Normal, TextAlign.Start) {
-            haptic.performHapticFeedback(TextHandleMove)
-            val webUri = Uri.parse("https://www.twenty-four-hours.info/datenschutz/")
+            val webUri = "https://www.twenty-four-hours.info/datenschutz/".toUri()
             context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
         }
 
@@ -169,8 +167,7 @@ fun SettingsScreen(
 
         // Terms of Service
         SettingsButton(stringResource(R.string.terms_of_service), FontWeight.Normal, TextAlign.Start) {
-            haptic.performHapticFeedback(TextHandleMove)
-            val webUri = Uri.parse("https://www.twenty-four-hours.info/nutzungsbedingungen/")
+            val webUri = "https://www.twenty-four-hours.info/nutzungsbedingungen/".toUri()
             context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
         }
 
@@ -178,7 +175,6 @@ fun SettingsScreen(
 
         // Share App
         SettingsButton(stringResource(R.string.share_24hBerlin), FontWeight.Normal, TextAlign.Start) {
-            haptic.performHapticFeedback(TextHandleMove)
             val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(
@@ -195,7 +191,6 @@ fun SettingsScreen(
 
         // Log Out
         SettingsButton(stringResource(R.string.logout), FontWeight.SemiBold, TextAlign.Center) {
-            haptic.performHapticFeedback(LongPress)
             settingsVM.toggleLogoutAlert(true)
         }
 
@@ -204,7 +199,6 @@ fun SettingsScreen(
 
         // Delete Account
         SettingsButton(stringResource(R.string.delete_account), FontWeight.Normal, TextAlign.Center) {
-            haptic.performHapticFeedback(LongPress)
             settingsVM.toggleDeleteAlert(true)
         }
     }
@@ -309,8 +303,8 @@ private fun AccountDetailsCard(
         // Change Email
         SettingsCardItem(
             title = stringResource(R.string.change_email),
+            haptic = haptic,
             onClick = {
-                haptic.performHapticFeedback(TextHandleMove)
                 bottomBarState.value = false
                 navController.navigate(Screen.ReAuthWrapper.createRoute("email"))
             }
@@ -325,8 +319,8 @@ private fun AccountDetailsCard(
         // Change Password
         SettingsCardItem(
             title = stringResource(R.string.change_password),
+            haptic = haptic,
             onClick = {
-                haptic.performHapticFeedback(TextHandleMove)
                 bottomBarState.value = false
                 navController.navigate(Screen.ReAuthWrapper.createRoute("password"))
             }
@@ -335,7 +329,11 @@ private fun AccountDetailsCard(
 }
 
 @Composable
-private fun SettingsCardItem(title: String, onClick: () -> Unit) {
+private fun SettingsCardItem(
+    title: String,
+    haptic: HapticFeedback,
+    onClick: () -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -343,7 +341,10 @@ private fun SettingsCardItem(title: String, onClick: () -> Unit) {
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current,
                 role = Role.Button,
-                onClick = onClick
+                onClick = {
+                    haptic.performHapticFeedback(TextHandleMove)
+                    onClick()
+                }
             )
             .padding(regularPadding),
         verticalAlignment = Alignment.CenterVertically

@@ -72,13 +72,26 @@ fun NavGraph(
         }
         composable(
             route = Screen.ReAuthWrapper.route,
-            arguments = Screen.ReAuthWrapper.arguments,
-            enterTransition = { slideInHorizontally(animationSpec = tween(300)) { it } },
-            popExitTransition = { slideOutHorizontally(animationSpec = tween(300)) { it } }
+            arguments = Screen.ReAuthWrapper.navArguments,
+            enterTransition = {
+                slideInHorizontally(animationSpec = tween(300)) { it }
+            },
+            exitTransition = {
+                ExitTransition.None
+            },
+            popEnterTransition = {
+                EnterTransition.None
+            },
+            popExitTransition = {
+                slideOutHorizontally(animationSpec = tween(300)) { it }
+            }
         ) { backStackEntry ->
-            val from = backStackEntry.arguments?.getString(Screen.ReAuthWrapper.ARGUMENT_KEY) ?: ""
+            val from = backStackEntry.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM) ?: ""
 
-            ReAuthWrapper(from, onSetTitleId)
+            ReAuthWrapper(
+                from = from,
+                onSetTitleId = onSetTitleId
+            )
         }
     }
 }

@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.auth.nestedcomposables
 
 import android.Manifest
 import android.os.Build
-import android.view.SoundEffectConstants
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
@@ -23,7 +22,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,18 +40,16 @@ import com.example.a24hberlin.utils.regularPadding
 
 @Composable
 fun RegisterScreen(onClick: () -> Unit) {
-    val view = LocalView.current
     val authVM: AuthViewModel = viewModel()
-    val scrollState = rememberScrollState()
-
-    var confirmPassword by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
     val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
     val passwordErrorResId by authVM.passwordErrorResId.collectAsStateWithLifecycle()
     val hasNotificationPermission by authVM.hasNotificationPermission.collectAsStateWithLifecycle()
+
+    val scrollState = rememberScrollState()
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -118,8 +114,6 @@ fun RegisterScreen(onClick: () -> Unit) {
         LargeDarkButton(
             label = stringResource(R.string.register),
             onClick = {
-                view.playSoundEffect(SoundEffectConstants.CLICK)
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
                     permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 } else {

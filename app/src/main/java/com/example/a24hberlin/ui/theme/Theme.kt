@@ -22,7 +22,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun _24hBerlinTheme(
+fun AppTheme(
     content: @Composable () -> Unit
 ) {
     val colorScheme = LightColorScheme

@@ -17,8 +17,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
@@ -33,7 +31,6 @@ import com.example.a24hberlin.utils.slightRounding
 fun BugReportScreen(
     onSend: (String) -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
     var bugReport by remember { mutableStateOf("") }
 
     Column(Modifier.padding(horizontal = regularPadding)) {
@@ -63,10 +60,7 @@ fun BugReportScreen(
         LargeDarkButton(
             label = stringResource(R.string.send_bug_report),
             onClick = {
-                haptic.performHapticFeedback(TextHandleMove)
-
                 onSend(bugReport)
-
                 if (bugReport.isNotBlank()) {
                     bugReport = ""
                 }

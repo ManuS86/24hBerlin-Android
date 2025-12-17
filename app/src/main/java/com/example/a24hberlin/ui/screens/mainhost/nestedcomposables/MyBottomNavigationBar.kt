@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
-import android.view.SoundEffectConstants
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -8,7 +7,8 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -19,7 +19,7 @@ fun MyBottomNavigationBar(
     navController: NavHostController,
     onTabSelected: () -> Unit
 ) {
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
     val items = navItemsData
 
     NavigationBar(
@@ -43,7 +43,7 @@ fun MyBottomNavigationBar(
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
+                        haptic.performHapticFeedback(TextHandleMove)
                         onTabSelected()
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.startDestinationId) {

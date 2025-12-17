@@ -1,7 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables
 
 import android.content.Intent
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
@@ -19,8 +18,9 @@ import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -35,7 +35,7 @@ import com.example.a24hberlin.utils.regularPadding
 @Composable
 fun LearnMoreLinkCard(link: String?) {
     val context = LocalContext.current
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
 
     link?.let {
         Card(
@@ -46,8 +46,7 @@ fun LearnMoreLinkCard(link: String?) {
                     indication = ripple(),
                     role = Role.Button,
                     onClick = {
-                        view.playSoundEffect(SoundEffectConstants.CLICK)
-
+                        haptic.performHapticFeedback(TextHandleMove)
                         val intent = Intent(Intent.ACTION_VIEW, link.toUri())
                         context.startActivity(intent)
                     }

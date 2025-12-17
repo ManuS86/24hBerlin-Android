@@ -1,6 +1,7 @@
 package com.example.a24hberlin.ui.screens.settings.nestedcomposables
 
-import android.view.SoundEffectConstants
+import android.content.Context
+import android.media.AudioManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,14 +13,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.LongPress
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,18 +37,30 @@ import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.largePadding
 import com.example.a24hberlin.utils.regularPadding
+import kotlinx.coroutines.delay
 
 @Composable
 fun ChangePasswordScreen() {
-    val view = LocalView.current
+    val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
+    val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
+
     val settingsVM: SettingsViewModel = viewModel()
+    val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
+    val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
+    val passwordErrorResId by settingsVM.passwordErrorResId.collectAsStateWithLifecycle()
 
     var confirmPassword by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
-    val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
-    val passwordErrorResId by settingsVM.passwordErrorResId.collectAsStateWithLifecycle()
+    LaunchedEffect(confirmationMessageResId) {
+        if (confirmationMessageResId == R.string.password_changed_successfully) {
+            audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK)
+            haptic.performHapticFeedback(TextHandleMove)
+            delay(80)
+            haptic.performHapticFeedback(LongPress)
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
         Image(
@@ -88,10 +105,7 @@ fun ChangePasswordScreen() {
 
             LargeDarkButton(
                 label = stringResource(R.string.change_password),
-                onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
-                    settingsVM.changePassword(password, confirmPassword)
-                }
+                onClick = { settingsVM.changePassword(password, confirmPassword) }
                 )
 
             Spacer(Modifier.weight(1f))

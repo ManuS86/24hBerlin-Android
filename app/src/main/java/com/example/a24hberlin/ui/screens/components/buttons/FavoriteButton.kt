@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.components.buttons
 
-import android.view.SoundEffectConstants
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
@@ -14,7 +13,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -26,7 +26,7 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
 fun FavoriteButton(event: Event) {
-    val view = LocalView.current
+    val haptic = LocalHapticFeedback.current
     val eventVM: EventViewModel = viewModel()
 
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
@@ -44,7 +44,7 @@ fun FavoriteButton(event: Event) {
                 indication = ripple(),
                 role = Role.Button,
                 onClick = {
-                    view.playSoundEffect(SoundEffectConstants.CLICK)
+                    haptic.performHapticFeedback(TextHandleMove)
 
                     if (!isFavorite) {
                         eventVM.addFavoriteID(favoriteID = event.id)

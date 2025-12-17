@@ -15,7 +15,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.a24hberlin.ui.screens.auth.AuthWrapper
 import com.example.a24hberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
-import com.example.a24hberlin.ui.theme._24hBerlinTheme
+import com.example.a24hberlin.ui.theme.AppTheme
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 class MainActivity : ComponentActivity() {
@@ -25,7 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            _24hBerlinTheme {
+            AppTheme {
                 val eventVM: EventViewModel by viewModels()
 
                 ScheduleReminderEffect(eventVM)

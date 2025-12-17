@@ -1,13 +1,6 @@
 package com.example.a24hberlin.utils
 
-import androidx.compose.ui.graphics.Color
-import androidx.core.text.HtmlCompat
 import com.example.a24hberlin.R
-import com.example.a24hberlin.data.enums.Language
-import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.theme.ArtAndCulture
-import com.example.a24hberlin.ui.theme.Concert
-import com.example.a24hberlin.ui.theme.Party
 
 fun checkPassword(password: String, confirmPassword: String): Int? {
     if (password != confirmPassword) {
