@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.clubmap
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,11 +46,12 @@ fun ClubMapScreen(
     selectedSound: String?,
     selectedVenue: String?
 ) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState()
 
-    val eventVM: EventViewModel = viewModel()
+    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
     val events by eventVM.events.collectAsStateWithLifecycle()
 
     var selectedEvent: Event? by remember { mutableStateOf(null) }

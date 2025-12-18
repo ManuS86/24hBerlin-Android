@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.buttons
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.size
@@ -14,6 +15,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -26,8 +28,9 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
 fun BookmarkButton(event: Event) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val eventVM: EventViewModel = viewModel()
+    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
 
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
     val isBookmarked by remember {

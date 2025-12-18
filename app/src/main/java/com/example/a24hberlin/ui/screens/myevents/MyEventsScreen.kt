@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.myevents
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -16,6 +17,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -38,8 +40,9 @@ fun BookmarksScreen(
     selectedSound: String?,
     selectedVenue: String?
 ) {
+    val context = LocalContext.current
     val connectivityVM: ConnectivityViewModel = viewModel()
-    val eventVM: EventViewModel = viewModel()
+    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
 
     val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()

@@ -1,5 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -64,7 +65,7 @@ fun FilterBar(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val eventVM: EventViewModel = viewModel()
+    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
 
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()

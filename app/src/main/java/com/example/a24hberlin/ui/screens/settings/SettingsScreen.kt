@@ -5,6 +5,7 @@ import android.content.Intent.ACTION_SEND
 import android.content.Intent.ACTION_VIEW
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Resources
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
@@ -94,7 +95,7 @@ fun SettingsScreen(
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    val eventVM: EventViewModel = viewModel()
+    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
     val settingsVM: SettingsViewModel = viewModel()
 
     val scrollState = rememberScrollState()
