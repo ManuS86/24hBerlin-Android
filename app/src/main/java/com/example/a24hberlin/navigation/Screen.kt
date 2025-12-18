@@ -10,10 +10,10 @@ sealed class Screen(
     @get:StringRes val titleResId: Int? = null
 ) {
     // --- Primary Bottom Tabs ---
-    data object Events : Screen("events", R.string.events)
-    data object ClubMap : Screen("club_map", R.string.club_map)
-    data object Favorites : Screen("favorites", R.string.favorite)
-    data object Settings : Screen("settings", R.string.settings)
+    data object Events : Screen("events", R.string.app_name)
+    data object ClubMap : Screen("club_map", R.string.app_name)
+    data object Favorites : Screen("favorites", R.string.app_name)
+    data object Settings : Screen("settings", R.string.app_name)
 
     // --- Nested/Utility Screens ---
     data object ReAuthWrapper : Screen("reauth_wrapper/{from}", R.string.re_authenticate) {

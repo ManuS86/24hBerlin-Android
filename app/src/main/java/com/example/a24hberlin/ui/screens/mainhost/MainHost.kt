@@ -16,7 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -150,7 +150,7 @@ fun MainHost() {
             Image(
                 painter = painterResource(R.drawable.background),
                 contentDescription = null,
-                contentScale = ContentScale.FillBounds,
+                contentScale = FillBounds,
                 modifier = Modifier.fillMaxSize()
             )
 

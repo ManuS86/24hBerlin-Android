@@ -3,10 +3,14 @@ package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.NavigationBarItemDefaults.colors
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
@@ -23,14 +27,13 @@ fun MyBottomNavigationBar(
     val items = navItemsData
 
     NavigationBar(
-        containerColor = Color.Black
+        containerColor = Black
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
         items.forEach { item ->
             val selected = currentRoute == item.route
-
             val label = stringResource(id = item.labelResId)
 
             NavigationBarItem(
@@ -40,6 +43,7 @@ fun MyBottomNavigationBar(
                         contentDescription = label
                     )
                 },
+                label = { Text(text = label) },
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
@@ -54,11 +58,13 @@ fun MyBottomNavigationBar(
                         }
                     }
                 },
-                alwaysShowLabel = false,
-                colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = Color.White,
-                    indicatorColor = Color.Transparent,
-                    unselectedIconColor = Color.Gray
+                alwaysShowLabel = true,
+                colors = colors(
+                    selectedIconColor = White,
+                    selectedTextColor = White,
+                    unselectedIconColor = Gray,
+                    unselectedTextColor = Gray,
+                    indicatorColor = Transparent
                 )
             )
         }

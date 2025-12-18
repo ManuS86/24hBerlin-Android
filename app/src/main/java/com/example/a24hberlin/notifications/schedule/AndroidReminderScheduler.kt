@@ -84,12 +84,10 @@ class AndroidReminderScheduler(private val context: Context) : ReminderScheduler
                 R.string.dont_forget_event_3days,
                 event.name
             )
-
             EventReminderType.TWELVE_HOURS_BEFORE -> context.getString(
                 R.string.dont_forget_event_today,
                 event.name
             )
-
             EventReminderType.THREE_HOURS_BEFORE -> context.getString(
                 R.string.dont_forget_event_3hours,
                 event.name
@@ -189,9 +187,7 @@ class AndroidReminderScheduler(private val context: Context) : ReminderScheduler
 
         }
 
-        if (imageURL != null) {
-            intent.putExtra("imageURL", imageURL)
-        }
+        if (imageURL != null) { intent.putExtra("imageURL", imageURL) }
         return intent
     }
 }
