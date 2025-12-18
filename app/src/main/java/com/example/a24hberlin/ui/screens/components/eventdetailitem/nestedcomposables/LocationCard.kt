@@ -62,7 +62,7 @@ fun LocationCard(
                     SelectionContainer {
                         Column {
                             Text(
-                                text = name.trim().replaceFirstChar {
+                                text = name.replaceFirstChar {
                                     if (it.isLowerCase()) it.titlecase() else it.toString()
                                 },
                                 overflow = Ellipsis,
