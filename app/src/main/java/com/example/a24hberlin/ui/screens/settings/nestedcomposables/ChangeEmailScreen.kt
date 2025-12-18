@@ -24,7 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.textfields.AuthMessages
+import com.example.a24hberlin.ui.screens.components.utilityelements.AuthMessages
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.ui.theme.largePadding

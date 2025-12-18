@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.textfields
+package com.example.a24hberlin.ui.screens.components.utilityelements
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography

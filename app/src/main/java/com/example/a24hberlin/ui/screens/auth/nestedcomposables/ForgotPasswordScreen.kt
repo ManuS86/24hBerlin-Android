@@ -23,13 +23,14 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
-import com.example.a24hberlin.ui.screens.components.textfields.AuthMessages
+import com.example.a24hberlin.ui.screens.components.utilityelements.AuthMessages
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.extraLargePadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
@@ -49,6 +50,8 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
             .padding(horizontal = regularPadding),
         horizontalAlignment = CenterHorizontally
     ) {
+        Spacer(Modifier.height(mediumPadding))
+
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,

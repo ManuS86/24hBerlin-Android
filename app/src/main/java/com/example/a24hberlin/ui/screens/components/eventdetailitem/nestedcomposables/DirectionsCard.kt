@@ -96,9 +96,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
                         modifier = Modifier
                             .padding(start = 2.dp)
                             .size(20.dp)
-                            .clickable {
-                                onClick()
-                            }
+                            .clickable { onClick() }
                     )
                 }
             }

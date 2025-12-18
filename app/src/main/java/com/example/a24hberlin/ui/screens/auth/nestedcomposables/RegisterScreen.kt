@@ -67,6 +67,8 @@ fun RegisterScreen(onClick: () -> Unit) {
             .padding(horizontal = regularPadding),
         horizontalAlignment = CenterHorizontally
     ) {
+        Spacer(Modifier.height(mediumPadding))
+
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,
@@ -126,6 +128,8 @@ fun RegisterScreen(onClick: () -> Unit) {
         Spacer(Modifier.weight(1f))
 
         LoginPrompt(onClick)
+
+        Spacer(Modifier.height(mediumPadding))
     }
 
     DisposableEffect(Unit) {

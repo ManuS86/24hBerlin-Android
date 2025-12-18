@@ -56,6 +56,8 @@ fun LoginScreen(onClick: () -> Unit) {
                 .padding(horizontal = regularPadding),
             horizontalAlignment = CenterHorizontally
         ) {
+            Spacer(Modifier.height(mediumPadding))
+
             Text(
                 text = stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
@@ -105,6 +107,8 @@ fun LoginScreen(onClick: () -> Unit) {
             Spacer(Modifier.weight(1f))
 
             SignupPrompt(onClick)
+
+            Spacer(Modifier.height(mediumPadding))
         }
     }
 
