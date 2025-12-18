@@ -126,7 +126,7 @@ class AndroidReminderScheduler(private val context: Context) : ReminderScheduler
     }
 
 
-    override fun cancelAllPendingReminders(favorites: List<Event>) {
+    override fun cancelAllPendingReminders(bookmarks: List<Event>) {
         alarmManager.cancel(
             createPendingIntent(
                 ReminderConstants.ABSENCE_REMINDER_ID,
@@ -134,8 +134,8 @@ class AndroidReminderScheduler(private val context: Context) : ReminderScheduler
             )
         )
 
-        favorites.forEach { favorite ->
-            cancelEventReminders(favorite)
+        bookmarks.forEach { bookmark ->
+            cancelEventReminders(bookmark)
         }
 
         Log.d(

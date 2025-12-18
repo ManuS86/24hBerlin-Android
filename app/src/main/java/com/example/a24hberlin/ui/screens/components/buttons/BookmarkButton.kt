@@ -25,18 +25,18 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
-fun FavoriteButton(event: Event) {
+fun BookmarkButton(event: Event) {
     val haptic = LocalHapticFeedback.current
     val eventVM: EventViewModel = viewModel()
 
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
-    val isFavorite by remember {
-        derivedStateOf { currentAppUser?.favoriteIDs?.contains(event.id) ?: false }
+    val isBookmarked by remember {
+        derivedStateOf { currentAppUser?.bookmarkIDs?.contains(event.id) ?: false }
     }
 
     Icon(
-        imageVector = if (isFavorite) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
-        contentDescription = if (isFavorite) stringResource(R.string.unfavorite) else stringResource(R.string.favorite),
+        imageVector = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
+        contentDescription = if (isBookmarked) stringResource(R.string.remove) else stringResource(R.string.bookmark),
         modifier = Modifier
             .size(28.dp)
             .clickable(
@@ -46,10 +46,10 @@ fun FavoriteButton(event: Event) {
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)
 
-                    if (!isFavorite) {
-                        eventVM.addFavoriteID(favoriteID = event.id)
+                    if (!isBookmarked) {
+                        eventVM.addBookmarkId(bookmarkId = event.id)
                     } else {
-                        eventVM.removeFavoriteID(favoriteID = event.id)
+                        eventVM.removeBookmarkId(bookmarkId = event.id)
                     }
                 }
             )

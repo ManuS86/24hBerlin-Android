@@ -42,7 +42,7 @@ fun MainHost() {
         listOf(
             Screen.Events,
             Screen.ClubMap,
-            Screen.Favorites,
+            Screen.MyEvents,
             Screen.Settings,
             Screen.ReAuthWrapper
         )
@@ -112,7 +112,7 @@ fun MainHost() {
                 val showFilterBar = currentRoute in listOf(
                     Screen.Events.route,
                     Screen.ClubMap.route,
-                    Screen.Favorites.route
+                    Screen.MyEvents.route
                 )
 
                 if (showFilterBar) {

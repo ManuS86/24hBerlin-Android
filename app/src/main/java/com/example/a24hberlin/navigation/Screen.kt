@@ -12,7 +12,7 @@ sealed class Screen(
     // --- Primary Bottom Tabs ---
     data object Events : Screen("events", R.string.app_name)
     data object ClubMap : Screen("club_map", R.string.app_name)
-    data object Favorites : Screen("favorites", R.string.app_name)
+    data object MyEvents : Screen("my_events", R.string.app_name)
     data object Settings : Screen("settings", R.string.app_name)
 
     // --- Nested/Utility Screens ---

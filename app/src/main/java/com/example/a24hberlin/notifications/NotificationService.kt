@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
+import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationCompat.PRIORITY_HIGH
 import androidx.core.app.NotificationManagerCompat
 import coil3.Bitmap
 import com.example.a24hberlin.MainActivity
@@ -34,7 +37,7 @@ class NotificationService(private val context: Context) {
         }
 
         val notificationManager =
-            context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
@@ -50,7 +53,7 @@ class NotificationService(private val context: Context) {
             context,
             notificationId,
             activityIntent,
-            PendingIntent.FLAG_IMMUTABLE
+            FLAG_IMMUTABLE
         )
 
         val notification =
@@ -60,7 +63,7 @@ class NotificationService(private val context: Context) {
                 .setContentText(body)
                 .setContentIntent(activityPendingIntent)
                 .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setPriority(PRIORITY_HIGH)
 
         if (image != null) {
             notification.setLargeIcon(image)

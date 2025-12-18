@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,7 +19,7 @@ import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
@@ -27,15 +27,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -71,25 +73,22 @@ fun FilterBar(
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
 
-    val filterAlpha = if (selectedMonth != null) 0.9f else 0.5f
-    val textAlpha = if (selectedMonth != null) 1f else 0.6f
-
     Column(
         modifier = Modifier
-            .background(Color.Black)
+            .background(Black)
             .padding(bottom = smallPadding)
     ) {
         Row(
             modifier = Modifier
                 .padding(horizontal = regularPadding)
                 .padding(bottom = mediumPadding),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = CenterVertically
         ) {
             Row(
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
                     .weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(mediumPadding)
+                horizontalArrangement = spacedBy(mediumPadding)
             ) {
                 Button(
                     onClick = {
@@ -100,13 +99,14 @@ fun FilterBar(
                         .height(32.dp),
                     shape = RoundedCornerShape(slightRounding),
                     contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                    colors = buttonColors(Color.DarkGray.copy(filterAlpha))
+                    colors = buttonColors(
+                        DarkGray.copy(if (selectedMonth == null) 0.9f else 0.5f))
                 ) {
                     Text(
                         text = stringResource(R.string.all),
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.White.copy(textAlpha),
-                        style = MaterialTheme.typography.bodyMedium
+                        fontWeight = SemiBold,
+                        color = White.copy(if (selectedMonth == null) 1f else 0.6f),
+                        style = typography.bodyMedium
                     )
                 }
 
@@ -120,13 +120,15 @@ fun FilterBar(
                             .height(32.dp),
                         shape = RoundedCornerShape(slightRounding),
                         contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                        colors = buttonColors(Color.DarkGray.copy(filterAlpha))
+                        colors = buttonColors(
+                            DarkGray.copy(if (selectedMonth == month) 0.9f else 0.5f)
+                        )
                     ) {
                         Text(
                             text = month.getStringResource(context),
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color.White.copy(textAlpha),
-                            style = MaterialTheme.typography.bodyMedium
+                            fontWeight = SemiBold,
+                            color = White.copy(if (selectedMonth == month) 1f else 0.6f),
+                            style = typography.bodyMedium
                         )
                     }
                 }
@@ -146,7 +148,7 @@ fun FilterBar(
                             showFilters = !showFilters
                         }
                     ),
-                tint = Color.White
+                tint = White
             )
         }
 
@@ -155,7 +157,7 @@ fun FilterBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(end = regularPadding),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = CenterVertically
             ) {
                 Row(
                     modifier = Modifier
@@ -163,7 +165,7 @@ fun FilterBar(
                         .horizontalScroll(horizontalScrollState2)
                         .weight(1f)
                         .padding(horizontal = regularPadding),
-                    horizontalArrangement = Arrangement.spacedBy(mediumPadding),
+                    horizontalArrangement = spacedBy(mediumPadding),
                 ) {
                     FilterDropdown(
                         label = stringResource(R.string.type),
@@ -210,7 +212,7 @@ fun FilterBar(
                                     onVenueSelected(null)
                                 }
                             ),
-                        tint = Color.White
+                        tint = White
                     )
                 }
             }

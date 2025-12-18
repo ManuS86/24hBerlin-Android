@@ -10,6 +10,7 @@
     <string name="are_you_sure_you_want_to_log_out_q">Bist du sicher, dass du dich ausloggen willst?</string>
     <string name="august">Aug</string>
     <string name="back">Zurück</string>
+    <string name="bookmark">Speichern</string>
     <string name="bug_report">Fehlerbericht</string>
     <string name="change_email">Email ändern</string>
     <string name="change_password">Passwort ändern</string>
@@ -55,7 +56,6 @@
     <string name="event_image">Eventbild</string>
     <string name="event_reminder">Eventerinnerung</string>
     <string name="events">Events</string>
-    <string name="favorite">Favorisieren</string>
     <string name="february">Feb</string>
     <string name="forgot_password">Passwort vergessen?</string>
     <string name="fri">FR</string>
@@ -84,6 +84,7 @@
     <string name="new_email">Neue E-Mail</string>
     <string name="new_password">Neues Passwort</string>
     <string name="no">NEIN</string>
+    <string name="no_events_available">Keine Events vorhanden</string>
     <string name="notification_settings">Benachrichtigungseinstellungen</string>
     <string name="november">Nov</string>
     <string name="october">Okt</string>
@@ -105,6 +106,7 @@
     <string name="re_enter_your_password">Gib dein Passwort erneut ein</string>
     <string name="register">Registrieren</string>
     <string name="registration_failed_please_try_again">Registrierung fehlgeschlagen. Bitte versuche es erneut.</string>
+    <string name="remove">Entfernen</string>
     <string name="report_a_bug">Ein Problem melden</string>
     <string name="reset_password">Passwort zurücksetzen</string>
     <string name="reset_your_password">Setze dein Passwort zurück</string>
@@ -133,7 +135,6 @@
     <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Kulturprogramm</string>
     <string name="type">Eventart</string>
     <string name="types">Arten</string>
-    <string name="unfavorite">Entfavorisieren</string>
     <string name="venue">Veranstaltungsort</string>
     <string name="venue_">Ort</string>
     <string name="verify_password">Password bestätigen</string>

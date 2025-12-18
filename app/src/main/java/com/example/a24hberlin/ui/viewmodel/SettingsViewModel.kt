@@ -134,9 +134,9 @@ class SettingsViewModel(
         }
     }
 
-    fun removeAllPendingNotifications(favorites: List<Event>) {
+    fun removeAllPendingNotifications(bookmarks: List<Event>) {
         viewModelScope.launch {
-            notificationService.cancelAllPendingReminders(favorites)
+            notificationService.cancelAllPendingReminders(bookmarks)
         }
     }
 

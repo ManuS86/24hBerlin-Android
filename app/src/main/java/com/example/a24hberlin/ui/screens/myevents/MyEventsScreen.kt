@@ -1,6 +1,6 @@
-package com.example.a24hberlin.ui.screens.favorites
+package com.example.a24hberlin.ui.screens.myevents
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,9 +12,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.WifiOff
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -22,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
+import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoundState
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
@@ -29,7 +31,7 @@ import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
-fun FavoritesScreen(
+fun BookmarksScreen(
     searchText: TextFieldValue,
     selectedEventType: EventType?,
     selectedMonth: Month?,
@@ -39,13 +41,13 @@ fun FavoritesScreen(
     val connectivityVM: ConnectivityViewModel = viewModel()
     val eventVM: EventViewModel = viewModel()
 
-    val favorites by eventVM.favorites.collectAsStateWithLifecycle()
+    val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
 
-    val filteredFavorites = filteredEvents(
-        events = favorites,
+    val filteredEvents = filteredEvents(
+        events = bookmarks,
         selectedMonth = selectedMonth,
         selectedEventType = selectedEventType,
         selectedSound = selectedSound,
@@ -53,20 +55,36 @@ fun FavoritesScreen(
         searchText = searchText
     )
 
+    LaunchedEffect(
+        selectedMonth,
+        selectedEventType,
+        selectedSound,
+        selectedVenue,
+        searchText.text
+    ) {
+        if (filteredEvents.isNotEmpty()) {
+            listState.scrollToItem(0)
+        }
+    }
+
     Column(Modifier.fillMaxSize()) {
         if (isNetworkAvailable) {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = regularPadding),
-                verticalArrangement = Arrangement.spacedBy(mediumPadding),
-                state = listState,
-                contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
-            ) {
-                items(
-                    items = filteredFavorites,
-                    key = { favorite -> favorite.id }
-                ) { favorite ->
-                    EventItem(favorite)
+            if (filteredEvents.isEmpty()) {
+                NoEventsFoundState()
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .padding(horizontal = regularPadding),
+                    verticalArrangement = spacedBy(mediumPadding),
+                    state = listState,
+                    contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
+                ) {
+                    items(
+                        items = filteredEvents,
+                        key = { bookmark -> bookmark.id }
+                    ) { bookmark ->
+                        EventItem(bookmark)
+                    }
                 }
             }
         } else {
@@ -76,7 +94,7 @@ fun FavoritesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(120.dp),
-                tint = Color.Gray
+                tint = Gray
             )
         }
     }

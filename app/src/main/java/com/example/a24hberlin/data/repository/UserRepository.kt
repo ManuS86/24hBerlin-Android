@@ -14,7 +14,7 @@ interface UserRepository {
     suspend fun changePassword(password: String)
     suspend fun resetPassword(email: String)
     fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration?
-    suspend fun updateUserInformation(favoriteID: String?, settings: Settings?)
-    suspend fun removeFavoriteID(favoriteID: String)
+    suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?)
+    suspend fun removeBookmarkId(bookmarkId: String)
     suspend fun sendBugReport(message: String)
 }

@@ -33,7 +33,7 @@ val navItemsData = listOf(
         labelResId = R.string.club_map
     ),
     NavigationItem(
-        route = Screen.Favorites.route,
+        route = Screen.MyEvents.route,
         selectedIcon = Icons.Filled.Bookmarks,
         unselectedIcon = Icons.Outlined.Bookmarks,
         labelResId = R.string.my_events

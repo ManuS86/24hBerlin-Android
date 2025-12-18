@@ -5,7 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.End
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,13 +19,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.screens.components.buttons.FavoriteButton
+import com.example.a24hberlin.ui.screens.components.buttons.BookmarkButton
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.EventDetailItem
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Categories
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Header
@@ -75,9 +76,9 @@ fun EventItem(
         Modifier
             .clip(RoundedCornerShape(mediumRounding))
             .border(BorderStroke(0.5.dp, TextOffBlack), RoundedCornerShape(mediumRounding))
-            .background(Color.White)
+            .background(White)
     ) {
-        CompositionLocalProvider(LocalContentColor provides Color.White) {
+        CompositionLocalProvider(LocalContentColor provides White) {
             Row(rowModifier) {
                 ImageAndDate(
                     event.imageURL,
@@ -86,8 +87,8 @@ fun EventItem(
                 )
 
                 Column(
-                    horizontalAlignment = Alignment.Start,
-                    verticalArrangement = Arrangement.spacedBy(mediumPadding)
+                    horizontalAlignment = Start,
+                    verticalArrangement = spacedBy(mediumPadding)
                 ) {
                     Header(
                         event.name,
@@ -112,9 +113,9 @@ fun EventItem(
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
+                        horizontalArrangement = End
                     ) {
-                        FavoriteButton(event)
+                        BookmarkButton(event)
                     }
                 }
             }

@@ -16,42 +16,51 @@ fun filteredEvents(
     selectedVenue: String?,
     searchText: TextFieldValue
 ): List<Event> {
+
     return remember(
         events,
         selectedMonth,
         selectedEventType,
         selectedSound,
         selectedVenue,
-        searchText
+        searchText.text
     ) {
+        val now = java.time.LocalDate.now()
+        val currentYear = now.year
+        val currentMonthValue = now.monthValue
+
         events.filter { event ->
-            val monthMatches = selectedMonth?.let {
-                val currentYear = java.time.Year.now().value
-
-                event.start.month.value == selectedMonth.value && event.start.year == currentYear
-            } ?: true
-
-            val eventTypeMatches = selectedEventType?.let { selectedEventType ->
-                event.eventType?.values.orEmpty().any { eventTypeValue ->
-                    eventTypeValue.cleanToAnnotatedString().text == selectedEventType.label
+            val monthMatches = selectedMonth?.let { selMonth ->
+                val targetYear = if (selMonth.value < currentMonthValue) {
+                    currentYear + 1
+                } else {
+                    currentYear
                 }
+
+                event.start.month.value == selMonth.value && event.start.year == targetYear
             } ?: true
 
-            val soundMatches = selectedSound?.let { selectedSound ->
-                event.sounds?.values.orEmpty().any { soundValue ->
-                    soundValue == selectedSound
-                }
-            } ?: true
+            val eventTypeMatches = selectedEventType == null ||
+                                            event.eventType?.values.orEmpty().any {
+                                                it.cleanToAnnotatedString().text == selectedEventType.label
+                                             }
 
-            val venueMatches = selectedVenue?.let { selectedVenue ->
-                event.locationName?.lowercase()?.contains(selectedVenue.lowercase()) ?: false
-            } ?: true
+            val soundMatches = selectedSound == null ||
+                                        event.sounds?.values.orEmpty().any {
+                                          it == selectedSound
+                                         }
 
-            val textMatches = event.name.lowercase().contains(
-                searchText.text.lowercase()
-            ).takeUnless {
-                searchText.text.isEmpty()
-            } ?: true
+            val venueMatches = selectedVenue == null ||
+                                        event.locationName?.contains(
+                                           selectedVenue,
+                                             ignoreCase = true
+                                         ) == true
+
+            val textMatches = searchText.text.isEmpty() ||
+                                        event.name.contains(
+                                            searchText.text,
+                                            ignoreCase = true
+                                         )
 
             monthMatches && eventTypeMatches && soundMatches && venueMatches && textMatches
         }

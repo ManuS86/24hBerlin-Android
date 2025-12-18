@@ -51,10 +51,10 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     val hasNotificationPermission: StateFlow<Boolean> = permissionManager.hasNotificationPermission
 
-    val favorites: StateFlow<List<Event>> = combine(currentAppUser, events) { user, eventsList ->
+    val bookmarks: StateFlow<List<Event>> = combine(currentAppUser, events) { user, eventsList ->
         user?.let {
             eventsList.filter { event ->
-                it.favoriteIDs.contains(event.id)
+                it.bookmarkIDs.contains(event.id)
             }
         } ?: emptyList()
     }.stateIn(
@@ -107,30 +107,30 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun addFavoriteID(favoriteID: String) {
-        val event = _events.value.find { it.id == favoriteID } ?: return
+    fun addBookmarkId(bookmarkId: String) {
+        val event = _events.value.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                userRepo.updateUserInformation(favoriteID, null)
+                userRepo.updateUserInformation(bookmarkId, null)
 
                 currentAppUser.value?.settings?.let { settings ->
                     if (settings.pushNotificationsEnabled) {
-                        addFavoritePushNotifications(event)
+                        addBookmarkPushNotifications(event)
                     }
                 }
             } catch (ex: Exception) {
-                Log.e(TAG, "Error adding favorite ID: $favoriteID.", ex)
+                Log.e(TAG, "Error adding bookmark ID: $bookmarkId.", ex)
             }
         }
     }
 
-    fun removeFavoriteID(favoriteID: String) {
-        val event = _events.value.find { it.id == favoriteID } ?: return
+    fun removeBookmarkId(bookmarkId: String) {
+        val event = _events.value.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                userRepo.removeFavoriteID(favoriteID)
+                userRepo.removeBookmarkId(bookmarkId)
 
                 currentAppUser.value?.settings?.let { settings ->
                     if (settings.pushNotificationsEnabled) {
@@ -138,12 +138,12 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }
             } catch (ex: Exception) {
-                Log.e(TAG, "Error removing favorite ID: $favoriteID.", ex)
+                Log.e(TAG, "Error removing bookmark ID: $bookmarkId.", ex)
             }
         }
     }
 
-    fun addFavoritePushNotifications(event: Event) {
+    fun addBookmarkPushNotifications(event: Event) {
         reminderScheduler.scheduleEventReminder(
             event,
             EventReminderType.THREE_DAYS_BEFORE,

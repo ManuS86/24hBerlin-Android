@@ -15,7 +15,7 @@ import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
-import com.example.a24hberlin.ui.screens.favorites.FavoritesScreen
+import com.example.a24hberlin.ui.screens.myevents.BookmarksScreen
 import com.example.a24hberlin.ui.screens.settings.SettingsScreen
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.ReAuthWrapper
 
@@ -53,13 +53,13 @@ fun NavGraph(
             ClubMapScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
         }
         composable(
-            route = Screen.Favorites.route,
+            route = Screen.MyEvents.route,
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            FavoritesScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
+            BookmarksScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
         }
         composable(
             route = Screen.Settings.route,

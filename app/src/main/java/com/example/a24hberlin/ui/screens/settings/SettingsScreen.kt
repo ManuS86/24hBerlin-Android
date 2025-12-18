@@ -99,7 +99,7 @@ fun SettingsScreen(
     val bugReportAlertMessage by settingsVM.bugReportAlertMessage.collectAsStateWithLifecycle()
     val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
     val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
-    val favorites by eventVM.favorites.collectAsStateWithLifecycle()
+    val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
 
@@ -145,7 +145,7 @@ fun SettingsScreen(
 
         // B. App Settings
         SettingsSectionTitle(R.string.app_settings)
-        AppSettingsCard(language, settingsVM, pushNotificationsEnabled, favorites, eventVM, haptic)
+        AppSettingsCard(language, settingsVM, pushNotificationsEnabled, bookmarks, eventVM, haptic)
 
         // C. Community & Utility
         SettingsSectionTitle(R.string.help_and_feedback)
@@ -368,7 +368,7 @@ private fun AppSettingsCard(
     language: Language?,
     settingsVM: SettingsViewModel,
     pushNotificationsEnabled: Boolean,
-    favorites: List<Event>,
+    bookmarks: List<Event>,
     eventVM: EventViewModel,
     haptic: HapticFeedback
 ) {
@@ -449,12 +449,12 @@ private fun AppSettingsCard(
                     haptic.performHapticFeedback(TextHandleMove)
                     settingsVM.changePushNotifications(isChecked)
                     if (isChecked) {
-                        favorites.forEach { favorite ->
-                            eventVM.addFavoritePushNotifications(favorite)
+                        bookmarks.forEach { bookmark ->
+                            eventVM.addBookmarkPushNotifications(bookmark)
                         }
                         eventVM.setupAbsenceReminder()
                     } else {
-                        settingsVM.removeAllPendingNotifications(favorites)
+                        settingsVM.removeAllPendingNotifications(bookmarks)
                     }
                 },
                 colors = SwitchDefaults.colors(

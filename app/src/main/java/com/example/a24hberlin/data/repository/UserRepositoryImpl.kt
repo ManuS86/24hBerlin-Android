@@ -121,10 +121,10 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override suspend fun updateUserInformation(favoriteID: String?, settings: Settings?) {
+    override suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?) {
         withContext(Dispatchers.IO) {
             val values = mutableMapOf<String, Any>().apply {
-                favoriteID?.let { this["favoriteIDs"] = FieldValue.arrayUnion(it) }
+                bookmarkId?.let { this["bookmarkIDs"] = FieldValue.arrayUnion(it) }
                 settings?.let {
                     this["settings"] = mapOf(
                         "pushNotificationsEnabled" to it.pushNotificationsEnabled,
@@ -141,10 +141,10 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override suspend fun removeFavoriteID(favoriteID: String) {
+    override suspend fun removeBookmarkId(bookmarkId: String) {
         withContext(Dispatchers.IO) {
             auth.getUserDocumentRef()
-                ?.update("favoriteIDs", FieldValue.arrayRemove(favoriteID))
+                ?.update("bookmarkIDs", FieldValue.arrayRemove(bookmarkId))
                 ?.await()
         }
     }

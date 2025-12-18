@@ -6,6 +6,6 @@ import com.example.a24hberlin.data.model.Event
 interface ReminderScheduler {
     fun schedule14DayReminder()
     fun scheduleEventReminder(event: Event, type: EventReminderType, imageURL: String?)
-    fun cancelAllPendingReminders(favorites: List<Event>)
+    fun cancelAllPendingReminders(bookmarks: List<Event>)
     fun cancelEventReminders(event: Event)
 }

@@ -1,0 +1,34 @@
+package com.example.a24hberlin.ui.screens.components.utilityelements
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
+import com.example.a24hberlin.R
+import com.example.a24hberlin.ui.theme.regularPadding
+
+@Composable
+fun NoEventsFoundState() {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(regularPadding),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(R.string.no_events_available),
+            style = typography.headlineMedium,
+            color = Gray.copy(0.6f),
+            fontWeight = Bold,
+            textAlign = Center
+        )
+    }
+}

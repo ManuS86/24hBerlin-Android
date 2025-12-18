@@ -10,6 +10,7 @@
     <string name="are_you_sure_you_want_to_log_out_q">Are you sure you want to log out?</string>
     <string name="august">Aug</string>
     <string name="back">Back</string>
+    <string name="bookmark">Bookmark</string>
     <string name="bug_report">Bug Report</string>
     <string name="change_email">Change Email</string>
     <string name="change_password">Change Password</string>
@@ -55,7 +56,6 @@
     <string name="event_image">Event Image</string>
     <string name="event_reminder">Event Reminder</string>
     <string name="events">Events</string>
-    <string name="favorite">Favorite</string>
     <string name="february">Feb</string>
     <string name="forgot_password">Forgot password?</string>
     <string name="fri">FR</string>
@@ -84,6 +84,7 @@
     <string name="new_email">New Email</string>
     <string name="new_password">New Password</string>
     <string name="no">NO</string>
+    <string name="no_events_available">No Events available</string>
     <string name="notification_settings">Notification Settings</string>
     <string name="november">Nov</string>
     <string name="october">Oct</string>
@@ -105,6 +106,7 @@
     <string name="re_enter_your_password">Re-enter your password</string>
     <string name="register">Register</string>
     <string name="registration_failed_please_try_again">Registration failed. Please try again.</string>
+    <string name="remove">Remove</string>
     <string name="report_a_bug">Report a Bug</string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_your_password">Reset your password</string>
@@ -133,7 +135,6 @@
     <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Event Calendar</string>
     <string name="type">Event Type</string>
     <string name="types">Types</string>
-    <string name="unfavorite">Unfavorite</string>
     <string name="venue">Venue</string>
     <string name="venue_">Venue</string>
     <string name="verify_password">Verify Password</string>

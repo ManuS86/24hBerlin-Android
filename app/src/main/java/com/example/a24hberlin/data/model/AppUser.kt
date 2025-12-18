@@ -4,7 +4,7 @@ import com.google.firebase.Timestamp
 import java.util.Date
 
 data class AppUser(
-    var favoriteIDs: MutableList<String> = mutableListOf(),
+    var bookmarkIDs: MutableList<String> = mutableListOf(),
     var registerDate: Timestamp = Timestamp(Date()),
     var settings: Settings = Settings()
 )
