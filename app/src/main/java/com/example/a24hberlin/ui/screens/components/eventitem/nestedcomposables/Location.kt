@@ -35,7 +35,9 @@ fun Location(
 
                 Column {
                     Text(
-                        text = name,
+                        text = name.trim().replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase() else it.toString()
+                        },
                         overflow = Ellipsis,
                         maxLines = 1,
                         style = typography.bodyMedium

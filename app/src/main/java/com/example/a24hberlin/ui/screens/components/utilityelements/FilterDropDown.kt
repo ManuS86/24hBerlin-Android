@@ -46,8 +46,8 @@ fun <T> FilterDropdown(
     val haptic = LocalHapticFeedback.current
     var isExpanded by remember { mutableStateOf(false) }
 
-    val contentAlpha = if (selectedValue != null) 1f else 0.5f
     val arrowAlpha = if (selectedValue != null) 1f else 0.8f
+    val contentAlpha = if (selectedValue != null) 1f else 0.5f
 
     Column(
         modifier = Modifier

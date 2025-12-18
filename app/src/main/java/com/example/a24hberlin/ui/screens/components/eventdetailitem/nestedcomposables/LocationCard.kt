@@ -27,7 +27,10 @@ import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
-fun LocationCard(name: String?, address: String?) {
+fun LocationCard(
+    name: String?,
+    address: String?
+) {
     name?.let {
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -59,7 +62,9 @@ fun LocationCard(name: String?, address: String?) {
                     SelectionContainer {
                         Column {
                             Text(
-                                text = name,
+                                text = name.trim().replaceFirstChar {
+                                    if (it.isLowerCase()) it.titlecase() else it.toString()
+                                },
                                 overflow = Ellipsis,
                                 maxLines = 1,
                                 style = typography.bodyLarge,
