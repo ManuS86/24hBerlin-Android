@@ -5,14 +5,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.slightRounding
@@ -30,8 +31,8 @@ fun LargeDarkButton(
             onClick()
         },
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.Black,
-            contentColor = Color.White
+            containerColor = Black,
+            contentColor = White
         ),
         shape = RoundedCornerShape(slightRounding),
         modifier = Modifier
@@ -41,8 +42,8 @@ fun LargeDarkButton(
         Text(
             text = label,
             modifier = Modifier.padding(mediumPadding),
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.bodyLarge
+            fontWeight = SemiBold,
+            style = typography.bodyLarge
         )
     }
 }

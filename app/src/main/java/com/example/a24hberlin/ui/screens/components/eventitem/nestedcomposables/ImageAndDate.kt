@@ -6,20 +6,22 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Image
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Alignment.Companion.Start
+import androidx.compose.ui.Alignment.Companion.Top
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Black
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
@@ -32,7 +34,7 @@ import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.smallPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.Locale
+import java.util.Locale.getDefault
 
 @Composable
 fun ImageAndDate(
@@ -40,7 +42,7 @@ fun ImageAndDate(
     start: LocalDateTime,
     end: LocalDateTime?
 ) {
-    val locale = Locale.getDefault()
+    val locale = getDefault()
 
     Column(Modifier.padding(end = mediumPadding)) {
         imageURL?.let { url ->
@@ -49,10 +51,10 @@ fun ImageAndDate(
                     .data(url)
                     .crossfade(true)
                     .build(),
-                placeholder = rememberVectorPainter(image = Icons.Default.Image),
-                error = rememberVectorPainter(image = Icons.Default.BrokenImage),
+                placeholder = rememberVectorPainter(image = Default.Image),
+                error = rememberVectorPainter(image = Default.BrokenImage),
                 contentDescription = stringResource(R.string.event_image),
-                contentScale = ContentScale.Crop,
+                contentScale = Crop,
                 modifier = Modifier
                     .size(eventImageSize)
                     .clip(RoundedCornerShape(mediumRounding))
@@ -62,18 +64,18 @@ fun ImageAndDate(
 
         Row(
             modifier = Modifier.size(eventImageSize),
-            verticalAlignment = Alignment.Top
+            verticalAlignment = Top
         ) {
             Column(
                 modifier = Modifier.padding(start = smallPadding),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Start
             ) {
                 Text(
                     text = start.format(
                         DateTimeFormatter.ofPattern("EEE").withLocale(locale) // Weekday
                     ).substring(0, 2).uppercase(),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Black,
+                    style = typography.labelSmall,
+                    fontWeight = Black,
                     modifier = Modifier.offset(y = 5.dp)
                 )
 
@@ -81,16 +83,16 @@ fun ImageAndDate(
                     text = start.format(
                         DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                     ),
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Black
+                    style = typography.headlineMedium,
+                    fontWeight = Black
                 )
 
                 Text(
                     text = start.format(
                         DateTimeFormatter.ofPattern("MMM").withLocale(locale) // Month
                     ).substring(0, 3).uppercase(),
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Black,
+                    style = typography.labelSmall,
+                    fontWeight = Black,
                     modifier = Modifier.offset(y = (-5).dp)
                 )
             }
@@ -100,11 +102,11 @@ fun ImageAndDate(
                     end.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
                     != start.format(DateTimeFormatter.ofPattern("yyyyMMdd").withLocale(locale))
                 ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(verticalAlignment = CenterVertically) {
                         Text(
                             text = "-",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Black,
+                            style = typography.titleSmall,
+                            fontWeight = Black,
                             modifier = Modifier
                                 .padding(top = mediumPadding)
                                 .padding(horizontal = 2.dp)
@@ -117,7 +119,7 @@ fun ImageAndDate(
                                         .withLocale(locale)
                                 ).substring(0, 2).uppercase(),
                                 fontSize = 9.sp,
-                                fontWeight = FontWeight.Black,
+                                fontWeight = Black,
                                 modifier = Modifier.offset(y = 1.dp)
                             )
 
@@ -125,8 +127,8 @@ fun ImageAndDate(
                                 text = end.format(
                                     DateTimeFormatter.ofPattern("dd").withLocale(locale) // Day
                                 ),
-                                style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.Black,
+                                style = typography.titleSmall,
+                                fontWeight = Black,
                                 modifier = Modifier
                                     .offset(y = (-6).dp)
                             )

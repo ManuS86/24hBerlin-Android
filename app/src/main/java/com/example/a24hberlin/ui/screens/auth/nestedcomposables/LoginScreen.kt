@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -15,12 +15,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight.Companion.Black
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
@@ -53,14 +54,14 @@ fun LoginScreen(onClick: () -> Unit) {
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .padding(horizontal = regularPadding),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = CenterHorizontally
         ) {
             Text(
                 text = stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,
-                fontWeight = FontWeight.Black,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.headlineLarge
+                fontWeight = Black,
+                textAlign = Center,
+                style = typography.headlineLarge
             )
 
             Spacer(Modifier.height(regularPadding))
@@ -119,8 +120,8 @@ private fun ErrorMessage(errorMessageResId: Int) {
     Text(
         stringResource(errorMessageResId),
         Modifier.padding(top = errorPadding),
-        color = Color.Red,
-        style = MaterialTheme.typography.bodyMedium
+        color = Red,
+        style = typography.bodyMedium
     )
 }
 
@@ -128,8 +129,8 @@ private fun ErrorMessage(errorMessageResId: Int) {
 private fun SignupPrompt(onClick: () -> Unit) {
     Text(
         stringResource(R.string.dont_have_an_account),
-        color = Color.Gray,
-        textAlign = TextAlign.Center
+        color = Gray,
+        textAlign = Center
     )
 
     AuthTextButton(

@@ -1,13 +1,13 @@
 package com.example.a24hberlin.ui.screens.components.buttons
 
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 
 @Composable
 fun AuthTextButton(
@@ -24,9 +24,9 @@ fun AuthTextButton(
     ) {
         Text(
             text = label,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            style = MaterialTheme.typography.bodyLarge
+            fontWeight = Bold,
+            color = Black,
+            style = typography.bodyLarge
         )
     }
 }

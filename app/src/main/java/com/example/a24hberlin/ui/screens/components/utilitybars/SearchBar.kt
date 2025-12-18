@@ -15,22 +15,25 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults.Container
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.ImeAction.Companion.Search
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.regularPadding
@@ -54,17 +57,15 @@ fun SearchBar(
             .height(48.dp)
             .padding(horizontal = regularPadding)
             .padding(bottom = smallPadding),
-        textStyle = MaterialTheme.typography.bodyLarge.copy(color = Color.White),
-        cursorBrush = SolidColor(Color.White),
+        textStyle = typography.bodyLarge.copy(color = White),
+        cursorBrush = SolidColor(White),
         singleLine = true,
         keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Search,
+            imeAction = Search,
             keyboardType = KeyboardType.Text
         ),
         keyboardActions = KeyboardActions(
-            onSearch = {
-                focusManager.clearFocus()
-            }
+            onSearch = { focusManager.clearFocus() }
         ),
         decorationBox = { innerTextField ->
             OutlinedTextFieldDefaults.DecorationBox(
@@ -72,13 +73,13 @@ fun SearchBar(
                 innerTextField = innerTextField,
                 enabled = true,
                 singleLine = true,
-                visualTransformation = VisualTransformation.None,
+                visualTransformation = None,
                 interactionSource = remember { MutableInteractionSource() },
                 placeholder = {
                     Text(
                         stringResource(R.string.search_),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = Color.Gray
+                        style = typography.bodyLarge,
+                        color = Gray
                     )
                 },
                 leadingIcon = {
@@ -90,7 +91,7 @@ fun SearchBar(
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.search),
-                            tint = Color.White
+                            tint = White
                         )
                     }
                 },
@@ -103,22 +104,22 @@ fun SearchBar(
                             Icon(
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = stringResource(R.string.clear_search),
-                                tint = Color.White
+                                tint = White
                             )
                         }
                     }
                 },
                 contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
                 container = {
-                    OutlinedTextFieldDefaults.Container(
+                    Container(
                         enabled = true,
                         isError = false,
                         interactionSource = remember { MutableInteractionSource() },
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = Color.Gray.copy(0.15f),
-                            unfocusedContainerColor = Color.Gray.copy(0.15f),
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent,
+                            focusedContainerColor = Gray.copy(0.15f),
+                            unfocusedContainerColor = Gray.copy(0.15f),
+                            focusedBorderColor = Transparent,
+                            unfocusedBorderColor = Transparent,
                         ),
                         shape = RoundedCornerShape(32.dp),
                     )

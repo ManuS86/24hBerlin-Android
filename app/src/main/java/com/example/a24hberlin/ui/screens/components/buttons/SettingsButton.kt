@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
@@ -38,13 +40,13 @@ fun SettingsButton(
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(slightRounding),
-                ambientColor = Color.Gray.copy(0.5f),
-                spotColor = Color.Gray.copy(0.5f)
+                ambientColor = Gray.copy(0.5f),
+                spotColor = Gray.copy(0.5f)
             ),
         shape = RoundedCornerShape(slightRounding),
         colors = ButtonDefaults.buttonColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+            containerColor = White,
+            contentColor = Black
         ),
         contentPadding = PaddingValues(regularPadding)
     ) {
@@ -52,7 +54,7 @@ fun SettingsButton(
             text = label,
             modifier = Modifier.fillMaxWidth(),
             fontWeight = fontWeight,
-            style = MaterialTheme.typography.bodyLarge,
+            style = typography.bodyLarge,
             textAlign = textAlign
         )
     }

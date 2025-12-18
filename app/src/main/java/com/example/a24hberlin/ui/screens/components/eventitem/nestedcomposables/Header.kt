@@ -1,17 +1,18 @@
 package com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.font.FontWeight.Companion.Black
+import androidx.compose.ui.text.font.FontWeight.Companion.Medium
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.example.a24hberlin.ui.screens.components.buttons.ShareButton
 import com.example.a24hberlin.utils.cleanToAnnotatedString
 import com.example.a24hberlin.ui.theme.mediumPadding
@@ -28,15 +29,15 @@ fun Header(
         name.cleanToAnnotatedString().text.uppercase()
     }
 
-    Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
+    Column(verticalArrangement = spacedBy(mediumPadding)) {
         Row(
             Modifier.fillMaxWidth()
         ) {
             Text(
                 text = cleanedName,
-                fontWeight = FontWeight.Black,
-                style = MaterialTheme.typography.titleLarge,
-                overflow = TextOverflow.Ellipsis,
+                fontWeight = Black,
+                style = typography.titleLarge,
+                overflow = Ellipsis,
                 modifier = Modifier.weight(1f)
             )
 
@@ -52,8 +53,8 @@ fun Header(
             }
             Text(
                 text = cleanedSubtitle,
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Medium
+                style = typography.titleMedium,
+                fontWeight = Medium
             )
         }
     }

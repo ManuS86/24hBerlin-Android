@@ -19,8 +19,8 @@ import com.google.maps.android.compose.rememberMarkerState
 
 @Composable
 fun MapCard(event: Event) {
-    val lat = event.lat ?: 52.5207 // Default to Berlin if null
-    val lon = event.long ?: 13.4094
+    val lat = event.lat ?: 52.5200 // Default to Berlin if null
+    val lon = event.long ?: 13.4050
 
     val venue = remember(lat, lon) { LatLng(lat, lon) }
     val venueMarkerState = rememberMarkerState(position = venue)

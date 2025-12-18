@@ -18,13 +18,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.ui.theme.mediumPadding
 
@@ -48,32 +53,32 @@ fun LanguageDropdown(
             )
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = CenterVertically
         ) {
             Text(
                 text = selectedValue?.resource?.let { stringResource(it) } ?: label,
-                color = Color.Black,
-                overflow = TextOverflow.Ellipsis,
+                color = Black,
+                overflow = Ellipsis,
                 maxLines = 1
             )
 
             Icon(
                 imageVector = Icons.Filled.KeyboardArrowDown,
                 contentDescription = "Dropdown",
-                tint = Color.Gray
+                tint = Gray
             )
         }
 
         DropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = !isExpanded },
-            containerColor = Color.White
+            containerColor = White
         ) {
             DropdownMenuItem(
                 text = {
                     Text(
                         text = label,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = Ellipsis,
                         modifier = Modifier.padding(end = mediumPadding)
                     )
                 },
@@ -89,7 +94,7 @@ fun LanguageDropdown(
                     text = {
                         Text(
                             text = stringResource(option.resource),
-                            overflow = TextOverflow.Ellipsis,
+                            overflow = Ellipsis,
                             modifier = Modifier
                                 .padding(end = mediumPadding)
                         )

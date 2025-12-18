@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.WatchLater
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,20 +36,20 @@ fun Time(
             start.format(
                 DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
             ),
-            style = MaterialTheme.typography.bodyMedium
+            style = typography.bodyMedium
         )
 
         end?.let { endTime ->
             Text(
                 " - ",
-                style = MaterialTheme.typography.bodyMedium
+                style = typography.bodyMedium
             )
 
             Text(
                 endTime.format(
                     DateTimeFormatter.ofPattern("HH:mm", Locale.getDefault())
                 ),
-                style = MaterialTheme.typography.bodyMedium
+                style = typography.bodyMedium
             )
         }
     }

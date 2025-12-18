@@ -2,9 +2,11 @@ package com.example.a24hberlin.ui.screens.components.buttons
 
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_SEND
+import android.content.Intent.EXTRA_TEXT
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ripple
@@ -22,7 +24,7 @@ fun ShareButton(context: Context, permalink: String) {
     val haptic = LocalHapticFeedback.current
 
     Icon(
-        imageVector = Icons.Default.Share,
+        imageVector = Default.Share,
         contentDescription = stringResource(R.string.share),
         modifier = Modifier
             .clickable(
@@ -31,9 +33,9 @@ fun ShareButton(context: Context, permalink: String) {
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)
-                    val intent = Intent(Intent.ACTION_SEND).apply {
+                    val intent = Intent(ACTION_SEND).apply {
                         type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, permalink)
+                        putExtra(EXTRA_TEXT, permalink)
                     }
                     context.startActivity(
                         Intent.createChooser(

@@ -1,7 +1,7 @@
 package com.example.a24hberlin.ui.screens.components.utilityelements
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,12 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.slightRounding
@@ -57,11 +58,11 @@ fun <T> FilterDropdown(
             onClick = { isExpanded = !isExpanded },
             modifier = Modifier.fillMaxWidth()
                     .height(36.dp),
-            border = BorderStroke(1.dp, Color.White.copy(contentAlpha)),
+            border = BorderStroke(1.dp, White.copy(contentAlpha)),
             shape = RoundedCornerShape(slightRounding),
             colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color.White.copy(contentAlpha),
-                containerColor = Color.Transparent
+                contentColor = White.copy(contentAlpha),
+                containerColor = Transparent
             ),
             contentPadding = PaddingValues(
                 start = 12.dp,
@@ -70,20 +71,20 @@ fun <T> FilterDropdown(
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalAlignment = CenterVertically,
+                horizontalArrangement = SpaceBetween
             ) {
                 Text(
                     text = selectedValue?.let { itemToLabel(it) } ?: label,
-                    color = Color.White.copy(contentAlpha),
-                    overflow = TextOverflow.Ellipsis,
+                    color = White.copy(contentAlpha),
+                    overflow = Ellipsis,
                     maxLines = 1
                 )
 
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = "Dropdown",
-                    tint = Color.White.copy(arrowAlpha)
+                    tint = White.copy(arrowAlpha)
                 )
             }
         }
@@ -91,13 +92,13 @@ fun <T> FilterDropdown(
         DropdownMenu(
             expanded = isExpanded,
             onDismissRequest = { isExpanded = false },
-            containerColor = Color.White
+            containerColor = White
         ) {
             DropdownMenuItem(
                 text = {
                     Text(
                         text = label,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = Ellipsis,
                         modifier = Modifier.padding(end = mediumPadding)
                     )
                 },
@@ -113,7 +114,7 @@ fun <T> FilterDropdown(
                     text = {
                         Text(
                             text = option,
-                            overflow = TextOverflow.Ellipsis,
+                            overflow = Ellipsis,
                             modifier = Modifier
                                 .padding(end = mediumPadding)
                         )

@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.mediumPadding
@@ -36,18 +36,18 @@ fun Location(
                 Column {
                     Text(
                         text = name,
-                        overflow = TextOverflow.Ellipsis,
+                        overflow = Ellipsis,
                         maxLines = 1,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = typography.bodyMedium
                     )
 
                     address?.let { address ->
                         address.split(", ").forEach { part ->
                             Text(
                                 text = part,
-                                overflow = TextOverflow.Ellipsis,
+                                overflow = Ellipsis,
                                 maxLines = 1,
-                                style = MaterialTheme.typography.bodyMedium
+                                style = typography.bodyMedium
                             )
                         }
                     }
