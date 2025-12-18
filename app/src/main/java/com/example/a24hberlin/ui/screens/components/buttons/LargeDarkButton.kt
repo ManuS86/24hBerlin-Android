@@ -13,9 +13,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
-import com.example.a24hberlin.utils.largePadding
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.slightRounding
+import com.example.a24hberlin.ui.theme.largePadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.slightRounding
 
 @Composable
 fun LargeDarkButton(

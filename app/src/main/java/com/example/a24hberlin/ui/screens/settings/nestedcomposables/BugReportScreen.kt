@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.theme.TextOffBlack
-import com.example.a24hberlin.utils.largePadding
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.slightRounding
+import com.example.a24hberlin.ui.theme.largePadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.slightRounding
 
 @Composable
 fun BugReportScreen(

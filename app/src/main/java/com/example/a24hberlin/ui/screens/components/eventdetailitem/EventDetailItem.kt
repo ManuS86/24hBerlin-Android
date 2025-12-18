@@ -26,8 +26,8 @@ import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcompos
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.managers.ExternalMapNavigator
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumRounding
 
 /**
  * Displays the detailed information for an event, typically used inside an expandable container

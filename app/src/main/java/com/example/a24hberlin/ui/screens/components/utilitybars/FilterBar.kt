@@ -6,8 +6,10 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -34,6 +36,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
@@ -41,10 +44,10 @@ import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.slightRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 
 @Composable
 fun FilterBar(
@@ -68,6 +71,9 @@ fun FilterBar(
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
 
+    val filterAlpha = if (selectedMonth != null) 0.9f else 0.5f
+    val textAlpha = if (selectedMonth != null) 1f else 0.6f
+
     Column(
         modifier = Modifier
             .background(Color.Black)
@@ -76,7 +82,7 @@ fun FilterBar(
         Row(
             modifier = Modifier
                 .padding(horizontal = regularPadding)
-                .padding(bottom = smallPadding),
+                .padding(bottom = mediumPadding),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
@@ -90,21 +96,16 @@ fun FilterBar(
                         haptic.performHapticFeedback(TextHandleMove)
                         onMonthSelected(null)
                     },
-                    shape = RoundedCornerShape(mediumRounding),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (selectedMonth == null) Color.DarkGray.copy(
-                            0.8f
-                        ) else Color.DarkGray.copy(
-                            0.4f
-                        )
-                    )
+                    modifier = Modifier
+                        .height(32.dp),
+                    shape = RoundedCornerShape(slightRounding),
+                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
+                    colors = buttonColors(Color.DarkGray.copy(filterAlpha))
                 ) {
                     Text(
                         text = stringResource(R.string.all),
                         fontWeight = FontWeight.SemiBold,
-                        color = if (selectedMonth == null) Color.White else Color.White.copy(
-                            0.6f
-                        ),
+                        color = Color.White.copy(textAlpha),
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
@@ -115,21 +116,16 @@ fun FilterBar(
                             haptic.performHapticFeedback(TextHandleMove)
                             onMonthSelected(month)
                         },
-                        shape = RoundedCornerShape(mediumRounding),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selectedMonth == month) Color.DarkGray.copy(
-                                0.8f
-                            ) else Color.DarkGray.copy(
-                                0.4f
-                            )
-                        )
+                        modifier = Modifier
+                            .height(32.dp),
+                        shape = RoundedCornerShape(slightRounding),
+                        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
+                        colors = buttonColors(Color.DarkGray.copy(filterAlpha))
                     ) {
                         Text(
                             text = month.getStringResource(context),
                             fontWeight = FontWeight.SemiBold,
-                            color = if (selectedMonth == month) Color.White else Color.White.copy(
-                                0.6f
-                            ),
+                            color = Color.White.copy(textAlpha),
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

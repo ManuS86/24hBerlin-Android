@@ -26,8 +26,8 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.regularPadding
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap

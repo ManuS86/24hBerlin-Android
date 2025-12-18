@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a24hberlin.ui.screens.components.buttons.ShareButton
 import com.example.a24hberlin.utils.cleanToAnnotatedString
-import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 
 @Composable
 fun Header(

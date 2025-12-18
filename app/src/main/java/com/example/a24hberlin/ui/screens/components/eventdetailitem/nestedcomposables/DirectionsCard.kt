@@ -32,9 +32,9 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.getEventColor
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumRounding
+import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
 fun DirectionsCard(event: Event, onClick: () -> Unit) {

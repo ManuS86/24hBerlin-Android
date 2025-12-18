@@ -33,9 +33,9 @@ import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Time
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.getEventColor
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumRounding
+import com.example.a24hberlin.ui.theme.regularPadding
 
 /**
  * Single composable component to represent an Event item, supporting both collapsed/expandable

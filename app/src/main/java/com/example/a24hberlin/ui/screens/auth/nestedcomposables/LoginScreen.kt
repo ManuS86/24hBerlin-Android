@@ -30,10 +30,10 @@ import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
-import com.example.a24hberlin.utils.errorPadding
-import com.example.a24hberlin.utils.extraLargePadding
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.errorPadding
+import com.example.a24hberlin.ui.theme.extraLargePadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
 fun LoginScreen(onClick: () -> Unit) {

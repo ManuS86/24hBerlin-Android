@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import com.example.a24hberlin.data.enums.Language
-import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 
 @Composable
 fun LanguageDropdown(

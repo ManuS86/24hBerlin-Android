@@ -16,8 +16,8 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.detailImageSize
-import com.example.a24hberlin.utils.mediumRounding
+import com.example.a24hberlin.ui.theme.detailImageSize
+import com.example.a24hberlin.ui.theme.mediumRounding
 
 @Composable
 fun ImageCard(imageURL: String?) {

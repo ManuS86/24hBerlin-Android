@@ -33,9 +33,9 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
-import com.example.a24hberlin.utils.errorPadding
-import com.example.a24hberlin.utils.largePadding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.errorPadding
+import com.example.a24hberlin.ui.theme.largePadding
+import com.example.a24hberlin.ui.theme.regularPadding
 import kotlinx.coroutines.delay
 
 @Composable

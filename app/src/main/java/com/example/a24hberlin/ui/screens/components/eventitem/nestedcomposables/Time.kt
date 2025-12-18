@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale

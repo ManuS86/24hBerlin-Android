@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,9 +29,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.slightRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 
 @Composable
 fun <T> FilterDropdown(
@@ -44,22 +45,22 @@ fun <T> FilterDropdown(
     val haptic = LocalHapticFeedback.current
     var isExpanded by remember { mutableStateOf(false) }
 
+    val contentAlpha = if (selectedValue != null) 1f else 0.5f
+    val arrowAlpha = if (selectedValue != null) 1f else 0.8f
+
     Column(
-        modifier = Modifier.padding(bottom = smallPadding)
+        modifier = Modifier
+            .padding(top = smallPadding)
+            .padding(bottom = mediumPadding)
     ) {
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
-            modifier = Modifier.fillMaxWidth(),
-            border = BorderStroke(
-                1.dp, if (selectedValue != null) Color.White.copy(
-                    0.8f
-                ) else Color.White.copy(
-                    0.4f
-                )
-            ),
-            shape = RoundedCornerShape(mediumRounding),
+            modifier = Modifier.fillMaxWidth()
+                    .height(36.dp),
+            border = BorderStroke(1.dp, Color.White.copy(contentAlpha)),
+            shape = RoundedCornerShape(slightRounding),
             colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = Color.White,
+                contentColor = Color.White.copy(contentAlpha),
                 containerColor = Color.Transparent
             ),
             contentPadding = PaddingValues(
@@ -74,9 +75,7 @@ fun <T> FilterDropdown(
             ) {
                 Text(
                     text = selectedValue?.let { itemToLabel(it) } ?: label,
-                    color = if (selectedValue != null) Color.White else Color.White.copy(
-                        0.6f
-                    ),
+                    color = Color.White.copy(contentAlpha),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1
                 )
@@ -84,14 +83,14 @@ fun <T> FilterDropdown(
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowDown,
                     contentDescription = "Dropdown",
-                    tint = Color.White
+                    tint = Color.White.copy(arrowAlpha)
                 )
             }
         }
 
         DropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { isExpanded = !isExpanded },
+            onDismissRequest = { isExpanded = false },
             containerColor = Color.White
         ) {
             DropdownMenuItem(
@@ -105,7 +104,7 @@ fun <T> FilterDropdown(
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)
                     onValueSelected(null)
-                    isExpanded = !isExpanded
+                    isExpanded = false
                 }
             )
 
@@ -122,7 +121,7 @@ fun <T> FilterDropdown(
                     onClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         onValueSelected(stringToItem(option))
-                        isExpanded = !isExpanded
+                        isExpanded = false
                     }
                 )
             }

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.logoSize
+import com.example.a24hberlin.ui.theme.logoSize
 
 @Composable
 fun AppLogo() {

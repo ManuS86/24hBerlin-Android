@@ -22,9 +22,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumRounding
+import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
 fun LocationCard(name: String?, address: String?) {

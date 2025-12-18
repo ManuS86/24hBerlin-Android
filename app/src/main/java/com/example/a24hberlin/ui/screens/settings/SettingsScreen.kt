@@ -70,12 +70,12 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScr
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.YesNoAlert
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
-import com.example.a24hberlin.utils.largePadding
-import com.example.a24hberlin.utils.logoSizeSmall
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.slightRounding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.largePadding
+import com.example.a24hberlin.ui.theme.logoSizeSmall
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.slightRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 import kotlinx.coroutines.delay
 import androidx.core.net.toUri
 

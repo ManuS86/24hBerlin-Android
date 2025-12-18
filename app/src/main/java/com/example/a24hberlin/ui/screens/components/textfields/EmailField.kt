@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import com.example.a24hberlin.utils.slightRounding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.slightRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 
 @Composable
 fun EmailField(

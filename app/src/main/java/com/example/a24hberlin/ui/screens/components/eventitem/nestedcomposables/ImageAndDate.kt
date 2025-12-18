@@ -26,10 +26,10 @@ import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.eventImageSize
-import com.example.a24hberlin.utils.mediumPadding
-import com.example.a24hberlin.utils.mediumRounding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.eventImageSize
+import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale

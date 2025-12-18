@@ -1,4 +1,4 @@
-package com.example.a24hberlin.utils
+package com.example.a24hberlin.ui.theme
 
 import androidx.compose.ui.unit.dp
 

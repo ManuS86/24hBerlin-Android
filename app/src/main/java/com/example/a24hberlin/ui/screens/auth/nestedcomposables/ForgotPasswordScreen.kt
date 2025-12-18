@@ -29,8 +29,8 @@ import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
-import com.example.a24hberlin.utils.extraLargePadding
-import com.example.a24hberlin.utils.regularPadding
+import com.example.a24hberlin.ui.theme.extraLargePadding
+import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
 fun ForgotPasswordScreen(onClick: () -> Unit) {

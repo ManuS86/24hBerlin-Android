@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 
 @Composable
 fun Location(

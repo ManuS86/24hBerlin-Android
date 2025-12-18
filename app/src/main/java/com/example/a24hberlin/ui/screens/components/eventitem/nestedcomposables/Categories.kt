@@ -14,7 +14,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import com.example.a24hberlin.R
 import com.example.a24hberlin.utils.cleanToAnnotatedString
-import com.example.a24hberlin.utils.mediumPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 
 @Composable
 fun Categories(

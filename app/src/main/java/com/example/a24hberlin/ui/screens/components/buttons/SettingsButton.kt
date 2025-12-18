@@ -16,8 +16,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.a24hberlin.utils.regularPadding
-import com.example.a24hberlin.utils.slightRounding
+import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.slightRounding
 
 @Composable
 fun SettingsButton(

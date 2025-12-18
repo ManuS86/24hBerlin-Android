@@ -27,8 +27,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.a24hberlin.R
-import com.example.a24hberlin.utils.slightRounding
-import com.example.a24hberlin.utils.smallPadding
+import com.example.a24hberlin.ui.theme.slightRounding
+import com.example.a24hberlin.ui.theme.smallPadding
 
 @Composable
 fun PasswordField(

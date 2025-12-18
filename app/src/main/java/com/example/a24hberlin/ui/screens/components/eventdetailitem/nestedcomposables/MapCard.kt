@@ -9,7 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.utils.mediumRounding
+import com.example.a24hberlin.ui.theme.mediumRounding
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
