@@ -3,22 +3,24 @@ package com.example.a24hberlin.ui.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 
 private val LightColorScheme = lightColorScheme(
-    primary = Color.Black,
-    secondary = Color.White,
-    tertiary = Color.Gray,
-    background = Color.White,
-    surface = Color.Black,
+    primary = Black,
+    secondary = White,
+    tertiary = Gray,
+    background = White,
+    surface = Black,
     surfaceVariant = Details,
-    primaryContainer = Color.Black,
+    primaryContainer = Black,
     onBackground = TextOffBlack,
     onSurface = TextOffBlack,
     onSurfaceVariant = TextOffBlack,
-    onPrimary = Color.White,
+    onPrimary = White,
     onSecondary = TextOffBlack,
-    onTertiary = Color.White
+    onTertiary = White
 )
 
 @Composable

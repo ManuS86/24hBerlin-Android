@@ -6,19 +6,19 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.ViewHeadline
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
@@ -37,7 +37,7 @@ fun DetailCard(details: String) {
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(mediumRounding),
-            colors = CardDefaults.cardColors(
+            colors = cardColors(
                 containerColor = Details
             )
         ) {
@@ -47,7 +47,7 @@ fun DetailCard(details: String) {
                     .padding(regularPadding)
             ) {
                 Icon(
-                    imageVector = Icons.Default.ViewHeadline,
+                    imageVector = Default.ViewHeadline,
                     contentDescription = null,
                     modifier = Modifier.padding(end = mediumPadding),
                     tint = Party
@@ -58,14 +58,14 @@ fun DetailCard(details: String) {
                         Text(
                             text = stringResource(R.string.event_details),
                             modifier = Modifier.padding(bottom = mediumPadding),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
+                            style = typography.titleMedium,
+                            fontWeight = Bold
                         )
 
                         Text(
                             text = cleanedDetails,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = Color.DarkGray
+                            style = typography.bodyLarge,
+                            color = DarkGray
                         )
                     }
                 }

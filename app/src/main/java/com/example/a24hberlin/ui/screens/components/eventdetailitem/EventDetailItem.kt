@@ -1,19 +1,19 @@
 package com.example.a24hberlin.ui.screens.components.eventdetailitem
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DetailCard
@@ -45,7 +45,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
         modifier = Modifier
             .fillMaxWidth()
             .padding(mediumPadding),
-        verticalArrangement = Arrangement.spacedBy(mediumPadding)
+        verticalArrangement = spacedBy(mediumPadding)
     ) {
         ImageCard(event.imageURL)
         DetailCard(event.details)
@@ -71,20 +71,18 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(mediumRounding),
-                colors = CardDefaults.cardColors(
+                colors = cardColors(
                     containerColor = Details
                 )
             ) {
                 Icon(
-                    imageVector = Icons.Default.KeyboardArrowUp,
+                    imageVector = Default.KeyboardArrowUp,
                     contentDescription = "Decollapse",
-                    tint = Color.Gray,
+                    tint = Gray,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(mediumPadding)
-                        .clickable {
-                            showDetailToggle()
-                        }
+                        .clickable { showDetailToggle() }
                 )
             }
         }

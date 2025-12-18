@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.OutlinedTextFieldDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,7 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
@@ -26,6 +27,7 @@ import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.slightRounding
+import kotlin.Int.Companion.MAX_VALUE
 
 @Composable
 fun BugReportScreen(
@@ -37,7 +39,7 @@ fun BugReportScreen(
         Text(
             text = stringResource(R.string.report_a_bug),
             modifier = Modifier.padding(bottom = mediumPadding),
-            style = MaterialTheme.typography.titleMedium,
+            style = typography.titleMedium,
             color = TextOffBlack
         )
 
@@ -47,13 +49,13 @@ fun BugReportScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp),
-            maxLines = Int.MAX_VALUE,
+            maxLines = MAX_VALUE,
             shape = RoundedCornerShape(slightRounding),
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = Color.Gray.copy(0.5f),
-                unfocusedBorderColor = Color.Gray.copy(0.5f),
-                focusedContainerColor = Color.White,
-                unfocusedContainerColor = Color.White
+            colors = colors(
+                focusedBorderColor = Gray.copy(0.5f),
+                unfocusedBorderColor = Gray.copy(0.5f),
+                focusedContainerColor = White,
+                unfocusedContainerColor = White
             )
         )
 

@@ -1,14 +1,15 @@
 package com.example.a24hberlin.ui.screens.settings
 
-import android.content.Context
 import android.content.Intent
+import android.content.Intent.ACTION_SEND
+import android.content.Intent.ACTION_VIEW
+import android.content.Intent.EXTRA_TEXT
 import android.content.res.Resources
-import android.media.AudioManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,11 +24,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -41,20 +42,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Gray
+import androidx.compose.ui.graphics.Color.Companion.LightGray
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.LongPress
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.font.FontWeight.Companion.Medium
+import androidx.compose.ui.text.font.FontWeight.Companion.Normal
+import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
+import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -76,7 +83,6 @@ import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.smallPadding
-import kotlinx.coroutines.delay
 import androidx.core.net.toUri
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,7 +93,6 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val audioManager = remember { context.getSystemService(Context.AUDIO_SERVICE) as AudioManager }
 
     val eventVM: EventViewModel = viewModel()
     val settingsVM: SettingsViewModel = viewModel()
@@ -108,15 +113,6 @@ fun SettingsScreen(
 
     val pleaseDescribeBug = stringResource(R.string.please_describe_the_bug)
     val reportThankYou = stringResource(R.string.thank_you_for_your_report)
-
-    LaunchedEffect(bugReportAlertMessage) {
-        if (bugReportAlertMessage == reportThankYou) {
-            audioManager.playSoundEffect(AudioManager.FX_KEY_CLICK)
-            haptic.performHapticFeedback(TextHandleMove)
-            delay(80)
-            haptic.performHapticFeedback(LongPress)
-        }
-    }
 
     LaunchedEffect(Unit) {
         previousLanguageCode = language?.languageCode
@@ -151,68 +147,94 @@ fun SettingsScreen(
         SettingsSectionTitle(R.string.help_and_feedback)
 
         // Report a Bug
-        SettingsButton(stringResource(R.string.report_a_bug), FontWeight.Normal, TextAlign.Start) {
-            settingsVM.openBugReport()
-        }
+        SettingsButton(
+            label = stringResource(R.string.report_a_bug),
+            fontWeight = Normal,
+            textAlign = Start,
+            onClick = { settingsVM.openBugReport() }
+        )
 
         Spacer(Modifier.padding(mediumPadding))
 
         // Privacy Policy
-        SettingsButton(stringResource(R.string.privacy_policy), FontWeight.Normal, TextAlign.Start) {
-            val webUri = "https://www.twenty-four-hours.info/datenschutz/".toUri()
-            context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
-        }
+        SettingsButton(
+            label = stringResource(R.string.privacy_policy),
+            fontWeight = Normal,
+            textAlign = Start,
+            onClick = {
+                val webUri = "https://www.twenty-four-hours.info/datenschutz/".toUri()
+                context.startActivity(Intent(ACTION_VIEW, webUri))
+            }
+        )
 
         Spacer(Modifier.padding(mediumPadding))
 
         // Terms of Service
-        SettingsButton(stringResource(R.string.terms_of_service), FontWeight.Normal, TextAlign.Start) {
-            val webUri = "https://www.twenty-four-hours.info/nutzungsbedingungen/".toUri()
-            context.startActivity(Intent(Intent.ACTION_VIEW, webUri))
-        }
+        SettingsButton(
+            label = stringResource(R.string.terms_of_service),
+            fontWeight = Normal,
+            textAlign = Start,
+            onClick = {
+                val webUri = "https://www.twenty-four-hours.info/nutzungsbedingungen/".toUri()
+                context.startActivity(Intent(ACTION_VIEW, webUri))
+            }
+        )
 
         Spacer(Modifier.padding(largePadding))
 
         // Share App
-        SettingsButton(stringResource(R.string.share_24hBerlin), FontWeight.Normal, TextAlign.Start) {
-            val intent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(
-                    Intent.EXTRA_TEXT,
-                    "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
-                )
+        SettingsButton(
+            label = stringResource(R.string.share_24hBerlin),
+            fontWeight = Normal,
+            textAlign = Start,
+            onClick = {
+                val intent = Intent(ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(
+                        EXTRA_TEXT,
+                        "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
+                    )
+                }
+                context.startActivity(Intent.createChooser(intent, "Share Link"))
             }
-            context.startActivity(
-                Intent.createChooser(intent, "Share Link")
-            )
-        }
+        )
 
         Spacer(Modifier.padding(largePadding))
 
         // Log Out
-        SettingsButton(stringResource(R.string.logout), FontWeight.SemiBold, TextAlign.Center) {
-            settingsVM.toggleLogoutAlert(true)
-        }
+        SettingsButton(
+            label = stringResource(R.string.logout),
+            fontWeight = SemiBold,
+            textAlign = Center,
+            onClick = { settingsVM.toggleLogoutAlert(true) }
+        )
 
         // D. Footer and Version
         AppFooter()
 
         // Delete Account
-        SettingsButton(stringResource(R.string.delete_account), FontWeight.Normal, TextAlign.Center) {
-            settingsVM.toggleDeleteAlert(true)
-        }
+        SettingsButton(
+            label = stringResource(R.string.delete_account),
+            fontWeight = Normal,
+            textAlign = Center,
+            onClick = { settingsVM.toggleDeleteAlert(true) }
+        )
     }
 
     // Bug Report Modal Sheet
     if (isBugReportSheetOpen) {
         ModalBottomSheet(
             onDismissRequest = { settingsVM.closeBugReport() },
-            containerColor = Color.White,
+            containerColor = White,
             sheetState = sheetState
         ) {
             BugReportScreen(
                 onSend = { report ->
-                    settingsVM.sendBugReport(report, pleaseDescribeBug, reportThankYou)
+                    settingsVM.sendBugReport(
+                        report,
+                        pleaseDescribeBug,
+                        reportThankYou
+                    )
                 }
             )
         }
@@ -221,10 +243,9 @@ fun SettingsScreen(
     // Bug Report Status Alert (OK only)
     bugReportAlertMessage?.let { message ->
         AlertDialog(
-            onDismissRequest = { settingsVM.setBugReportAlert(null) },
-            title = { Text(stringResource(R.string.bug_report)) },
-            text = { Text(message) },
-            containerColor = Color.White,
+            onDismissRequest = {
+                settingsVM.setBugReportAlert(null)
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -232,7 +253,10 @@ fun SettingsScreen(
                         if (message == reportThankYou) settingsVM.closeBugReport()
                     }
                 ) { Text("OK") }
-            }
+            },
+            title = { Text(stringResource(R.string.bug_report)) },
+            text = { Text(message) },
+            containerColor = White
         )
     }
 
@@ -274,8 +298,8 @@ private fun SettingsSectionTitle(titleResId: Int) {
         modifier = Modifier
             .padding(top = regularPadding)
             .padding(bottom = smallPadding),
-        fontWeight = FontWeight.Medium,
-        color = Color.Black
+        fontWeight = Medium,
+        color = Black
     )
 }
 
@@ -291,13 +315,13 @@ private fun AccountDetailsCard(
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(slightRounding),
-                ambientColor = Color.Gray.copy(0.5f),
-                spotColor = Color.Gray.copy(0.5f)
+                ambientColor = Gray.copy(0.5f),
+                spotColor = Gray.copy(0.5f)
             ),
         shape = RoundedCornerShape(slightRounding),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+        colors = cardColors(
+            containerColor = White,
+            contentColor = Black
         )
     ) {
         // Change Email
@@ -313,7 +337,7 @@ private fun AccountDetailsCard(
         HorizontalDivider(
             modifier = Modifier
                 .padding(horizontal = regularPadding),
-            color = Color.LightGray
+            color = LightGray
         )
 
         // Change Password
@@ -347,7 +371,7 @@ private fun SettingsCardItem(
                 }
             )
             .padding(regularPadding),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = CenterVertically
     ) {
         Text(title)
 
@@ -355,7 +379,7 @@ private fun SettingsCardItem(
 
         Icon(
             imageVector = Icons.AutoMirrored.Default.ArrowForwardIos,
-            tint = Color.Gray,
+            tint = Gray,
             contentDescription = title,
             modifier = Modifier
                 .size(16.dp)
@@ -378,13 +402,13 @@ private fun AppSettingsCard(
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(slightRounding),
-                ambientColor = Color.Gray.copy(0.5f),
-                spotColor = Color.Gray.copy(0.5f)
+                ambientColor = Gray.copy(0.5f),
+                spotColor = Gray.copy(0.5f)
             ),
         shape = RoundedCornerShape(slightRounding),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+        colors = cardColors(
+            containerColor = White,
+            contentColor = Black
         )
     ) {
         // Language Settings
@@ -392,7 +416,7 @@ private fun AppSettingsCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = regularPadding),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.language_settings),
@@ -404,9 +428,7 @@ private fun AppSettingsCard(
             LanguageDropdown(
                 label = stringResource(R.string.system_default),
                 selectedValue = language,
-                onValueSelected = {
-                    settingsVM.changeLanguage(it)
-                },
+                onValueSelected = { settingsVM.changeLanguage(it) },
                 options = Language.allValues.toList()
             )
         }
@@ -421,20 +443,20 @@ private fun AppSettingsCard(
             .shadow(
                 elevation = 2.dp,
                 shape = RoundedCornerShape(slightRounding),
-                ambientColor = Color.Gray.copy(0.5f),
-                spotColor = Color.Gray.copy(0.5f)
+                ambientColor = Gray.copy(0.5f),
+                spotColor = Gray.copy(0.5f)
             ),
         shape = RoundedCornerShape(slightRounding),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White,
-            contentColor = Color.Black
+        colors = cardColors(
+            containerColor = White,
+            contentColor = Black
         )
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = regularPadding),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.push_notifications),
@@ -457,9 +479,7 @@ private fun AppSettingsCard(
                         settingsVM.removeAllPendingNotifications(bookmarks)
                     }
                 },
-                colors = SwitchDefaults.colors(
-                    uncheckedTrackColor = Color.LightGray.copy(0.5f)
-                )
+                colors = SwitchDefaults.colors(uncheckedTrackColor = LightGray.copy(0.5f))
             )
         }
     }
@@ -471,20 +491,19 @@ private fun AppFooter() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(40.dp),
-        verticalArrangement = Arrangement.spacedBy(mediumPadding),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = spacedBy(mediumPadding),
+        horizontalAlignment = CenterHorizontally,
     ) {
         Image(
             painter = painterResource(R.drawable.app_logo),
             contentDescription = null,
-            modifier = Modifier
-                .size(logoSizeSmall)
+            modifier = Modifier.size(logoSizeSmall)
         )
 
         Text(
             text = "Version 1.0",
-            style = MaterialTheme.typography.bodySmall,
-            color = Color.Gray
+            style = typography.bodySmall,
+            color = Gray
         )
     }
 }

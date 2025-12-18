@@ -45,7 +45,6 @@ fun BookmarkButton(event: Event) {
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)
-
                     if (!isBookmarked) {
                         eventVM.addBookmarkId(bookmarkId = event.id)
                     } else {

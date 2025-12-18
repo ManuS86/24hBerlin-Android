@@ -4,7 +4,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import com.example.a24hberlin.R
 
@@ -19,13 +20,13 @@ fun YesNoAlert(
         onDismissRequest = onNo,
         title = { Text(title) },
         text = { Text(body) },
-        containerColor = Color.White,
+        containerColor = White,
 
         confirmButton = {
             TextButton(onClick = onYes) {
                 Text(
                     text = stringResource(R.string.yes),
-                    color = Color.Red
+                    color = Red
                 )
             }
         },
