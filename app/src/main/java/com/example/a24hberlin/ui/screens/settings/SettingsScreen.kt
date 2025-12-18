@@ -4,6 +4,8 @@ import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.ACTION_VIEW
 import android.content.Intent.EXTRA_TEXT
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.res.Resources
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
@@ -85,6 +87,7 @@ import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.smallPadding
 import androidx.core.net.toUri
+import com.example.a24hberlin.MainActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -272,6 +275,11 @@ fun SettingsScreen(
             onYes = {
                 settingsVM.toggleLogoutAlert(false)
                 settingsVM.logout()
+
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    addFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
+                }
+                context.startActivity(intent)
             }
         )
     }
@@ -287,6 +295,11 @@ fun SettingsScreen(
             onYes = {
                 settingsVM.toggleDeleteAlert(false)
                 settingsVM.deleteAccount()
+
+                val intent = Intent(context, MainActivity::class.java).apply {
+                    addFlags(FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_CLEAR_TASK)
+                }
+                context.startActivity(intent)
             }
         )
     }
