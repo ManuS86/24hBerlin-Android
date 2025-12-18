@@ -65,6 +65,9 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
 
     val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
         eventsList.mapNotNull { it.locationName }
+            .map { name ->
+                name.trim().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+            }
             .distinct()
             .sorted()
     }.stateIn(
