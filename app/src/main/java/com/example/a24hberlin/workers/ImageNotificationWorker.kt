@@ -14,9 +14,10 @@ import com.example.a24hberlin.notifications.NotificationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
+private const val TAG = "ImageNotificationWorker"
+
 class ImageNotificationWorker(context: Context, workerParams: WorkerParameters) :
     CoroutineWorker(context, workerParams) {
-    private val TAG = "ImageNotificationWorker"
 
     private val notificationService = NotificationService(applicationContext)
 
@@ -51,9 +52,7 @@ class ImageNotificationWorker(context: Context, workerParams: WorkerParameters) 
                 e.printStackTrace()
             }
         }
-
         notificationService.showNotification(title, body, image, notificationId)
-
         return@withContext Result.success()
     }
 }
