@@ -86,7 +86,7 @@ fun BookmarksScreen(
                         items = filteredEvents,
                         key = { bookmark -> bookmark.id }
                     ) { bookmark ->
-                        EventItem(bookmark)
+                        EventItem(bookmark, eventVM)
                     }
                 }
             }

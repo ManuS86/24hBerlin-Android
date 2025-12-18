@@ -18,6 +18,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults.Container
+import androidx.compose.material3.OutlinedTextFieldDefaults.DecorationBox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -68,7 +69,7 @@ fun SearchBar(
             onSearch = { focusManager.clearFocus() }
         ),
         decorationBox = { innerTextField ->
-            OutlinedTextFieldDefaults.DecorationBox(
+            DecorationBox(
                 value = searchText.text,
                 innerTextField = innerTextField,
                 enabled = true,
@@ -77,7 +78,7 @@ fun SearchBar(
                 interactionSource = remember { MutableInteractionSource() },
                 placeholder = {
                     Text(
-                        stringResource(R.string.search_),
+                        text = stringResource(R.string.search_),
                         style = typography.bodyLarge,
                         color = Gray
                     )

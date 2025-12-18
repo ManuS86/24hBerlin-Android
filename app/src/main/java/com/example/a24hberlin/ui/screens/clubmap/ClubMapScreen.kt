@@ -105,7 +105,12 @@ fun ClubMapScreen(
                     .verticalScroll(scrollState)
             ) {
                 selectedEvent?.let {
-                    EventItem(it, isExpandable = false, isInitiallyExpanded = true)
+                    EventItem(
+                        event = it,
+                        eventVM = eventVM,
+                        isExpandable = false,
+                        isInitiallyExpanded = true
+                    )
                 }
             }
         }

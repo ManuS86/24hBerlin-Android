@@ -37,6 +37,7 @@ import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 /**
  * Single composable component to represent an Event item, supporting both collapsed/expandable
@@ -50,6 +51,7 @@ import com.example.a24hberlin.ui.theme.regularPadding
 @Composable
 fun EventItem(
     event: Event,
+    eventVM: EventViewModel,
     isExpandable: Boolean = true,
     isInitiallyExpanded: Boolean = false
 ) {
@@ -115,7 +117,7 @@ fun EventItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = End
                     ) {
-                        BookmarkButton(event)
+                        BookmarkButton(event, eventVM)
                     }
                 }
             }

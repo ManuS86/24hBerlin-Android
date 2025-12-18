@@ -65,14 +65,14 @@ fun FilterBar(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+
     val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
-
-    val horizontalScrollState = rememberScrollState()
-    val horizontalScrollState2 = rememberScrollState()
-
-    var showFilters by remember { mutableStateOf(false) }
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
+
+    var showFilters by remember { mutableStateOf(false) }
+    val horizontalScrollState = rememberScrollState()
+    val horizontalScrollState2 = rememberScrollState()
 
     Column(
         modifier = Modifier
@@ -81,8 +81,8 @@ fun FilterBar(
     ) {
         Row(
             modifier = Modifier
-                .padding(horizontal = regularPadding)
-                .padding(bottom = mediumPadding),
+                .padding(bottom = mediumPadding)
+                .padding(horizontal = regularPadding),
             verticalAlignment = CenterVertically
         ) {
             Row(
@@ -96,8 +96,7 @@ fun FilterBar(
                         haptic.performHapticFeedback(TextHandleMove)
                         onMonthSelected(null)
                     },
-                    modifier = Modifier
-                        .height(32.dp),
+                    modifier = Modifier.height(32.dp),
                     shape = RoundedCornerShape(slightRounding),
                     contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
                     colors = buttonColors(
@@ -117,8 +116,7 @@ fun FilterBar(
                             haptic.performHapticFeedback(TextHandleMove)
                             onMonthSelected(month)
                         },
-                        modifier = Modifier
-                            .height(32.dp),
+                        modifier = Modifier.height(32.dp),
                         shape = RoundedCornerShape(slightRounding),
                         contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
                         colors = buttonColors(
@@ -142,7 +140,7 @@ fun FilterBar(
                     .padding(start = mediumPadding)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = ripple(),
+                        indication = ripple(bounded = false, radius = 22.dp),
                         role = Role.Button,
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
@@ -164,8 +162,8 @@ fun FilterBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .horizontalScroll(horizontalScrollState2)
-                        .weight(1f)
-                        .padding(horizontal = regularPadding),
+                        .padding(horizontal = regularPadding)
+                        .weight(1f),
                     horizontalArrangement = spacedBy(mediumPadding),
                 ) {
                     FilterDropdown(
@@ -204,7 +202,7 @@ fun FilterBar(
                             .padding(start = mediumPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = ripple(),
+                                indication = ripple(bounded = false, radius = 22.dp),
                                 role = Role.Button,
                                 onClick = {
                                     haptic.performHapticFeedback(TextHandleMove)

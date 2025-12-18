@@ -100,7 +100,7 @@ fun MyTopAppBar(
                     navController.navigateUp()
                 }) {
                     Icon(
-                        Icons.AutoMirrored.Filled.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = stringResource(R.string.back)
                     )
                 }
@@ -111,7 +111,7 @@ fun MyTopAppBar(
                 if (!showSearchBar) {
                     IconButton(onClick = onSearchIconClick) {
                         Icon(
-                            Icons.Filled.Search,
+                            imageVector = Icons.Filled.Search,
                             contentDescription = stringResource(R.string.search)
                         )
                     }

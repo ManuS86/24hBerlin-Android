@@ -26,9 +26,7 @@ fun MyBottomNavigationBar(
     val haptic = LocalHapticFeedback.current
     val items = navItemsData
 
-    NavigationBar(
-        containerColor = Black
-    ) {
+    NavigationBar(containerColor = Black) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = navBackStackEntry?.destination?.route
 
@@ -37,13 +35,6 @@ fun MyBottomNavigationBar(
             val label = stringResource(id = item.labelResId)
 
             NavigationBarItem(
-                icon = {
-                    Icon(
-                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = label
-                    )
-                },
-                label = { Text(text = label) },
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
@@ -58,6 +49,13 @@ fun MyBottomNavigationBar(
                         }
                     }
                 },
+                icon = {
+                    Icon(
+                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                        contentDescription = label
+                    )
+                },
+                label = { Text(text = label) },
                 alwaysShowLabel = true,
                 colors = colors(
                     selectedIconColor = White,

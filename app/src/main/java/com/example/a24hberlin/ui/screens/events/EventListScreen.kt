@@ -87,7 +87,7 @@ fun EventsScreen(
                         items = filteredEvents,
                         key = { event -> event.id }
                     ) { event ->
-                        EventItem(event)
+                        EventItem(event, eventVM)
                     }
                 }
             }
