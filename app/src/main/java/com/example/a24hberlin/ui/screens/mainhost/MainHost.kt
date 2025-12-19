@@ -88,8 +88,6 @@ fun MainHost() {
     }
 
     Scaffold(
-        contentWindowInsets = WindowInsets.safeDrawing,
-
         topBar = {
             Column {
                 MyTopAppBar(
@@ -111,8 +109,7 @@ fun MainHost() {
 
                 val showFilterBar = currentRoute in listOf(
                     Screen.Events.route,
-                    Screen.ClubMap.route,
-                    Screen.MyEvents.route
+                    Screen.ClubMap.route
                 )
 
                 if (showFilterBar) {
@@ -140,7 +137,9 @@ fun MainHost() {
                     }
                 )
             }
-        }
+        },
+
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         Surface(
             Modifier

@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
+import com.example.a24hberlin.ui.theme.rippleRadius
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
@@ -41,7 +42,7 @@ fun BookmarkButton(
             .size(28.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(bounded = false, radius = 22.dp),
+                indication = ripple(bounded = false, radius = rippleRadius),
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)

@@ -19,3 +19,6 @@ val largePadding = 24.dp
 val mediumPadding = 8.dp
 val regularPadding = 16.dp
 val smallPadding = 4.dp
+
+//Misc
+val rippleRadius = 24.dp

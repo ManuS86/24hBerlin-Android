@@ -3,7 +3,7 @@
     <string name="all">Alle</string>
     <string name="already_have_an_account">Hast du bereits einen Account?</string>
     <string name="an_account_with_this_email_already_exists">Ein Account mit dieser E-Mail existiert bereits.</string>
-    <string name="app_name">24hBerlin</string>
+    <string name="app_name">24hBERLIN</string>
     <string name="app_settings">App-Einstellungen</string>
     <string name="april">Apr</string>
     <string name="are_you_sure_you_want_to_delete_your_account">Bist du sicher, dass du deinen Account löschen willst?</string>
@@ -112,13 +112,12 @@
     <string name="reset_your_password">Setze dein Passwort zurück</string>
     <string name="sat">SA</string>
     <string name="search">Suche</string>
-    <string name="search_">Suchen …</string>
     <string name="search_event_names">Eventnamen durchsuchen</string>
     <string name="send_bug_report">Fehlermeldung senden</string>
     <string name="september">Sep</string>
     <string name="settings">Einstellungen</string>
     <string name="share">Teilen</string>
-    <string name="share_24hBerlin">24hBerlin teilen</string>
+    <string name="share_24hBerlin">24hBERLIN teilen</string>
     <string name="share_link">Link teilen</string>
     <string name="show_filters">Filter anzeigen</string>
     <string name="show_password">Passwort verstecken</string>

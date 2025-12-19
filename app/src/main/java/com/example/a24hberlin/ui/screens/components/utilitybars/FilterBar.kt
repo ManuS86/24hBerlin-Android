@@ -49,6 +49,7 @@ import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdo
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.rippleRadius
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.smallPadding
 
@@ -77,7 +78,7 @@ fun FilterBar(
     Column(
         modifier = Modifier
             .background(Black)
-            .padding(bottom = smallPadding)
+            .padding(top = smallPadding)
     ) {
         Row(
             modifier = Modifier
@@ -140,7 +141,7 @@ fun FilterBar(
                     .padding(start = mediumPadding)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = ripple(bounded = false, radius = 22.dp),
+                        indication = ripple(bounded = false, radius = rippleRadius),
                         role = Role.Button,
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
@@ -202,7 +203,7 @@ fun FilterBar(
                             .padding(start = mediumPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = ripple(bounded = false, radius = 22.dp),
+                                indication = ripple(bounded = false, radius = rippleRadius),
                                 role = Role.Button,
                                 onClick = {
                                     haptic.performHapticFeedback(TextHandleMove)

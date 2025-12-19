@@ -26,6 +26,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.ui.theme.mediumPadding
@@ -55,6 +56,7 @@ fun LanguageDropdown(
             Text(
                 text = selectedValue?.resource?.let { stringResource(it) } ?: label,
                 color = Black,
+                fontWeight = Medium,
                 overflow = Ellipsis,
                 maxLines = 1
             )

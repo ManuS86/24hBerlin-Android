@@ -55,7 +55,7 @@ fun SearchBar(
         onValueChange = onSearchTextChanged,
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(44.dp)
             .padding(horizontal = regularPadding)
             .padding(bottom = smallPadding),
         textStyle = typography.bodyLarge.copy(color = White),
@@ -78,7 +78,7 @@ fun SearchBar(
                 interactionSource = remember { MutableInteractionSource() },
                 placeholder = {
                     Text(
-                        text = stringResource(R.string.search_),
+                        text = stringResource(R.string.search_event_names),
                         style = typography.bodyLarge,
                         color = Gray
                     )

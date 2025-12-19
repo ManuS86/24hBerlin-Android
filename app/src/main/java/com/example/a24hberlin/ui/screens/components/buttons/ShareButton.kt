@@ -17,8 +17,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
+import com.example.a24hberlin.ui.theme.rippleRadius
 
 @Composable
 fun ShareButton(context: Context, permalink: String) {
@@ -30,7 +30,7 @@ fun ShareButton(context: Context, permalink: String) {
         modifier = Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(bounded = false, radius = 22.dp),
+                indication = ripple(bounded = false, radius = rippleRadius),
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)
