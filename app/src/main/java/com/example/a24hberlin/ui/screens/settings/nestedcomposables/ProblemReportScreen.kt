@@ -37,7 +37,7 @@ fun BugReportScreen(
 
     Column(Modifier.padding(horizontal = regularPadding)) {
         Text(
-            text = stringResource(R.string.report_a_bug),
+            text = stringResource(R.string.report_a_problem),
             modifier = Modifier.padding(bottom = mediumPadding),
             style = typography.titleMedium,
             color = TextOffBlack

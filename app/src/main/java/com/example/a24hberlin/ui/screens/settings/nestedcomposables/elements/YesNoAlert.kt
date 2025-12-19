@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.settings.nestedcomposables
+package com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text

@@ -107,7 +107,7 @@
     <string name="register">Register</string>
     <string name="registration_failed_please_try_again">Registration failed. Please try again.</string>
     <string name="remove">Remove</string>
-    <string name="report_a_bug">Report a Bug</string>
+    <string name="report_a_problem">Report a Problem</string>
     <string name="reset_password">Reset Password</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="sat">SA</string>
