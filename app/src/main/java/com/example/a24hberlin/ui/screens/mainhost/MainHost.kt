@@ -26,11 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
@@ -53,10 +53,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+
+    val isOnline by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
+    val noInternetMsg = stringResource(R.string.no_internet_connection)
+    val backOnlineMsg = stringResource(R.string.back_online)
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -94,13 +97,23 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
     val showSearchBar by showSearchBarState
     val searchText by searchTextState
 
+    LaunchedEffect(isOnline) {
+        if (isOnline) {
+            snackbarHostState.currentSnackbarData?.let { data ->
+                if (data.visuals.message == noInternetMsg) {
+                    data.dismiss()
+                }
+            }
+        }
+    }
+
     LaunchedEffect(Unit) {
         connectivityVM.connectionEvent.collect { event ->
             when (event) {
                 is ConnectionEvent.LostConnection -> {
                     launch {
                         snackbarHostState.showSnackbar(
-                            message = context.getString(R.string.no_internet_connection),
+                            message = noInternetMsg,
                             duration = SnackbarDuration.Indefinite,
                             withDismissAction = true
                         )
@@ -111,7 +124,7 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
 
                     launch {
                         snackbarHostState.showSnackbar(
-                            message = context.getString(R.string.back_online),
+                            message = backOnlineMsg,
                             duration = SnackbarDuration.Short
                         )
                     }
