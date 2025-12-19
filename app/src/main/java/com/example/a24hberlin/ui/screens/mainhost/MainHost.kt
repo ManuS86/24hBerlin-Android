@@ -126,7 +126,6 @@ fun MainHost() {
                 }
             }
         },
-
         bottomBar = {
             if (bottomBarState.value) {
                 MyBottomNavigationBar(
@@ -138,7 +137,6 @@ fun MainHost() {
                 )
             }
         },
-
         contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         Surface(

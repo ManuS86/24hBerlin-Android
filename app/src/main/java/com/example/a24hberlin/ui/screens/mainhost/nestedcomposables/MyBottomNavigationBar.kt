@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -67,7 +67,7 @@ fun MyBottomNavigationBar(
                 label = { Text(
                     text = label,
                     fontSize = 10.sp,
-                    fontWeight = FontWeight.Light,
+                    fontWeight = Normal,
                     modifier = Modifier.offset(y = (-8).dp)
                 ) },
                 alwaysShowLabel = true,
