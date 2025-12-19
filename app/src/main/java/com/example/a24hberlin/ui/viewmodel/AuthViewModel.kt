@@ -16,7 +16,7 @@ import com.google.firebase.analytics.logEvent
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -38,9 +38,9 @@ class AuthViewModel(
 
     val hasNotificationPermission: StateFlow<Boolean> =
         permissionManager.hasNotificationPermission.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            permissionManager.hasNotificationPermission.value
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = permissionManager.hasNotificationPermission.value
         )
 
     val confirmationMessageResId = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)

@@ -36,6 +36,7 @@ import com.example.a24hberlin.ui.theme.doublePadding
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
+@Suppress("AssignedValueIsNeverRead")
 @Composable
 fun LoginScreen(onClick: () -> Unit) {
     val authVM: AuthViewModel = viewModel()

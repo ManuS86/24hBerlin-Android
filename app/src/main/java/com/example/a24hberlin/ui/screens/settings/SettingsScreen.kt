@@ -47,6 +47,7 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.App
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.HelpAndFeedbackSection
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.SettingsOverlays
 
+@Suppress("AssignedValueIsNeverRead")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(

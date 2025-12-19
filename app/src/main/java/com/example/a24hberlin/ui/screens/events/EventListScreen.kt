@@ -8,23 +8,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.WifiOff
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoundState
+import com.example.a24hberlin.ui.screens.components.utilityelements.OfflineState
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
@@ -66,35 +62,28 @@ fun EventsScreen(
     }
 
     Column {
-        if (isNetworkAvailable) {
-            if (filteredEvents.isEmpty()) {
+        if (filteredEvents.isEmpty()) {
+            if (isNetworkAvailable) {
                 NoEventsFoundState()
             } else {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = regularPadding),
-                    verticalArrangement = spacedBy(halfPadding),
-                    state = listState,
-                    contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
-                ) {
-                    items(
-                        items = filteredEvents,
-                        key = { event -> event.id }
-                    ) { event ->
-                        EventItem(event)
-                    }
-                }
+                OfflineState()
             }
         } else {
-            Icon(
-                imageVector = Icons.Rounded.WifiOff,
-                contentDescription = null,
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(120.dp),
-                tint = Gray
-            )
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = spacedBy(halfPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
+            ) {
+                items(
+                    items = filteredEvents,
+                    key = { event -> event.id }
+                ) { event ->
+                    EventItem(event)
+                }
+            }
         }
     }
 }

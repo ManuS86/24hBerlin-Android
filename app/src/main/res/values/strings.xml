@@ -10,6 +10,7 @@
     <string name="are_you_sure_you_want_to_log_out_q">Are you sure you want to log out?</string>
     <string name="august">Aug</string>
     <string name="back">Back</string>
+    <string name="back_online">Back online</string>
     <string name="bookmark">Bookmark</string>
     <string name="bug_report">Bug Report</string>
     <string name="change_email">Change Email</string>
@@ -85,6 +86,7 @@
     <string name="new_password">New Password</string>
     <string name="no">NO</string>
     <string name="no_events_available">No Events available</string>
+    <string name="no_internet_connection">No Internet connection</string>
     <string name="notification_settings">Notification Settings</string>
     <string name="november">Nov</string>
     <string name="october">Oct</string>

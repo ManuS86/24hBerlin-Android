@@ -99,6 +99,7 @@ fun ClubMapScreen(
     }
 
     if (showEventSheet) {
+        @Suppress("AssignedValueIsNeverRead")
         ModalBottomSheet(
             onDismissRequest = { showEventSheet = false },
             containerColor = White,

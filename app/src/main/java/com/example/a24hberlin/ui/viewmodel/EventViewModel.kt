@@ -16,7 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -44,9 +44,9 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
     val events: StateFlow<List<Event>> = _events
         .onStart { loadEvents() }
         .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000L),
-            emptyList()
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = emptyList()
         )
 
     val hasNotificationPermission: StateFlow<Boolean> = permissionManager.hasNotificationPermission
@@ -59,7 +59,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
         } ?: emptyList()
     }.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(),
+        WhileSubscribed(),
         emptyList()
     )
 
@@ -72,7 +72,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             .sorted()
     }.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(),
+        WhileSubscribed(),
         emptyList()
     )
 
@@ -84,7 +84,7 @@ class EventViewModel(application: Application) : AndroidViewModel(application) {
             .sorted()
     }.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(),
+        WhileSubscribed(),
         emptyList()
     )
 
