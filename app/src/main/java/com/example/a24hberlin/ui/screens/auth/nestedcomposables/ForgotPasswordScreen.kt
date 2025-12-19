@@ -29,8 +29,8 @@ import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
-import com.example.a24hberlin.ui.theme.extraLargePadding
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.doublePadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
@@ -50,7 +50,7 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
             .padding(horizontal = regularPadding),
         horizontalAlignment = CenterHorizontally
     ) {
-        Spacer(Modifier.height(mediumPadding))
+        Spacer(Modifier.height(halfPadding))
 
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
@@ -84,7 +84,7 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
             onClick = { authVM.resetPassword(email) }
         )
 
-        Spacer(Modifier.height(extraLargePadding))
+        Spacer(Modifier.height(doublePadding))
 
         AuthTextButton(
             label = stringResource(R.string.try_logging_in_again),

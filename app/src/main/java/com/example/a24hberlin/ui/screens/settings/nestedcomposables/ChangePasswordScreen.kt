@@ -32,8 +32,7 @@ import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
-fun ChangePasswordScreen() {
-    val settingsVM: SettingsViewModel = viewModel()
+fun ChangePasswordScreen(settingsVM: SettingsViewModel = viewModel()) {
     val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val passwordErrorResId by settingsVM.passwordErrorResId.collectAsStateWithLifecycle()

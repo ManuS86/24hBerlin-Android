@@ -15,7 +15,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import com.example.a24hberlin.ui.theme.largePadding
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 
 @Composable
@@ -41,7 +41,7 @@ fun LargeDarkButton(
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(mediumPadding),
+            modifier = Modifier.padding(halfPadding),
             fontWeight = SemiBold,
             style = typography.bodyLarge
         )

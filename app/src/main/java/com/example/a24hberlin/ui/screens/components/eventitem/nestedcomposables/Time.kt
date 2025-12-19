@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -28,7 +28,7 @@ fun Time(
             imageVector = Icons.Filled.WatchLater,
             contentDescription = stringResource(R.string.time),
             modifier = Modifier
-                .padding(end = mediumPadding)
+                .padding(end = halfPadding)
                 .size(18.dp)
         )
 

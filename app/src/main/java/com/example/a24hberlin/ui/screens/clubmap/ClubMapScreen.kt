@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.clubmap
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -17,7 +16,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,7 +26,7 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -44,27 +42,31 @@ fun ClubMapScreen(
     selectedEventType: EventType?,
     selectedMonth: Month?,
     selectedSound: String?,
-    selectedVenue: String?
+    selectedVenue: String?,
+    eventVM: EventViewModel = viewModel()
 ) {
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
     val sheetState = rememberModalBottomSheetState()
 
-    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
     val events by eventVM.events.collectAsStateWithLifecycle()
 
     var selectedEvent: Event? by remember { mutableStateOf(null) }
     var showEventSheet by remember { mutableStateOf(false) }
 
-    val filteredEvents = filteredEvents(
-        events = events,
-        selectedMonth = selectedMonth,
-        selectedEventType = selectedEventType,
-        selectedSound = selectedSound,
-        selectedVenue = selectedVenue,
-        searchText = searchText
-    )
+    val filteredEvents = remember(
+        events, selectedMonth, selectedEventType,
+        selectedSound, selectedVenue, searchText.text
+    ) {
+        filteredEvents(
+            events = events,
+            selectedMonth = selectedMonth,
+            selectedEventType = selectedEventType,
+            selectedSound = selectedSound,
+            selectedVenue = selectedVenue,
+            searchText = searchText
+        )
+    }
 
     val berlinLatLng = LatLng(52.5200, 13.4050)
     val cameraPositionState = rememberCameraPositionState {
@@ -77,14 +79,18 @@ fun ClubMapScreen(
     ) {
         filteredEvents.forEach { event ->
             if (event.lat != null && event.long != null) {
-                val venuePosition = LatLng(event.lat, event.long)
+                val markerState = rememberMarkerState(
+                    key = event.id,
+                    position = LatLng(event.lat, event.long)
+                )
+
                 Marker(
-                    state = rememberMarkerState(position = venuePosition),
+                    state = markerState,
                     title = event.name,
                     onClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         selectedEvent = event
-                        showEventSheet = !showEventSheet
+                        showEventSheet = true
                         true
                     }
                 )
@@ -101,13 +107,12 @@ fun ClubMapScreen(
             Column(
                 Modifier
                     .padding(horizontal = regularPadding)
-                    .padding(bottom = mediumPadding)
+                    .padding(bottom = halfPadding)
                     .verticalScroll(scrollState)
             ) {
                 selectedEvent?.let {
                     EventItem(
                         event = it,
-                        eventVM = eventVM,
                         isExpandable = false,
                         isInitiallyExpanded = true
                     )

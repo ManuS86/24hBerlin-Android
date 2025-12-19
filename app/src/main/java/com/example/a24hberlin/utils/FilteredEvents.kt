@@ -1,68 +1,55 @@
 package com.example.a24hberlin.utils
 
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.text.input.TextFieldValue
 import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.data.model.Event
 
-@Composable
 fun filteredEvents(
     events: List<Event>,
-    selectedMonth: Month?,
-    selectedEventType: EventType?,
-    selectedSound: String?,
-    selectedVenue: String?,
+    selectedMonth: Month? = null,
+    selectedEventType: EventType? = null,
+    selectedSound: String? = null,
+    selectedVenue: String? = null,
     searchText: TextFieldValue
 ): List<Event> {
+    val now = java.time.LocalDate.now()
+    val currentYear = now.year
+    val currentMonthValue = now.monthValue
 
-    return remember(
-        events,
-        selectedMonth,
-        selectedEventType,
-        selectedSound,
-        selectedVenue,
-        searchText.text
-    ) {
-        val now = java.time.LocalDate.now()
-        val currentYear = now.year
-        val currentMonthValue = now.monthValue
+    return events.filter { event ->
+        val monthMatches = selectedMonth?.let { selMonth ->
+            val targetYear = if (selMonth.value < currentMonthValue) {
+                currentYear + 1
+            } else {
+                currentYear
+            }
 
-        events.filter { event ->
-            val monthMatches = selectedMonth?.let { selMonth ->
-                val targetYear = if (selMonth.value < currentMonthValue) {
-                    currentYear + 1
-                } else {
-                    currentYear
+            event.start.month.value == selMonth.value && event.start.year == targetYear
+        } ?: true
+
+        val eventTypeMatches = selectedEventType == null ||
+                event.eventType?.values.orEmpty().any {
+                    it.cleanToAnnotatedString().text == selectedEventType.label
                 }
 
-                event.start.month.value == selMonth.value && event.start.year == targetYear
-            } ?: true
+        val soundMatches = selectedSound == null ||
+                event.sounds?.values.orEmpty().any {
+                    it == selectedSound
+                }
 
-            val eventTypeMatches = selectedEventType == null ||
-                                            event.eventType?.values.orEmpty().any {
-                                                it.cleanToAnnotatedString().text == selectedEventType.label
-                                             }
+        val venueMatches = selectedVenue == null ||
+                event.locationName?.contains(
+                    selectedVenue,
+                    ignoreCase = true
+                ) == true
 
-            val soundMatches = selectedSound == null ||
-                                        event.sounds?.values.orEmpty().any {
-                                          it == selectedSound
-                                         }
+        val textMatches = searchText.text.isEmpty() ||
+                event.name.contains(
+                    searchText.text,
+                    ignoreCase = true
+                )
 
-            val venueMatches = selectedVenue == null ||
-                                        event.locationName?.contains(
-                                           selectedVenue,
-                                             ignoreCase = true
-                                         ) == true
-
-            val textMatches = searchText.text.isEmpty() ||
-                                        event.name.contains(
-                                            searchText.text,
-                                            ignoreCase = true
-                                         )
-
-            monthMatches && eventTypeMatches && soundMatches && venueMatches && textMatches
-        }
+        monthMatches && eventTypeMatches && soundMatches && venueMatches && textMatches
     }
 }

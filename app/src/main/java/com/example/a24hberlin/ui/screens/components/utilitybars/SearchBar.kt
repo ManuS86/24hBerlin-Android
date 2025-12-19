@@ -38,7 +38,7 @@ import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.regularPadding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,7 +57,7 @@ fun SearchBar(
             .fillMaxWidth()
             .height(44.dp)
             .padding(horizontal = regularPadding)
-            .padding(bottom = smallPadding),
+            .padding(bottom = microPadding),
         textStyle = typography.bodyLarge.copy(color = White),
         cursorBrush = SolidColor(White),
         singleLine = true,

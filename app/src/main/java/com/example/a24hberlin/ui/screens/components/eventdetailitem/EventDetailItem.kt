@@ -26,7 +26,7 @@ import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcompos
 import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.managers.ExternalMapNavigator
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 
 /**
@@ -44,8 +44,8 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(mediumPadding),
-        verticalArrangement = spacedBy(mediumPadding)
+            .padding(halfPadding),
+        verticalArrangement = spacedBy(halfPadding)
     ) {
         ImageCard(event.imageURL)
         DetailCard(event.details)
@@ -81,7 +81,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
                     tint = Gray,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(mediumPadding)
+                        .padding(halfPadding)
                         .clickable { showDetailToggle() }
                 )
             }

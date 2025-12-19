@@ -29,9 +29,9 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.eventImageSize
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale.getDefault
@@ -44,7 +44,7 @@ fun ImageAndDate(
 ) {
     val locale = getDefault()
 
-    Column(Modifier.padding(end = mediumPadding)) {
+    Column(Modifier.padding(end = halfPadding)) {
         imageURL?.let { url ->
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -58,7 +58,7 @@ fun ImageAndDate(
                 modifier = Modifier
                     .size(eventImageSize)
                     .clip(RoundedCornerShape(mediumRounding))
-                    .padding(end = smallPadding)
+                    .padding(end = microPadding)
             )
         }
 
@@ -67,7 +67,7 @@ fun ImageAndDate(
             verticalAlignment = Top
         ) {
             Column(
-                modifier = Modifier.padding(start = smallPadding),
+                modifier = Modifier.padding(start = microPadding),
                 horizontalAlignment = Start
             ) {
                 Text(
@@ -108,7 +108,7 @@ fun ImageAndDate(
                             style = typography.titleSmall,
                             fontWeight = Black,
                             modifier = Modifier
-                                .padding(top = mediumPadding)
+                                .padding(top = halfPadding)
                                 .padding(horizontal = 2.dp)
                         )
 

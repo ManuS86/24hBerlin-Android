@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 
 @Composable
 fun EmailField(
@@ -33,7 +33,7 @@ fun EmailField(
         Text(
             label,
             fontWeight = SemiBold,
-            modifier = Modifier.padding(bottom = smallPadding),
+            modifier = Modifier.padding(bottom = microPadding),
             color = Black
         )
 

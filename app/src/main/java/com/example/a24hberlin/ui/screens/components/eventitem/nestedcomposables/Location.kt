@@ -15,7 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 
 @Composable
 fun Location(
@@ -29,7 +29,7 @@ fun Location(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = stringResource(R.string.location),
                     modifier = Modifier
-                        .padding(end = mediumPadding)
+                        .padding(end = halfPadding)
                         .size(20.dp)
                 )
 

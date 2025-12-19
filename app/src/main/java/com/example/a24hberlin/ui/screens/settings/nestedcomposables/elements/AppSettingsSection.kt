@@ -22,13 +22,14 @@ import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.utilityelements.LanguageDropdown
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import kotlin.collections.forEach
@@ -36,11 +37,11 @@ import kotlin.collections.forEach
 @Composable
 fun AppSettingsSection(
     language: Language?,
-    settingsVM: SettingsViewModel,
     pushNotificationsEnabled: Boolean,
     bookmarks: List<Event>,
-    eventVM: EventViewModel,
-    haptic: HapticFeedback
+    haptic: HapticFeedback,
+    eventVM: EventViewModel = viewModel(),
+    settingsVM: SettingsViewModel = viewModel()
 ) {
     Card(
         modifier = Modifier
@@ -80,7 +81,7 @@ fun AppSettingsSection(
         }
     }
 
-    Spacer(Modifier.padding(smallPadding))
+    Spacer(Modifier.padding(microPadding))
 
     // Push Notifications
     Card(

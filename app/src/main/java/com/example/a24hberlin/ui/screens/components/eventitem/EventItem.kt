@@ -34,10 +34,9 @@ import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.
 import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Time
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.getEventColor
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
-import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 /**
  * Single composable component to represent an Event item, supporting both collapsed/expandable
@@ -51,7 +50,6 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 @Composable
 fun EventItem(
     event: Event,
-    eventVM: EventViewModel,
     isExpandable: Boolean = true,
     isInitiallyExpanded: Boolean = false
 ) {
@@ -90,7 +88,7 @@ fun EventItem(
 
                 Column(
                     horizontalAlignment = Start,
-                    verticalArrangement = spacedBy(mediumPadding)
+                    verticalArrangement = spacedBy(halfPadding)
                 ) {
                     Header(
                         event.name,
@@ -117,7 +115,7 @@ fun EventItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = End
                     ) {
-                        BookmarkButton(event, eventVM)
+                        BookmarkButton(event)
                     }
                 }
             }

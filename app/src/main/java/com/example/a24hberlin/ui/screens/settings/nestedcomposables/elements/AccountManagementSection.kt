@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.theme.logoSizeSmall
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 
 @Composable
 fun AccountManagementSection(
@@ -53,7 +53,7 @@ private fun AppFooter() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(40.dp),
-        verticalArrangement = spacedBy(mediumPadding),
+        verticalArrangement = spacedBy(halfPadding),
         horizontalAlignment = CenterHorizontally,
     ) {
         Image(

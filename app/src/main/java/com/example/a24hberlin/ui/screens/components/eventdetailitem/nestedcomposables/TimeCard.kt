@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
 import java.time.LocalDateTime
@@ -48,7 +48,7 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
             Icon(
                 imageVector = Default.WatchLater,
                 contentDescription = null,
-                modifier = Modifier.padding(end = mediumPadding),
+                modifier = Modifier.padding(end = halfPadding),
                 tint = Party
             )
 
@@ -56,7 +56,7 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
                 Column {
                     Text(
                         text = stringResource(R.string.time),
-                        modifier = Modifier.padding(bottom = mediumPadding),
+                        modifier = Modifier.padding(bottom = halfPadding),
                         style = typography.titleMedium,
                         fontWeight = Bold
                     )

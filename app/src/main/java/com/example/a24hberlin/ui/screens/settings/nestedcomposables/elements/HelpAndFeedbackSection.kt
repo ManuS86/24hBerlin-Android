@@ -11,15 +11,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.core.net.toUri
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 
 @Composable
 fun HelpAndFeedbackSection(
     context: Context,
-    settingsVM: SettingsViewModel
+    settingsVM: SettingsViewModel = viewModel()
 ) {
 // Report a Problem
     SettingsButton(
@@ -29,7 +30,7 @@ fun HelpAndFeedbackSection(
         onClick = { settingsVM.openBugReport() }
     )
 
-    Spacer(Modifier.padding(smallPadding))
+    Spacer(Modifier.padding(microPadding))
 
     // Privacy Policy
     SettingsButton(
@@ -42,7 +43,7 @@ fun HelpAndFeedbackSection(
         }
     )
 
-    Spacer(Modifier.padding(smallPadding))
+    Spacer(Modifier.padding(microPadding))
 
     // Terms of Service
     SettingsButton(

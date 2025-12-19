@@ -10,7 +10,6 @@ import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,21 +34,12 @@ import com.example.a24hberlin.ui.theme.regularPadding
 @Composable
 fun ReAuthWrapper(
     from: String,
-    onSetTitleId: (Int?) -> Unit
+    settingsVM: SettingsViewModel = viewModel()
 ) {
-    val settingsVM: SettingsViewModel = viewModel()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val isReauthenticated by settingsVM.isReauthenticated.collectAsStateWithLifecycle()
 
     var password by remember { mutableStateOf("") }
-
-    val targetTitleId = when {
-        isReauthenticated && from == "email" -> R.string.change_email
-        isReauthenticated && from == "password" -> R.string.change_password
-        else -> R.string.re_authenticate
-    }
-
-    LaunchedEffect(targetTitleId) { onSetTitleId(targetTitleId) }
 
     Box(Modifier.fillMaxSize()) {
         Image(

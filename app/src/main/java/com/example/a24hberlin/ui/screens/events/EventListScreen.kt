@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.events
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,9 +14,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -29,7 +28,7 @@ import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoun
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.filteredEvents
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
@@ -38,33 +37,29 @@ fun EventsScreen(
     selectedEventType: EventType?,
     selectedMonth: Month?,
     selectedSound: String?,
-    selectedVenue: String?
+    selectedVenue: String?,
+    connectivityVM: ConnectivityViewModel = viewModel(),
+    eventVM: EventViewModel = viewModel()
 ) {
-    val context = LocalContext.current
-    val connectivityVM: ConnectivityViewModel = viewModel()
-    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
-
     val events by eventVM.events.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
-
     val listState = rememberLazyListState()
 
-    val filteredEvents = filteredEvents(
-        events = events,
-        selectedMonth = selectedMonth,
-        selectedEventType = selectedEventType,
-        selectedSound = selectedSound,
-        selectedVenue = selectedVenue,
-        searchText = searchText
-    )
-
-    LaunchedEffect(
-        selectedMonth,
-        selectedEventType,
-        selectedSound,
-        selectedVenue,
-        searchText.text
+    val filteredEvents = remember(
+        events, selectedMonth, selectedEventType,
+        selectedSound, selectedVenue, searchText.text
     ) {
+        filteredEvents(
+            events = events,
+            selectedMonth = selectedMonth,
+            selectedEventType = selectedEventType,
+            selectedSound = selectedSound,
+            selectedVenue = selectedVenue,
+            searchText = searchText
+        )
+    }
+
+    LaunchedEffect(filteredEvents.size) {
         if (filteredEvents.isNotEmpty()) {
             listState.scrollToItem(0)
         }
@@ -79,15 +74,15 @@ fun EventsScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = regularPadding),
-                    verticalArrangement = spacedBy(mediumPadding),
+                    verticalArrangement = spacedBy(halfPadding),
                     state = listState,
-                    contentPadding = PaddingValues(top = mediumPadding, bottom = mediumPadding)
+                    contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
                 ) {
                     items(
                         items = filteredEvents,
                         key = { event -> event.id }
                     ) { event ->
-                        EventItem(event, eventVM)
+                        EventItem(event)
                     }
                 }
             }

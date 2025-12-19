@@ -29,7 +29,7 @@ import androidx.core.net.toUri
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
 
@@ -64,7 +64,7 @@ fun LearnMoreLinkCard(link: String?) {
                 Icon(
                     imageVector = Default.Link,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = halfPadding),
                     tint = Party
                 )
 

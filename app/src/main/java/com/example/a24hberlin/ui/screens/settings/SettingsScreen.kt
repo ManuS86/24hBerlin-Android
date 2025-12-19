@@ -4,7 +4,8 @@ import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
 import android.content.res.Resources
-import androidx.activity.ComponentActivity
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,8 +23,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
@@ -37,7 +40,7 @@ import com.example.a24hberlin.ui.screens.components.buttons.SettingsButton
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.ui.theme.regularPadding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.AccountDetailsSection
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.AccountManagementSection
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.AppSettingsSection
@@ -48,32 +51,33 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.Set
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    eventVM: EventViewModel = viewModel(),
+    settingsVM: SettingsViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-
-    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
-    val settingsVM: SettingsViewModel = viewModel()
-
     val scrollState = rememberScrollState()
 
     val isBugReportSheetOpen by settingsVM.isBugReportSheetOpen.collectAsStateWithLifecycle()
     val bugReportAlertMessage by settingsVM.bugReportAlertMessage.collectAsStateWithLifecycle()
     val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
     val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
-    val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
 
+    val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
+
     val languageChangeHelper = remember { LanguageChangeHelper() }
     var previousLanguageCode by remember {
-        mutableStateOf(language?.languageCode ?: Resources.getSystem().configuration.locales.get(0).language)
+        mutableStateOf(
+            language?.languageCode ?: Resources.getSystem().configuration.locales[0].language
+        )
     }
 
     LaunchedEffect(language) {
         val languageCode = language?.languageCode
-            ?: Resources.getSystem().configuration.locales.get(1).language
+            ?: Resources.getSystem().configuration.locales[1].language
 
         if (languageCode != previousLanguageCode) {
             previousLanguageCode = languageCode
@@ -81,62 +85,70 @@ fun SettingsScreen(
         }
     }
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
-            .padding(horizontal = regularPadding)
-            .padding(bottom = regularPadding)
-    ) {
-        // A. Account Details
-        SettingsSectionTitle(R.string.account_details)
-        AccountDetailsSection(navController, bottomBarState, haptic)
-
-        // B. App Settings
-        SettingsSectionTitle(R.string.app_settings)
-        AppSettingsSection(language, settingsVM, pushNotificationsEnabled, bookmarks, eventVM, haptic)
-
-        // C. Help and Feedback
-        SettingsSectionTitle(R.string.help_and_feedback)
-        HelpAndFeedbackSection(context, settingsVM)
-
-        Spacer(Modifier.padding(regularPadding))
-
-        // D. Share App
-        SettingsButton(
-            label = stringResource(R.string.share_24hBerlin),
-            fontWeight = Normal,
-            textAlign = Start,
-            onClick = {
-                val intent = Intent(ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(
-                        EXTRA_TEXT,
-                        "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
-                    )
-                }
-                context.startActivity(Intent.createChooser(intent, "Share Link"))
-            }
+    Box(Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.background),
+            contentDescription = null,
+            contentScale = FillBounds,
+            modifier = Modifier.fillMaxSize()
         )
 
-        Spacer(Modifier.padding(regularPadding))
+        Column(
+            Modifier
+                .fillMaxSize()
+                .verticalScroll(scrollState)
+                .padding(horizontal = regularPadding)
+                .padding(bottom = regularPadding)
+        ) {
+            // A. Account Details
+            SettingsSectionTitle(R.string.account_details)
+            AccountDetailsSection(navController, bottomBarState, haptic)
 
-        // E. Session Management and Version
-        AccountManagementSection(
-            onLogoutClick = { settingsVM.toggleLogoutAlert(true) },
-            onDeleteClick = { settingsVM.toggleDeleteAlert(true) }
+            // B. App Settings
+            SettingsSectionTitle(R.string.app_settings)
+            AppSettingsSection(language, pushNotificationsEnabled, bookmarks, haptic)
+
+            // C. Help and Feedback
+            SettingsSectionTitle(R.string.help_and_feedback)
+            HelpAndFeedbackSection(context)
+
+            Spacer(Modifier.padding(regularPadding))
+
+            // D. Share App
+            SettingsButton(
+                label = stringResource(R.string.share_24hBerlin),
+                fontWeight = Normal,
+                textAlign = Start,
+                onClick = {
+                    val intent = Intent(ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(
+                            EXTRA_TEXT,
+                            "https://play.google.com/store/apps/details?id=com.example.a24hberlin"
+                        )
+                    }
+                    context.startActivity(Intent.createChooser(intent, "Share Link"))
+                }
+            )
+
+            Spacer(Modifier.padding(regularPadding))
+
+            // E. Session Management and Version
+            AccountManagementSection(
+                onLogoutClick = { settingsVM.toggleLogoutAlert(true) },
+                onDeleteClick = { settingsVM.toggleDeleteAlert(true) }
+            )
+        }
+
+        // F. Alerts and BottomSheets
+        SettingsOverlays(
+            context = context,
+            isBugReportSheetOpen = isBugReportSheetOpen,
+            bugReportAlertMessage = bugReportAlertMessage,
+            showLogoutAlert = showLogoutAlert,
+            showDeleteAccountAlert = showDeleteAccountAlert
         )
     }
-
-    // F. Alerts and BottomSheets
-    SettingsOverlays(
-        context = context,
-        settingsVM = settingsVM,
-        isBugReportSheetOpen = isBugReportSheetOpen,
-        bugReportAlertMessage = bugReportAlertMessage,
-        showLogoutAlert = showLogoutAlert,
-        showDeleteAccountAlert = showDeleteAccountAlert
-    )
 }
 
 @Composable
@@ -145,7 +157,7 @@ private fun SettingsSectionTitle(titleResId: Int) {
         text = stringResource(titleResId),
         modifier = Modifier
             .padding(top = regularPadding)
-            .padding(bottom = smallPadding),
+            .padding(bottom = microPadding),
         fontWeight = Medium,
         color = Black
     )

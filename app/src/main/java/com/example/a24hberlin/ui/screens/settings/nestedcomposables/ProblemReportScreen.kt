@@ -24,7 +24,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.ui.theme.largePadding
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import kotlin.Int.Companion.MAX_VALUE
@@ -38,7 +38,7 @@ fun BugReportScreen(
     Column(Modifier.padding(horizontal = regularPadding)) {
         Text(
             text = stringResource(R.string.report_a_problem),
-            modifier = Modifier.padding(bottom = mediumPadding),
+            modifier = Modifier.padding(bottom = halfPadding),
             style = typography.titleMedium,
             color = TextOffBlack
         )

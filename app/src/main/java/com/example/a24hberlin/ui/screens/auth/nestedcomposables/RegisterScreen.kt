@@ -36,7 +36,7 @@ import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
@@ -67,7 +67,7 @@ fun RegisterScreen(onClick: () -> Unit) {
             .padding(horizontal = regularPadding),
         horizontalAlignment = CenterHorizontally
     ) {
-        Spacer(Modifier.height(mediumPadding))
+        Spacer(Modifier.height(halfPadding))
 
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
@@ -90,7 +90,7 @@ fun RegisterScreen(onClick: () -> Unit) {
             onEmailChanged = { email = it }
         )
 
-        Spacer(Modifier.height(mediumPadding))
+        Spacer(Modifier.height(halfPadding))
 
         PasswordField(
             label = stringResource(R.string.password),
@@ -99,7 +99,7 @@ fun RegisterScreen(onClick: () -> Unit) {
             onPasswordChanged = { password = it }
         )
 
-        Spacer(Modifier.height(mediumPadding))
+        Spacer(Modifier.height(halfPadding))
 
         PasswordField(
             label = stringResource(R.string.confirm_password),
@@ -129,7 +129,7 @@ fun RegisterScreen(onClick: () -> Unit) {
 
         LoginPrompt(onClick)
 
-        Spacer(Modifier.height(mediumPadding))
+        Spacer(Modifier.height(halfPadding))
     }
 
     DisposableEffect(Unit) {

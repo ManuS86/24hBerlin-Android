@@ -32,8 +32,8 @@ import com.example.a24hberlin.ui.screens.components.textfields.EmailField
 import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
-import com.example.a24hberlin.ui.theme.extraLargePadding
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.doublePadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
@@ -56,7 +56,7 @@ fun LoginScreen(onClick: () -> Unit) {
                 .padding(horizontal = regularPadding),
             horizontalAlignment = CenterHorizontally
         ) {
-            Spacer(Modifier.height(mediumPadding))
+            Spacer(Modifier.height(halfPadding))
 
             Text(
                 text = stringResource(R.string.twenty_four_hours_kulturprogramm),
@@ -79,7 +79,7 @@ fun LoginScreen(onClick: () -> Unit) {
                 onEmailChanged = { email = it }
             )
 
-            Spacer(Modifier.height(mediumPadding))
+            Spacer(Modifier.height(halfPadding))
 
             PasswordField(
                 label = stringResource(R.string.password),
@@ -97,7 +97,7 @@ fun LoginScreen(onClick: () -> Unit) {
                 onClick = { authVM.login(email, password) }
             )
 
-            Spacer(Modifier.height(extraLargePadding))
+            Spacer(Modifier.height(doublePadding))
 
             AuthTextButton(
                 label = stringResource(R.string.forgot_password),
@@ -108,7 +108,7 @@ fun LoginScreen(onClick: () -> Unit) {
 
             SignupPrompt(onClick)
 
-            Spacer(Modifier.height(mediumPadding))
+            Spacer(Modifier.height(halfPadding))
         }
     }
 

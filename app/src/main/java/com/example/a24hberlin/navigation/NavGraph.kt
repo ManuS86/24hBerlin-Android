@@ -15,7 +15,7 @@ import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
-import com.example.a24hberlin.ui.screens.myevents.BookmarksScreen
+import com.example.a24hberlin.ui.screens.myevents.MyEventsScreen
 import com.example.a24hberlin.ui.screens.settings.SettingsScreen
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.ReAuthWrapper
 
@@ -27,8 +27,7 @@ fun NavGraph(
     selectedMonth: Month?,
     selectedSound: String?,
     selectedVenue: String?,
-    bottomBarState: MutableState<Boolean>,
-    onSetTitleId: (Int?) -> Unit
+    bottomBarState: MutableState<Boolean>
 ) {
     NavHost(
         navController = navController,
@@ -59,7 +58,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            BookmarksScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
+            MyEventsScreen(searchText = searchText)
         }
         composable(
             route = Screen.Settings.route,
@@ -88,10 +87,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val from = backStackEntry.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM) ?: ""
 
-            ReAuthWrapper(
-                from = from,
-                onSetTitleId = onSetTitleId
-            )
+            ReAuthWrapper(from = from)
         }
     }
 }

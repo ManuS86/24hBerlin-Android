@@ -14,14 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import com.example.a24hberlin.R
 import com.example.a24hberlin.utils.cleanToAnnotatedString
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 
 @Composable
 fun Categories(
     eventType: Map<String, String>?,
     sounds: Map<String, String>?
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(mediumPadding)) {
+    Column(verticalArrangement = Arrangement.spacedBy(halfPadding)) {
 
     eventType?.let {
         val cleanedEventTypes = remember(it) {
@@ -31,7 +31,7 @@ fun Categories(
             Row {
                 Text(
                     text = stringResource(R.string.types),
-                    modifier = Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = halfPadding),
                     fontStyle = Italic,
                     color = White.copy(0.8f),
                     style = typography.bodyMedium
@@ -52,7 +52,7 @@ fun Categories(
             Row {
                 Text(
                     text = stringResource(R.string.sounds),
-                    modifier = Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = halfPadding),
                     fontStyle = Italic,
                     color = White.copy(0.8f),
                     style = typography.bodyMedium

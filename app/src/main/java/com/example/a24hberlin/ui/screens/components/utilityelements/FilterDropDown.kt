@@ -30,9 +30,9 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 
 @Composable
 fun <T> FilterDropdown(
@@ -51,8 +51,8 @@ fun <T> FilterDropdown(
 
     Column(
         modifier = Modifier
-            .padding(top = smallPadding)
-            .padding(bottom = mediumPadding)
+            .padding(top = microPadding)
+            .padding(bottom = halfPadding)
     ) {
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
@@ -99,7 +99,7 @@ fun <T> FilterDropdown(
                     Text(
                         text = label,
                         overflow = Ellipsis,
-                        modifier = Modifier.padding(end = mediumPadding)
+                        modifier = Modifier.padding(end = halfPadding)
                     )
                 },
                 onClick = {
@@ -116,7 +116,7 @@ fun <T> FilterDropdown(
                             text = option,
                             overflow = Ellipsis,
                             modifier = Modifier
-                                .padding(end = mediumPadding)
+                                .padding(end = halfPadding)
                         )
                     },
                     onClick = {

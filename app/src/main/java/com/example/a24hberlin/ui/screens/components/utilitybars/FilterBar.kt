@@ -1,6 +1,5 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -47,11 +46,11 @@ import com.example.a24hberlin.data.enums.EventType
 import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.rippleRadius
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 
 @Composable
 fun FilterBar(
@@ -63,11 +62,11 @@ fun FilterBar(
     onSoundSelected: (String?) -> Unit,
     selectedVenue: String?,
     onVenueSelected: (String?) -> Unit,
+    eventVM: EventViewModel = viewModel()
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
-    val eventVM: EventViewModel = viewModel(viewModelStoreOwner = context as ComponentActivity)
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
 
@@ -78,11 +77,11 @@ fun FilterBar(
     Column(
         modifier = Modifier
             .background(Black)
-            .padding(top = smallPadding)
+            .padding(top = microPadding)
     ) {
         Row(
             modifier = Modifier
-                .padding(bottom = mediumPadding)
+                .padding(bottom = halfPadding)
                 .padding(horizontal = regularPadding),
             verticalAlignment = CenterVertically
         ) {
@@ -90,7 +89,7 @@ fun FilterBar(
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
                     .weight(1f),
-                horizontalArrangement = spacedBy(mediumPadding)
+                horizontalArrangement = spacedBy(halfPadding)
             ) {
                 Button(
                     onClick = {
@@ -138,7 +137,7 @@ fun FilterBar(
                 imageVector = Icons.Rounded.Tune,
                 contentDescription = stringResource(R.string.show_filters),
                 modifier = Modifier
-                    .padding(start = mediumPadding)
+                    .padding(start = halfPadding)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = ripple(bounded = false, radius = rippleRadius),
@@ -165,7 +164,7 @@ fun FilterBar(
                         .horizontalScroll(horizontalScrollState2)
                         .padding(horizontal = regularPadding)
                         .weight(1f),
-                    horizontalArrangement = spacedBy(mediumPadding),
+                    horizontalArrangement = spacedBy(halfPadding),
                 ) {
                     FilterDropdown(
                         label = stringResource(R.string.type),
@@ -200,7 +199,7 @@ fun FilterBar(
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
-                            .padding(start = mediumPadding)
+                            .padding(start = halfPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
                                 indication = ripple(bounded = false, radius = rippleRadius),

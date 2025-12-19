@@ -34,7 +34,7 @@ import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.getEventColor
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
 
@@ -63,7 +63,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
             Icon(
                 imageVector = Default.Directions,
                 contentDescription = null,
-                modifier = Modifier.padding(end = mediumPadding),
+                modifier = Modifier.padding(end = halfPadding),
                 tint = TextOffBlack
             )
 

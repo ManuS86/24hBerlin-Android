@@ -24,7 +24,7 @@ import com.example.a24hberlin.data.model.EntranceFee
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.Party
 import com.example.a24hberlin.utils.cleanToAnnotatedString
-import com.example.a24hberlin.ui.theme.mediumPadding
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.ui.theme.regularPadding
 
@@ -50,14 +50,14 @@ fun EntranceFeeCard(entranceFee: EntranceFee?) {
                 Icon(
                     Icons.Filled.Payments,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = mediumPadding),
+                    modifier = Modifier.padding(end = halfPadding),
                     tint = Party
                 )
 
                 Column {
                     Text(
                         text = stringResource(R.string.entrance_fee),
-                        modifier = Modifier.padding(bottom = mediumPadding),
+                        modifier = Modifier.padding(bottom = halfPadding),
                         style = typography.titleMedium,
                         fontWeight = Bold
                     )

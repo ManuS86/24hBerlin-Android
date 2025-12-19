@@ -13,6 +13,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.MainActivity
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.BugReportScreen
@@ -22,11 +23,11 @@ import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 @Composable
 fun SettingsOverlays(
     context: Context,
-    settingsVM: SettingsViewModel,
     isBugReportSheetOpen: Boolean,
     bugReportAlertMessage: String?,
     showLogoutAlert: Boolean,
-    showDeleteAccountAlert: Boolean
+    showDeleteAccountAlert: Boolean,
+    settingsVM: SettingsViewModel = viewModel()
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 

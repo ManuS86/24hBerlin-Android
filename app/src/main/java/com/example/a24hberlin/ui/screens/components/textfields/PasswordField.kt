@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.smallPadding
+import com.example.a24hberlin.ui.theme.microPadding
 
 @Composable
 fun PasswordField(
@@ -48,7 +48,7 @@ fun PasswordField(
         Text(
             text = label,
             fontWeight = SemiBold,
-            modifier = Modifier.padding(bottom = smallPadding),
+            modifier = Modifier.padding(bottom = microPadding),
             color = Black
         )
 

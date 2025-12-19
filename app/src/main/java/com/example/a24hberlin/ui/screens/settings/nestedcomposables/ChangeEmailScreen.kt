@@ -31,8 +31,7 @@ import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
-fun ChangeEmailScreen() {
-    val settingsVM: SettingsViewModel = viewModel()
+fun ChangeEmailScreen(settingsVM: SettingsViewModel = viewModel()) {
     val confirmationMessageResId by settingsVM.confirmationMessageResId.collectAsStateWithLifecycle()
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
 
