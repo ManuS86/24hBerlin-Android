@@ -1,12 +1,19 @@
 package com.example.a24hberlin.ui.screens.mainhost
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Wifi
+import androidx.compose.material.icons.rounded.WifiOff
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
@@ -22,6 +29,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
@@ -30,6 +38,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -44,6 +53,7 @@ import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavi
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
 import com.example.a24hberlin.ui.theme.Offline
 import com.example.a24hberlin.ui.theme.Online
+import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.viewmodel.ConnectionEvent
@@ -206,7 +216,17 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
                     contentColor = White,
                     shape = RoundedCornerShape(slightRounding),
                 ) {
-                    Text(data.visuals.message)
+                    Row(
+                        verticalAlignment = CenterVertically,
+                        horizontalArrangement = spacedBy(halfPadding)
+                    ) {
+                        Icon(
+                            imageVector = if (isOffline) Icons.Rounded.WifiOff else Icons.Rounded.Wifi,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(data.visuals.message)
+                    }
                 }
             }
         },
