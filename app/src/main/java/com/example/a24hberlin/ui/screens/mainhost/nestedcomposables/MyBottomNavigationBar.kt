@@ -1,8 +1,9 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults.colors
@@ -15,15 +16,13 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.a24hberlin.navigation.navItemsData
-
 @Composable
 fun MyBottomNavigationBar(
     navController: NavHostController,
@@ -33,7 +32,7 @@ fun MyBottomNavigationBar(
     val items = navItemsData
 
     NavigationBar(
-        modifier = Modifier.height(108.dp),
+        modifier = Modifier.heightIn(max = 96.dp),
         containerColor = Black
     ) {
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -64,11 +63,17 @@ fun MyBottomNavigationBar(
                         contentDescription = label
                     )
                 },
+                modifier = Modifier
+                    .layout { measurable, constraints ->
+                        val placeable = measurable.measure(constraints)
+                        layout(placeable.width, placeable.height) {
+                            placeable.placeRelative(0, 16)
+                        }
+                    },
                 label = { Text(
                     text = label,
-                    fontSize = 10.sp,
-                    fontWeight = Normal,
-                    modifier = Modifier.offset(y = (-8).dp)
+                    modifier = Modifier.offset(y = (-6).dp),
+                    style = typography.labelSmall
                 ) },
                 alwaysShowLabel = true,
                 colors = colors(

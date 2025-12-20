@@ -51,7 +51,7 @@ fun EmailField(
             singleLine = true,
             shape = RoundedCornerShape(slightRounding),
             colors = colors(
-                focusedBorderColor = Gray.copy(0.5f),
+                focusedBorderColor = Gray.copy(0.8f),
                 unfocusedBorderColor = Gray.copy(0.5f),
                 focusedContainerColor = White,
                 unfocusedContainerColor = White

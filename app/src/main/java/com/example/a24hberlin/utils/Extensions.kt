@@ -61,5 +61,5 @@ fun String.cleanToAnnotatedString(): AnnotatedString {
 }
 
 fun String.toLanguageOrNull(): Language? {
-    return Language.allValues.firstOrNull { it.label.equals(this, ignoreCase = true) }
+    return Language.entries.firstOrNull { it.label.equals(this, ignoreCase = true) }
 }

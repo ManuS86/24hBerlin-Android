@@ -1,5 +1,10 @@
 package com.example.a24hberlin.ui.screens.components.utilitybars
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -26,6 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -51,6 +57,8 @@ import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.rippleRadius
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.microPadding
+import kotlinx.coroutines.launch
+import java.time.LocalDate.now
 
 @Composable
 fun FilterBar(
@@ -66,9 +74,18 @@ fun FilterBar(
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
+    val scope = rememberCoroutineScope()
 
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
+
+    // --- State & Calculations ---
+    val monthOptions = remember(now()) {
+        listOf<Month?>(null) + Month.dynamicOrder
+    }
+    val eventTypeLabels = remember {
+        EventType.entries.map { it.label }
+    }
 
     var showFilters by remember { mutableStateOf(false) }
     val horizontalScrollState = rememberScrollState()
@@ -79,38 +96,23 @@ fun FilterBar(
             .background(Black)
             .padding(top = microPadding)
     ) {
+        // --- Row 1: Months & Filter Button ---
         Row(
             modifier = Modifier
                 .padding(bottom = halfPadding)
-                .padding(horizontal = regularPadding),
+                .padding(end = regularPadding),
             verticalAlignment = CenterVertically
         ) {
             Row(
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
+                    .padding(start = regularPadding)
                     .weight(1f),
                 horizontalArrangement = spacedBy(halfPadding)
             ) {
-                Button(
-                    onClick = {
-                        haptic.performHapticFeedback(TextHandleMove)
-                        onMonthSelected(null)
-                    },
-                    modifier = Modifier.height(32.dp),
-                    shape = RoundedCornerShape(slightRounding),
-                    contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                    colors = buttonColors(
-                        DarkGray.copy(if (selectedMonth == null) 0.9f else 0.5f))
-                ) {
-                    Text(
-                        text = stringResource(R.string.all),
-                        fontWeight = SemiBold,
-                        color = White.copy(if (selectedMonth == null) 1f else 0.6f),
-                        style = typography.bodyMedium
-                    )
-                }
+                monthOptions.forEach { month ->
+                    val isSelected = selectedMonth == month
 
-                Month.allValues.forEach { month ->
                     Button(
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
@@ -119,20 +121,19 @@ fun FilterBar(
                         modifier = Modifier.height(32.dp),
                         shape = RoundedCornerShape(slightRounding),
                         contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                        colors = buttonColors(
-                            DarkGray.copy(if (selectedMonth == month) 0.9f else 0.5f)
-                        )
+                        colors = buttonColors(DarkGray.copy(if (isSelected) 0.9f else 0.5f))
                     ) {
                         Text(
-                            text = month.getStringResource(context),
+                            text = month?.getStringResource(context) ?: stringResource(R.string.all),
                             fontWeight = SemiBold,
-                            color = White.copy(if (selectedMonth == month) 1f else 0.6f),
+                            color = White.copy(if (isSelected) 1f else 0.6f),
                             style = typography.bodyMedium
                         )
                     }
                 }
             }
 
+            // Show Dropdown Filters Button
             Icon(
                 imageVector = Icons.Rounded.Tune,
                 contentDescription = stringResource(R.string.show_filters),
@@ -151,68 +152,91 @@ fun FilterBar(
             )
         }
 
+        // --- Row 2: Secondary Filters (Dropdowns) ---
         if (showFilters) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = regularPadding),
-                verticalAlignment = CenterVertically
+            AnimatedVisibility(
+                visible = showFilters,
+                enter = expandVertically() + fadeIn(),
+                exit = shrinkVertically() + fadeOut()
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(horizontalScrollState2)
-                        .padding(horizontal = regularPadding)
-                        .weight(1f),
-                    horizontalArrangement = spacedBy(halfPadding),
+                        .padding(end = regularPadding),
+                    verticalAlignment = CenterVertically
                 ) {
-                    FilterDropdown(
-                        label = stringResource(R.string.type),
-                        selectedValue = selectedEventType,
-                        onValueSelected = onEventTypeSelected,
-                        options = EventType.allValues.map { it.label },
-                        stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
-                        itemToLabel = { eventType -> eventType?.label }
-                    )
-
-                    FilterDropdown(
-                        label = stringResource(R.string.sound),
-                        selectedValue = selectedSound,
-                        onValueSelected = onSoundSelected,
-                        options = uniqueSounds,
-                        stringToItem = { it },
-                        itemToLabel = { uniqueSounds -> uniqueSounds }
-                    )
-
-                    FilterDropdown(
-                        label = stringResource(R.string.venue_),
-                        selectedValue = selectedVenue,
-                        onValueSelected = onVenueSelected,
-                        options = uniqueLocations,
-                        stringToItem = { it },
-                        itemToLabel = { uniqueLocations -> uniqueLocations }
-                    )
-                }
-
-                if (selectedEventType != null || selectedSound != null || selectedVenue != null) {
-                    Icon(
-                        imageVector = Icons.Rounded.Clear,
-                        contentDescription = stringResource(R.string.clear_filters),
+                    Row(
                         modifier = Modifier
-                            .padding(start = halfPadding)
-                            .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
-                                indication = ripple(bounded = false, radius = rippleRadius),
-                                role = Role.Button,
-                                onClick = {
-                                    haptic.performHapticFeedback(TextHandleMove)
-                                    onEventTypeSelected(null)
-                                    onSoundSelected(null)
-                                    onVenueSelected(null)
-                                }
-                            ),
-                        tint = White
-                    )
+                            .horizontalScroll(horizontalScrollState2)
+                            .padding(start = regularPadding)
+                            .weight(1f),
+                        horizontalArrangement = spacedBy(halfPadding),
+                    ) {
+                        FilterDropdown(
+                            label = stringResource(R.string.type),
+                            selectedValue = selectedEventType,
+                            onValueSelected = onEventTypeSelected,
+                            options = eventTypeLabels,
+                            stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
+                            itemToLabel = { it?.label }
+                        )
+
+                        FilterDropdown(
+                            label = stringResource(R.string.sound),
+                            selectedValue = selectedSound,
+                            onValueSelected = onSoundSelected,
+                            options = uniqueSounds,
+                            stringToItem = { it },
+                            itemToLabel = { it }
+                        )
+
+                        FilterDropdown(
+                            label = stringResource(R.string.venue_),
+                            selectedValue = selectedVenue,
+                            onValueSelected = onVenueSelected,
+                            options = uniqueLocations,
+                            stringToItem = { it },
+                            itemToLabel = { it }
+                        )
+                    }
+
+                    // Clear Filters Button
+                    val hasActiveFilters = listOf(
+                        selectedMonth,
+                        selectedEventType,
+                        selectedSound,
+                        selectedVenue
+                    ).any { it != null }
+
+                    if (hasActiveFilters) {
+                        Icon(
+                            imageVector = Icons.Rounded.Clear,
+                            contentDescription = stringResource(R.string.clear_filters),
+                            modifier = Modifier
+                                .padding(start = halfPadding)
+                                .clickable(
+                                    interactionSource = remember { MutableInteractionSource() },
+                                    indication = ripple(bounded = false, radius = rippleRadius),
+                                    role = Role.Button,
+                                    onClick = {
+                                        haptic.performHapticFeedback(TextHandleMove)
+
+                                        // Reset all Data States
+                                        onMonthSelected(null)
+                                        onEventTypeSelected(null)
+                                        onSoundSelected(null)
+                                        onVenueSelected(null)
+
+                                        // Reset UI Scroll States
+                                        scope.launch {
+                                            horizontalScrollState.animateScrollTo(0)
+                                            horizontalScrollState2.animateScrollTo(0)
+                                        }
+                                    }
+                                ),
+                            tint = White
+                        )
+                    }
                 }
             }
         }

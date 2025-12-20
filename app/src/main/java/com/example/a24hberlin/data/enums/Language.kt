@@ -6,8 +6,4 @@ enum class Language(val label: String, val resource: Int, val languageCode: Stri
 
     ENGLISH("english", R.string.english, "en"),
     GERMAN("german", R.string.german, "de");
-
-    companion object {
-        val allValues = entries.toTypedArray()
-    }
 }

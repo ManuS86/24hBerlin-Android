@@ -20,7 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.ui.theme.halfPadding
+import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.microPadding
 
@@ -44,7 +45,7 @@ fun <T> FilterDropdown(
     itemToLabel: (T?) -> String?
 ) {
     val haptic = LocalHapticFeedback.current
-    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
 
     val arrowAlpha = if (selectedValue != null) 1f else 0.8f
     val contentAlpha = if (selectedValue != null) 1f else 0.5f
@@ -56,8 +57,9 @@ fun <T> FilterDropdown(
     ) {
         OutlinedButton(
             onClick = { isExpanded = !isExpanded },
-            modifier = Modifier.fillMaxWidth()
-                    .height(36.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(36.dp),
             border = BorderStroke(1.dp, White.copy(contentAlpha)),
             shape = RoundedCornerShape(slightRounding),
             colors = ButtonDefaults.outlinedButtonColors(
@@ -65,7 +67,7 @@ fun <T> FilterDropdown(
                 containerColor = Transparent
             ),
             contentPadding = PaddingValues(
-                start = 12.dp,
+                start = mediumPadding,
                 end = 6.dp
             )
         ) {
@@ -115,8 +117,7 @@ fun <T> FilterDropdown(
                         Text(
                             text = option,
                             overflow = Ellipsis,
-                            modifier = Modifier
-                                .padding(end = halfPadding)
+                            modifier = Modifier.padding(end = halfPadding)
                         )
                     },
                     onClick = {

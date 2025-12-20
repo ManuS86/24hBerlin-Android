@@ -16,7 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
@@ -39,7 +39,7 @@ fun PasswordField(
     password: String,
     onPasswordChanged: (String) -> Unit
 ) {
-    var passwordVisible by remember { mutableStateOf(false) }
+    var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.fillMaxWidth(),
@@ -61,16 +61,16 @@ fun PasswordField(
                     color = Gray
                 )
             },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = Password),
             trailingIcon = {
                 val image =
-                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
                 val description =
-                    if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
+                    if (isPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
 
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                     Icon(
                         imageVector = image,
                         contentDescription = description,
@@ -81,7 +81,7 @@ fun PasswordField(
             singleLine = true,
             shape = RoundedCornerShape(slightRounding),
             colors = colors(
-                focusedBorderColor = Gray.copy(0.5f),
+                focusedBorderColor = Gray.copy(0.8f),
                 unfocusedBorderColor = Gray.copy(0.5f),
                 focusedContainerColor = White,
                 unfocusedContainerColor = White

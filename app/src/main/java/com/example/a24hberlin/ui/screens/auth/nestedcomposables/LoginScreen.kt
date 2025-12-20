@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -43,9 +43,9 @@ fun LoginScreen(onClick: () -> Unit) {
     val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var showForgotPassword by remember { mutableStateOf(false) }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var showForgotPassword by rememberSaveable { mutableStateOf(false) }
 
     if (showForgotPassword) {
         ForgotPasswordScreen { showForgotPassword = false }

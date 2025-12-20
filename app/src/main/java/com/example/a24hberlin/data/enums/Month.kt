@@ -2,8 +2,9 @@ package com.example.a24hberlin.data.enums
 
 import android.content.Context
 import com.example.a24hberlin.R
+import java.time.LocalDate.now
 import java.time.format.TextStyle
-import java.util.Locale
+import java.util.Locale.US
 
 enum class Month(val value: Int) {
 
@@ -21,10 +22,28 @@ enum class Month(val value: Int) {
     DECEMBER(12);
 
     private val englishName: String
-        get() = java.time.Month.of(value).getDisplayName(TextStyle.FULL, Locale.US).lowercase()
+        get() = java.time.Month.of(value)
+            .getDisplayName(TextStyle.FULL, US)
+            .lowercase()
+
+    fun getStringResource(context: Context): String {
+        val resourceId = monthResourceMap[englishName]
+        return if (resourceId != null) context.getString(resourceId) else englishName
+    }
 
     companion object {
-        val allValues = entries.toTypedArray()
+        /**
+         * Returns months starting from the current month to the end of the 12-month cycle.
+         * Example: If today is October, returns [OCT, NOV, DEC, JAN, ... SEP]
+         */
+        val dynamicOrder: List<Month>
+            get() {
+                val currentMonthValue = now().monthValue // 1-12
+                val entries = entries
+                val startIndex = currentMonthValue - 1
+
+                return entries.drop(startIndex) + entries.take(startIndex)
+            }
 
         private val monthResourceMap = mapOf(
             "january" to R.string.january,
@@ -40,15 +59,5 @@ enum class Month(val value: Int) {
             "november" to R.string.november,
             "december" to R.string.december
         )
-    }
-
-    fun getStringResource(context: Context): String {
-        val resourceId = monthResourceMap[englishName]
-
-        return if (resourceId != null) {
-            context.getString(resourceId)
-        } else {
-            englishName
-        }
     }
 }

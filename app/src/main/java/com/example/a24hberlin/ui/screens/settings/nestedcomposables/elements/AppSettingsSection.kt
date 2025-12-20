@@ -76,7 +76,7 @@ fun AppSettingsSection(
                 label = stringResource(R.string.system_default),
                 selectedValue = language,
                 onValueSelected = { settingsVM.changeLanguage(it) },
-                options = Language.allValues.toList()
+                options = Language.entries.toList()
             )
         }
     }
