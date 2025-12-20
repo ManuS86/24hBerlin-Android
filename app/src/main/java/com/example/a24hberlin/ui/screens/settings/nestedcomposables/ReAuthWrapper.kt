@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
+import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
 import com.example.a24hberlin.ui.theme.largePadding
@@ -55,8 +55,8 @@ fun ReAuthWrapper(
             PasswordReAuthForm(
                 settingsVM = settingsVM,
                 firebaseError = firebaseError,
-                onPasswordEntered = { password = it },
-                password = password
+                password = password,
+                onPasswordChange = { password = it }
             )
         }
     }
@@ -69,7 +69,7 @@ private fun PasswordReAuthForm(
     settingsVM: SettingsViewModel,
     firebaseError: String?,
     password: String,
-    onPasswordEntered: (String) -> Unit
+    onPasswordChange: (String) -> Unit
 ) {
     Column(Modifier.padding(horizontal = regularPadding)) {
         Spacer(Modifier.weight(0.7f))
@@ -82,11 +82,12 @@ private fun PasswordReAuthForm(
             color = Black
         )
 
-        PasswordField(
+        AuthTextField(
             label = stringResource(R.string.password),
             placeholder = stringResource(R.string.re_enter_password),
-            password = password,
-            onPasswordChanged = onPasswordEntered
+            value = password,
+            onValueChange = onPasswordChange,
+            isPasswordField = true
         )
 
         if (firebaseError != null) {

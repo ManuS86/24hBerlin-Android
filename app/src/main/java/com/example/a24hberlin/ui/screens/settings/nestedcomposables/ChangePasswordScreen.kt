@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.utilityelements.AuthMessages
-import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
+import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.regularPadding
@@ -59,20 +59,22 @@ fun ChangePasswordScreen(settingsVM: SettingsViewModel = viewModel()) {
                 color = Black
             )
 
-            PasswordField(
+            AuthTextField(
                 label = stringResource(R.string.new_password),
                 placeholder = stringResource(R.string.enter_your_new_password),
-                password = password,
-                onPasswordChanged = { password = it }
+                value = password,
+                onValueChange = { password = it },
+                isPasswordField = true
             )
 
             Spacer(Modifier.height(regularPadding))
 
-            PasswordField(
+            AuthTextField(
                 label = stringResource(R.string.confirm_new_password),
                 placeholder = stringResource(R.string.confirm_your_new_password),
-                password = confirmPassword,
-                onPasswordChanged = { confirmPassword = it }
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                isPasswordField = true
             )
 
             AuthMessages(

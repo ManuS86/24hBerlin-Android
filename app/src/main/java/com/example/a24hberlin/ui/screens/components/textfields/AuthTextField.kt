@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import androidx.compose.ui.text.input.KeyboardType.Companion.Password
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -33,11 +34,12 @@ import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.theme.microPadding
 
 @Composable
-fun PasswordField(
+fun AuthTextField(
     label: String,
     placeholder: String,
-    password: String,
-    onPasswordChanged: (String) -> Unit
+    value: String,
+    onValueChange: (String) -> Unit,
+    isPasswordField: Boolean
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -53,30 +55,32 @@ fun PasswordField(
         )
 
         OutlinedTextField(
-            value = password,
-            onValueChange = onPasswordChanged,
-            placeholder = {
-                Text(
-                    placeholder,
-                    color = Gray
-                )
+            value = value,
+            onValueChange = onValueChange,
+            placeholder = { Text(placeholder, color = Gray) },
+            visualTransformation = if (isPasswordField && !isPasswordVisible) {
+                PasswordVisualTransformation()
+            } else {
+                VisualTransformation.None
             },
-            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = Password),
-            trailingIcon = {
-                val image =
-                    if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
-                val description =
-                    if (isPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
+            keyboardOptions = KeyboardOptions(keyboardType = if (isPasswordField) Password else Email),
+            trailingIcon = if (isPasswordField) {
+                {
+                    val image = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                    val description =
+                        if (isPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
 
-                IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                    Icon(
-                        imageVector = image,
-                        contentDescription = description,
-                        tint = Gray
-                    )
+                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                        Icon(
+                            imageVector = image,
+                            contentDescription = if (isPasswordField) description else null,
+                            tint = Gray
+                        )
+                    }
                 }
+            } else {
+                null
             },
             singleLine = true,
             shape = RoundedCornerShape(slightRounding),

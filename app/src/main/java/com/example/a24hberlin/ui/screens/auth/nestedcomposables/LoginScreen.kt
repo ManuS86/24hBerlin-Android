@@ -28,8 +28,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
-import com.example.a24hberlin.ui.screens.components.textfields.EmailField
-import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
+import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
 import com.example.a24hberlin.ui.theme.doublePadding
@@ -73,20 +72,22 @@ fun LoginScreen(onClick: () -> Unit) {
 
             Spacer(Modifier.height(regularPadding))
 
-            EmailField(
+            AuthTextField(
                 label = stringResource(R.string.email),
                 placeholder = stringResource(R.string.enter_your_email),
-                email = email,
-                onEmailChanged = { email = it }
+                value = email,
+                onValueChange = { email = it },
+                isPasswordField = false
             )
 
             Spacer(Modifier.height(halfPadding))
 
-            PasswordField(
+            AuthTextField(
                 label = stringResource(R.string.password),
                 placeholder = stringResource(R.string.enter_your_password),
-                password = password,
-                onPasswordChanged = { password = it }
+                value = password,
+                onValueChange = { password = it },
+                isPasswordField = true
             )
 
             if (errorMessageResId != null) {

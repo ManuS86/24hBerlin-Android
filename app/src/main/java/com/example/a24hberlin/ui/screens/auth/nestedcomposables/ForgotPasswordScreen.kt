@@ -27,7 +27,7 @@ import com.example.a24hberlin.ui.screens.components.utilityelements.AuthMessages
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
-import com.example.a24hberlin.ui.screens.components.textfields.EmailField
+import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.doublePadding
 import com.example.a24hberlin.ui.theme.halfPadding
@@ -66,11 +66,12 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
 
         Spacer(Modifier.weight(0.2f))
 
-        EmailField(
+        AuthTextField(
             label = stringResource(R.string.email),
             placeholder = stringResource(R.string.enter_your_email),
-            email = email,
-            onEmailChanged = { email = it }
+            value = email,
+            onValueChange = { email = it },
+            isPasswordField = false
         )
 
         AuthMessages(

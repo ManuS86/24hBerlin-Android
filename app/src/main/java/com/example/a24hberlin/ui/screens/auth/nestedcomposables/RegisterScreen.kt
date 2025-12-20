@@ -32,8 +32,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.images.AppLogo
-import com.example.a24hberlin.ui.screens.components.textfields.EmailField
-import com.example.a24hberlin.ui.screens.components.textfields.PasswordField
+import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
 import com.example.a24hberlin.ui.theme.halfPadding
@@ -83,29 +82,32 @@ fun RegisterScreen(onClick: () -> Unit) {
 
         Spacer(Modifier.height(regularPadding))
 
-        EmailField(
+        AuthTextField(
             label = stringResource(R.string.email),
             placeholder = stringResource(R.string.enter_an_email),
-            email = email,
-            onEmailChanged = { email = it }
+            value = email,
+            onValueChange = { email = it },
+            isPasswordField = false
         )
 
         Spacer(Modifier.height(halfPadding))
 
-        PasswordField(
+        AuthTextField(
             label = stringResource(R.string.password),
             placeholder = stringResource(R.string.create_a_password),
-            password = password,
-            onPasswordChanged = { password = it }
+            value = password,
+            onValueChange = { password = it },
+            isPasswordField = true
         )
 
         Spacer(Modifier.height(halfPadding))
 
-        PasswordField(
+        AuthTextField(
             label = stringResource(R.string.confirm_password),
             placeholder = stringResource(R.string.confirm_your_password),
-            password = confirmPassword,
-            onPasswordChanged = { confirmPassword = it }
+            value = confirmPassword,
+            onValueChange = { confirmPassword = it },
+            isPasswordField = true
         )
 
         RegisterErrorMessages(
