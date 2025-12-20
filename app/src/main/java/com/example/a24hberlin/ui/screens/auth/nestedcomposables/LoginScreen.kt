@@ -53,11 +53,10 @@ fun LoginScreen(onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = regularPadding),
+                .padding(horizontal = regularPadding)
+                .padding(top = halfPadding),
             horizontalAlignment = CenterHorizontally
         ) {
-            Spacer(Modifier.height(halfPadding))
-
             Text(
                 text = stringResource(R.string.twenty_four_hours_kulturprogramm),
                 maxLines = 2,

@@ -17,7 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -47,9 +47,9 @@ fun RegisterScreen(onClick: () -> Unit) {
     val hasNotificationPermission by authVM.hasNotificationPermission.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
@@ -63,11 +63,10 @@ fun RegisterScreen(onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(horizontal = regularPadding),
+            .padding(horizontal = regularPadding)
+            .padding(top = halfPadding),
         horizontalAlignment = CenterHorizontally
     ) {
-        Spacer(Modifier.height(halfPadding))
-
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,

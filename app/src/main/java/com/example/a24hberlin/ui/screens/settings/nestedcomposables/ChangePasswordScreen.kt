@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -37,8 +37,8 @@ fun ChangePasswordScreen(settingsVM: SettingsViewModel = viewModel()) {
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val passwordErrorResId by settingsVM.passwordErrorResId.collectAsStateWithLifecycle()
 
-    var confirmPassword by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var confirmPassword by rememberSaveable { mutableStateOf("") }
+    var password by rememberSaveable { mutableStateOf("") }
 
     Box(Modifier.fillMaxSize()) {
         Image(

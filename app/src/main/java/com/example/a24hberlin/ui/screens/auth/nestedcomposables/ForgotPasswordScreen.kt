@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -41,17 +41,16 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
-    var email by remember { mutableStateOf("") }
+    var email by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(horizontal = regularPadding),
+            .padding(horizontal = regularPadding)
+            .padding(top = halfPadding),
         horizontalAlignment = CenterHorizontally
     ) {
-        Spacer(Modifier.height(halfPadding))
-
         Text(
             text = stringResource(R.string.twenty_four_hours_kulturprogramm),
             maxLines = 2,

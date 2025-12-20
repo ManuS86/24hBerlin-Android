@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.example.a24hberlin.ui.screens.auth.nestedcomposables.LoginScreen
@@ -15,7 +15,7 @@ import com.example.a24hberlin.ui.screens.auth.nestedcomposables.RegisterScreen
 
 @Composable
 fun AuthScreen(innerPadding: PaddingValues) {
-    var showRegister by remember { mutableStateOf(false) }
+    var showRegister by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
