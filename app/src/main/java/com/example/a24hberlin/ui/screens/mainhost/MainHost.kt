@@ -28,6 +28,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -99,10 +100,10 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
     val showSearchBarState = remember { mutableStateOf(false) }
     val searchTextState = remember { mutableStateOf(TextFieldValue("")) }
 
-    var selectedEventType by remember { mutableStateOf<EventType?>(null) }
-    var selectedMonth by remember { mutableStateOf<Month?>(null) }
-    var selectedSound by remember { mutableStateOf<String?>(null) }
-    var selectedVenue by remember { mutableStateOf<String?>(null) }
+    var selectedEventType by rememberSaveable { mutableStateOf<EventType?>(null) }
+    var selectedMonth by rememberSaveable { mutableStateOf<Month?>(null) }
+    var selectedSound by rememberSaveable { mutableStateOf<String?>(null) }
+    var selectedVenue by rememberSaveable { mutableStateOf<String?>(null) }
 
     val showSearchBar by showSearchBarState
     val searchText by searchTextState

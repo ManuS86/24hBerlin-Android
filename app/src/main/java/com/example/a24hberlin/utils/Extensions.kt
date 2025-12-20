@@ -13,10 +13,15 @@ import com.example.a24hberlin.ui.theme.Concert
 import com.example.a24hberlin.ui.theme.Party
 
 fun Event.getEventColor(): Color {
+    val eventTypes = this.eventType?.values ?: emptySet()
+
+    fun String.isMatch(category: String) =
+        this.replace("&amp;", "&").equals(category, ignoreCase = true)
+
     return when {
-        this.eventType?.values?.contains("Konzert") == true -> Concert
-        this.eventType?.values?.contains("Party") == true -> Party
-        this.eventType?.values?.contains("Kunst & Kultur") == true -> ArtAndCulture
+        eventTypes.any { it.isMatch("Konzert") } -> Concert
+        eventTypes.any { it.isMatch("Party") } -> Party
+        eventTypes.any { it.isMatch("Kunst & Kultur") } -> ArtAndCulture
         else -> Party
     }
 }

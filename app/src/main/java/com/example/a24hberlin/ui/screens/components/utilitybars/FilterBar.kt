@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -80,14 +81,14 @@ fun FilterBar(
     val uniqueSounds by eventVM.uniqueSounds.collectAsStateWithLifecycle()
 
     // --- State & Calculations ---
-    val monthOptions = remember(now()) {
+    val monthOptions = rememberSaveable(now()) {
         listOf<Month?>(null) + Month.dynamicOrder
     }
-    val eventTypeLabels = remember {
+    val eventTypeLabels = rememberSaveable {
         EventType.entries.map { it.label }
     }
 
-    var showFilters by remember { mutableStateOf(false) }
+    var showFilters by rememberSaveable { mutableStateOf(false) }
     val horizontalScrollState = rememberScrollState()
     val horizontalScrollState2 = rememberScrollState()
 
@@ -116,7 +117,11 @@ fun FilterBar(
                     Button(
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
-                            onMonthSelected(month)
+                            if (isSelected) {
+                                onMonthSelected(null)
+                            } else {
+                                onMonthSelected(month)
+                            }
                         },
                         modifier = Modifier.height(32.dp),
                         shape = RoundedCornerShape(slightRounding),
