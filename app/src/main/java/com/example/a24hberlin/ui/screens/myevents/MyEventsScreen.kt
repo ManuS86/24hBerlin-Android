@@ -11,9 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
@@ -23,34 +21,25 @@ import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
-import com.example.a24hberlin.utils.filteredEvents
 
 @Composable
 fun MyEventsScreen(
-    searchText: TextFieldValue,
     connectivityVM: ConnectivityViewModel = viewModel(),
     eventVM: EventViewModel = viewModel()
 ) {
-    val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
+    val bookmarks by eventVM.filteredBookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
 
-    val filteredEvents = remember(bookmarks, searchText.text) {
-        filteredEvents(
-            events = bookmarks,
-            searchText = searchText
-        )
-    }
-
-    LaunchedEffect(searchText.text) {
-        if (filteredEvents.isNotEmpty()) {
-            listState.scrollToItem(0)
+    LaunchedEffect(bookmarks) {
+        if (bookmarks.isNotEmpty()) {
+            listState.animateScrollToItem(0)
         }
     }
 
     Column(Modifier.fillMaxSize()) {
-        if (filteredEvents.isEmpty()) {
+        if (bookmarks.isEmpty()) {
             if (isNetworkAvailable) {
                 NoEventsFoundState()
             } else {
@@ -65,7 +54,7 @@ fun MyEventsScreen(
                 contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
             ) {
                 items(
-                    items = filteredEvents,
+                    items = bookmarks,
                     key = { bookmark -> bookmark.id }
                 ) { bookmark ->
                     EventItem(bookmark)

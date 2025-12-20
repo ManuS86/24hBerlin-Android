@@ -7,12 +7,9 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.a24hberlin.data.enums.EventType
-import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.ui.screens.clubmap.ClubMapScreen
 import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.myevents.MyEventsScreen
@@ -22,11 +19,6 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.ReAuthWrappe
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    searchText: TextFieldValue,
-    selectedEventType: EventType?,
-    selectedMonth: Month?,
-    selectedSound: String?,
-    selectedVenue: String?,
     bottomBarState: MutableState<Boolean>
 ) {
     NavHost(
@@ -40,7 +32,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            EventsScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
+            EventsScreen()
         }
         composable(
             Screen.ClubMap.route,
@@ -49,7 +41,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            ClubMapScreen(searchText, selectedEventType, selectedMonth, selectedSound, selectedVenue)
+            ClubMapScreen()
         }
         composable(
             route = Screen.MyEvents.route,
@@ -58,7 +50,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            MyEventsScreen(searchText = searchText)
+            MyEventsScreen()
         }
         composable(
             route = Screen.Settings.route,

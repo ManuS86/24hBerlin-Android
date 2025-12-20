@@ -62,17 +62,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate.now
 
 @Composable
-fun FilterBar(
-    selectedEventType: EventType?,
-    onEventTypeSelected: (EventType?) -> Unit,
-    selectedMonth: Month?,
-    onMonthSelected: (Month?) -> Unit,
-    selectedSound: String?,
-    onSoundSelected: (String?) -> Unit,
-    selectedVenue: String?,
-    onVenueSelected: (String?) -> Unit,
-    eventVM: EventViewModel = viewModel()
-) {
+fun FilterBar(eventVM: EventViewModel = viewModel()) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
@@ -87,6 +77,11 @@ fun FilterBar(
     val eventTypeLabels = rememberSaveable {
         EventType.entries.map { it.label }
     }
+
+    val selectedEventType by eventVM.selectedEventType.collectAsStateWithLifecycle()
+    val selectedMonth by eventVM.selectedMonth.collectAsStateWithLifecycle()
+    val selectedSound by eventVM.selectedSound.collectAsStateWithLifecycle()
+    val selectedVenue by eventVM.selectedVenue.collectAsStateWithLifecycle()
 
     var showFilters by rememberSaveable { mutableStateOf(false) }
     val horizontalScrollState = rememberScrollState()
@@ -117,11 +112,7 @@ fun FilterBar(
                     Button(
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
-                            if (isSelected) {
-                                onMonthSelected(null)
-                            } else {
-                                onMonthSelected(month)
-                            }
+                            eventVM.updateMonth(if (isSelected) null else month)
                         },
                         modifier = Modifier.height(32.dp),
                         shape = RoundedCornerShape(slightRounding),
@@ -158,90 +149,85 @@ fun FilterBar(
         }
 
         // --- Row 2: Secondary Filters (Dropdowns) ---
-        if (showFilters) {
-            AnimatedVisibility(
-                visible = showFilters,
-                enter = expandVertically() + fadeIn(),
-                exit = shrinkVertically() + fadeOut()
+        AnimatedVisibility(
+            visible = showFilters,
+            enter = expandVertically() + fadeIn(),
+            exit = shrinkVertically() + fadeOut()
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(end = regularPadding),
+                verticalAlignment = CenterVertically
             ) {
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(end = regularPadding),
-                    verticalAlignment = CenterVertically
+                        .horizontalScroll(horizontalScrollState2)
+                        .padding(start = regularPadding)
+                        .weight(1f),
+                    horizontalArrangement = spacedBy(halfPadding),
                 ) {
-                    Row(
+                    FilterDropdown(
+                        label = stringResource(R.string.type),
+                        selectedValue = selectedEventType,
+                        onValueSelected = { eventVM.updateEventType(it) },
+                        options = eventTypeLabels,
+                        stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
+                        itemToLabel = { it?.label }
+                    )
+
+                    FilterDropdown(
+                        label = stringResource(R.string.sound),
+                        selectedValue = selectedSound,
+                        onValueSelected = { eventVM.updateSound(it) },
+                        options = uniqueSounds,
+                        stringToItem = { it },
+                        itemToLabel = { it }
+                    )
+
+                    FilterDropdown(
+                        label = stringResource(R.string.venue_),
+                        selectedValue = selectedVenue,
+                        onValueSelected = { eventVM.updateVenue(it) },
+                        options = uniqueLocations,
+                        stringToItem = { it },
+                        itemToLabel = { it }
+                    )
+                }
+
+                // Clear Filters Button
+                val hasActiveFilters = listOf(
+                    selectedMonth,
+                    selectedEventType,
+                    selectedSound,
+                    selectedVenue
+                ).any { it != null }
+
+                if (hasActiveFilters) {
+                    Icon(
+                        imageVector = Icons.Rounded.Clear,
+                        contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
-                            .horizontalScroll(horizontalScrollState2)
-                            .padding(start = regularPadding)
-                            .weight(1f),
-                        horizontalArrangement = spacedBy(halfPadding),
-                    ) {
-                        FilterDropdown(
-                            label = stringResource(R.string.type),
-                            selectedValue = selectedEventType,
-                            onValueSelected = onEventTypeSelected,
-                            options = eventTypeLabels,
-                            stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
-                            itemToLabel = { it?.label }
-                        )
+                            .padding(start = halfPadding)
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(bounded = false, radius = rippleRadius),
+                                role = Role.Button,
+                                onClick = {
+                                    haptic.performHapticFeedback(TextHandleMove)
 
-                        FilterDropdown(
-                            label = stringResource(R.string.sound),
-                            selectedValue = selectedSound,
-                            onValueSelected = onSoundSelected,
-                            options = uniqueSounds,
-                            stringToItem = { it },
-                            itemToLabel = { it }
-                        )
+                                    // Reset all Data States
+                                    eventVM.clearAllFilters()
 
-                        FilterDropdown(
-                            label = stringResource(R.string.venue_),
-                            selectedValue = selectedVenue,
-                            onValueSelected = onVenueSelected,
-                            options = uniqueLocations,
-                            stringToItem = { it },
-                            itemToLabel = { it }
-                        )
-                    }
-
-                    // Clear Filters Button
-                    val hasActiveFilters = listOf(
-                        selectedMonth,
-                        selectedEventType,
-                        selectedSound,
-                        selectedVenue
-                    ).any { it != null }
-
-                    if (hasActiveFilters) {
-                        Icon(
-                            imageVector = Icons.Rounded.Clear,
-                            contentDescription = stringResource(R.string.clear_filters),
-                            modifier = Modifier
-                                .padding(start = halfPadding)
-                                .clickable(
-                                    interactionSource = remember { MutableInteractionSource() },
-                                    indication = ripple(bounded = false, radius = rippleRadius),
-                                    role = Role.Button,
-                                    onClick = {
-                                        haptic.performHapticFeedback(TextHandleMove)
-
-                                        // Reset all Data States
-                                        onMonthSelected(null)
-                                        onEventTypeSelected(null)
-                                        onSoundSelected(null)
-                                        onVenueSelected(null)
-
-                                        // Reset UI Scroll States
-                                        scope.launch {
-                                            horizontalScrollState.animateScrollTo(0)
-                                            horizontalScrollState2.animateScrollTo(0)
-                                        }
+                                    // Reset UI Scroll States
+                                    scope.launch {
+                                        horizontalScrollState.animateScrollTo(0)
+                                        horizontalScrollState2.animateScrollTo(0)
                                     }
-                                ),
-                            tint = White
-                        )
-                    }
+                                }
+                            ),
+                        tint = White
+                    )
                 }
             }
         }

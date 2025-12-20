@@ -29,7 +29,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -38,15 +37,12 @@ import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.a24hberlin.R
-import com.example.a24hberlin.data.enums.EventType
-import com.example.a24hberlin.data.enums.Month
 import com.example.a24hberlin.navigation.NavGraph
 import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
@@ -59,22 +55,32 @@ import com.example.a24hberlin.ui.theme.mediumPadding
 import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.viewmodel.ConnectionEvent
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
+fun MainHost(
+    connectivityVM: ConnectivityViewModel = viewModel(),
+    eventVM: EventViewModel = viewModel()
+) {
     val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    // --- Connectivity Logic ---
     val isOnline by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
     val noInternetMsg = stringResource(R.string.no_internet_connection)
     val backOnlineMsg = stringResource(R.string.back_online)
 
+    // --- Navigation & UI State ---
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val bottomBarState = remember { mutableStateOf(true) }
+    val showSearchBarState = rememberSaveable { mutableStateOf(false) }
+    val showSearchBar by showSearchBarState
 
+    // --- AppBar Title Logic ---
     val appBarTitleResId = remember(currentRoute, navBackStackEntry) {
         if (currentRoute?.startsWith(Screen.ReAuthWrapper.route) == true) {
             val from = navBackStackEntry?.arguments?.getString("from")
@@ -93,21 +99,9 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
             } ?: R.string.events
         }
     }
-
     val currentAppBarTitle = stringResource(id = appBarTitleResId)
 
-    val bottomBarState = remember { mutableStateOf(true) }
-    val showSearchBarState = remember { mutableStateOf(false) }
-    val searchTextState = remember { mutableStateOf(TextFieldValue("")) }
-
-    var selectedEventType by rememberSaveable { mutableStateOf<EventType?>(null) }
-    var selectedMonth by rememberSaveable { mutableStateOf<Month?>(null) }
-    var selectedSound by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedVenue by rememberSaveable { mutableStateOf<String?>(null) }
-
-    val showSearchBar by showSearchBarState
-    val searchText by searchTextState
-
+    // --- Effects ---
     LaunchedEffect(isOnline) {
         if (isOnline) {
             snackbarHostState.currentSnackbarData?.let { data ->
@@ -156,15 +150,14 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
                     title = currentAppBarTitle,
                     currentRoute = currentRoute,
                     showSearchBar = showSearchBar,
-                    searchText = searchText,
                     onSearchIconClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = !showSearchBarState.value
                     },
-                    onSearchTextChanged = { searchTextState.value = it },
                     onSearchClosed = {
                         haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = false
+                        eventVM.updateSearchText("")
                     },
                     navController = navController
                 )
@@ -175,16 +168,7 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
                 )
 
                 if (showFilterBar) {
-                    FilterBar(
-                        selectedEventType,
-                        { selectedEventType = it },
-                        selectedMonth,
-                        { selectedMonth = it },
-                        selectedSound,
-                        { selectedSound = it },
-                        selectedVenue,
-                        { selectedVenue = it }
-                    )
+                    FilterBar()
                 }
             }
         },
@@ -194,7 +178,7 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
                     navController,
                     onTabSelected = {
                         showSearchBarState.value = false
-                        searchTextState.value = TextFieldValue("")
+                        eventVM.updateSearchText("")
                     }
                 )
             }
@@ -246,13 +230,8 @@ fun MainHost(connectivityVM: ConnectivityViewModel = viewModel()) {
             )
 
             NavGraph(
-                navController,
-                searchText,
-                selectedEventType,
-                selectedMonth,
-                selectedSound,
-                selectedVenue,
-                bottomBarState
+                navController = navController,
+                bottomBarState = bottomBarState
             )
         }
     }

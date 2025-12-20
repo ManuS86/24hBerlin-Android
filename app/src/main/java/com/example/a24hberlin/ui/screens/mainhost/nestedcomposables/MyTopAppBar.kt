@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -31,10 +31,13 @@ import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,13 +45,14 @@ fun MyTopAppBar(
     title: String,
     currentRoute: String?,
     showSearchBar: Boolean,
-    searchText: TextFieldValue,
     onSearchIconClick: () -> Unit,
-    onSearchTextChanged: (TextFieldValue) -> Unit,
     onSearchClosed: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
+    eventVM: EventViewModel = viewModel()
 ) {
     val haptic = LocalHapticFeedback.current
+
+    val searchText by eventVM.searchText.collectAsStateWithLifecycle()
 
     val backButtonRoutes = remember {
         setOf(Screen.ReAuthWrapper.route)
@@ -120,8 +124,8 @@ fun MyTopAppBar(
                     }
                 } else {
                     SearchBar(
-                        searchText = searchText,
-                        onSearchTextChanged = onSearchTextChanged,
+                        searchText = TextFieldValue(searchText),
+                        onSearchTextChanged = { eventVM.updateSearchText(it.text) },
                         onSearchClosed = onSearchClosed
                     )
                 }

@@ -7,11 +7,11 @@ import com.example.a24hberlin.data.model.Event
 
 fun filteredEvents(
     events: List<Event>,
+    searchText: TextFieldValue,
     selectedMonth: Month? = null,
     selectedEventType: EventType? = null,
     selectedSound: String? = null,
-    selectedVenue: String? = null,
-    searchText: TextFieldValue
+    selectedVenue: String? = null
 ): List<Event> {
     val now = java.time.LocalDate.now()
     val currentYear = now.year
