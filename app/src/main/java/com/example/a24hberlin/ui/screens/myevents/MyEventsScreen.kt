@@ -13,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoundState
 import com.example.a24hberlin.ui.screens.components.utilityelements.OfflineState
@@ -24,8 +23,8 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
 fun MyEventsScreen(
-    connectivityVM: ConnectivityViewModel = viewModel(),
-    eventVM: EventViewModel = viewModel()
+    connectivityVM: ConnectivityViewModel,
+    eventVM: EventViewModel
 ) {
     val bookmarks by eventVM.filteredBookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()

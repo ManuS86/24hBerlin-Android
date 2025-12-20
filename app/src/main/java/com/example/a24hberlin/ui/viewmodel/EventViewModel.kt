@@ -54,9 +54,8 @@ class EventViewModel(
     // --- REPOSITORIES & MANAGERS ---
     private val permissionManager = AndroidPermissionManager(application)
     private val reminderScheduler = AndroidReminderScheduler(application.applicationContext)
-    private val db = FirebaseFirestore.getInstance()
     private val eventRepo = EventRepositoryImpl(EventApi)
-    private val userRepo = UserRepositoryImpl(db)
+    private val userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance())
 
     // --- DATA STATES ---
     private var userListener: ListenerRegistration? = null
@@ -70,12 +69,19 @@ class EventViewModel(
         .stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
     // --- FILTER & SEARCH STATES ---
-    val searchText = savedStateHandle.getStateFlow(KEY_SEARCH_TEXT, "")
     val selectedEventType = savedStateHandle.getStateFlow<EventType?>(KEY_EVENT_TYPE, null)
     val selectedMonth = savedStateHandle.getStateFlow<Month?>(KEY_MONTH, null)
     val selectedSound = savedStateHandle.getStateFlow<String?>(KEY_SOUND, null)
     val selectedVenue = savedStateHandle.getStateFlow<String?>(KEY_VENUE, null)
 
+    private val _searchTextFieldValue = MutableStateFlow(
+        TextFieldValue(savedStateHandle.get<String>(KEY_SEARCH_TEXT) ?: "")
+    )
+    val searchTextFieldValue: StateFlow<TextFieldValue> = _searchTextFieldValue.asStateFlow()
+
+    val hasNotificationPermission: StateFlow<Boolean> = permissionManager.hasNotificationPermission
+
+    // --- COMPUTED FLOWS ---
     private val filterCriteria = combine(
         selectedMonth,
         selectedEventType,
@@ -83,17 +89,16 @@ class EventViewModel(
         selectedVenue
     ) { month, type, sound, venue ->
         EventFilters(month, type, sound, venue)
-    }
+    }.stateIn(viewModelScope, WhileSubscribed(5000), EventFilters())
 
-    // --- COMPUTED FLOWS ---
     val filteredEvents: StateFlow<List<Event>> = combine(
         events,
-        searchText,
+        searchTextFieldValue,
         filterCriteria
-    ) { eventsList, query, filters ->
+    ) { eventsList, textValue, filters ->
         filteredEvents(
             events = eventsList,
-            searchText = TextFieldValue(query),
+            searchText = textValue,
             selectedMonth = filters.month,
             selectedEventType = filters.type,
             selectedSound = filters.sound,
@@ -102,39 +107,37 @@ class EventViewModel(
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
     val bookmarks: StateFlow<List<Event>> = combine(currentAppUser, events) { user, eventsList ->
-        user?.let {
-            eventsList.filter { event ->
-                it.bookmarkIDs.contains(event.id)
-            }
-        } ?: emptyList()
+        val bookmarkIds = user?.bookmarkIDs?.toSet() ?: emptySet()
+        if (bookmarkIds.isEmpty()) emptyList()
+        else eventsList.filter { it.id in bookmarkIds }
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
-    val filteredBookmarks: StateFlow<List<Event>> = combine(
-        filteredEvents,
-        bookmarks
-    ) { filtered, bookmarked ->
-        val bookmarkedIds = bookmarked.map { it.id }.toSet()
-        filtered.filter { it.id in bookmarkedIds }
+    val filteredBookmarks = combine(
+        bookmarks,
+        searchTextFieldValue
+    ) { bookmarkedList, textValue ->
+        filteredEvents(
+            events = bookmarkedList,
+            searchText = textValue,
+            selectedMonth = null,
+            selectedEventType = null,
+            selectedSound = null,
+            selectedVenue = null
+        )
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
+    // --- DATA HELPERS ---
     val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
-        eventsList.mapNotNull { it.locationName }
-            .map { name ->
-                name.trim().replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-            }
+        eventsList.mapNotNull { it.locationName?.trim()?.replaceFirstChar { char ->
+            if (char.isLowerCase()) char.titlecase() else char.toString()
+        }}
             .distinct()
             .sorted()
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
-    val uniqueSounds: StateFlow<List<String>> = events.map { eventsList ->
-        eventsList.flatMap { event ->
-            event.sounds?.values?.toList() ?: emptyList()
-        }
-            .distinct()
-            .sorted()
+    val uniqueSounds = events.map { list ->
+        list.flatMap { it.sounds?.values ?: emptyList() }.distinct().sorted()
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
-
-    val hasNotificationPermission: StateFlow<Boolean> = permissionManager.hasNotificationPermission
 
     // --- INIT & LIFECYCLE ---
     init {
@@ -151,8 +154,9 @@ class EventViewModel(
         savedStateHandle[KEY_EVENT_TYPE] = if (selectedEventType.value == type) null else type
     }
 
-    fun updateSearchText(newText: String) {
-        savedStateHandle[KEY_SEARCH_TEXT] = newText
+    fun updateSearchText(newValue: TextFieldValue) {
+        _searchTextFieldValue.value = newValue
+        savedStateHandle[KEY_SEARCH_TEXT] = newValue.text
     }
 
     fun updateMonth(month: Month?) {
@@ -168,6 +172,8 @@ class EventViewModel(
     }
 
     fun clearAllFilters() {
+        val empty = TextFieldValue("")
+        _searchTextFieldValue.value = empty
         savedStateHandle[KEY_SEARCH_TEXT] = ""
         savedStateHandle[KEY_EVENT_TYPE] = null
         savedStateHandle[KEY_MONTH] = null
@@ -194,10 +200,8 @@ class EventViewModel(
             try {
                 userRepo.updateUserInformation(bookmarkId, null)
 
-                currentAppUser.value?.settings?.let { settings ->
-                    if (settings.pushNotificationsEnabled) {
-                        addBookmarkPushNotifications(event)
-                    }
+                if (currentAppUser.value?.settings?.pushNotificationsEnabled == true) {
+                    addBookmarkPushNotifications(event)
                 }
             } catch (ex: Exception) {
                 Log.e(TAG, "Error adding bookmark ID: $bookmarkId.", ex)
@@ -212,10 +216,8 @@ class EventViewModel(
             try {
                 userRepo.removeBookmarkId(bookmarkId)
 
-                currentAppUser.value?.settings?.let { settings ->
-                    if (settings.pushNotificationsEnabled) {
-                        reminderScheduler.cancelEventReminders(event)
-                    }
+                if (currentAppUser.value?.settings?.pushNotificationsEnabled == true) {
+                    reminderScheduler.cancelEventReminders(event)
                 }
             } catch (ex: Exception) {
                 Log.e(TAG, "Error removing bookmark ID: $bookmarkId.", ex)

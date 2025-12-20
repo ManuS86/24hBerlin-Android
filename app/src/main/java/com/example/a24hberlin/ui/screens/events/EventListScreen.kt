@@ -13,7 +13,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoundState
 import com.example.a24hberlin.ui.screens.components.utilityelements.OfflineState
@@ -24,14 +23,14 @@ import com.example.a24hberlin.ui.theme.regularPadding
 
 @Composable
 fun EventsScreen(
-    connectivityVM: ConnectivityViewModel = viewModel(),
-    eventVM: EventViewModel = viewModel()
+    connectivityVM: ConnectivityViewModel,
+    eventVM: EventViewModel
 ) {
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isNetworkAvailable.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
 
-    LaunchedEffect(events) {
+    LaunchedEffect(events.size) {
         if (events.isNotEmpty()) {
             listState.scrollToItem(0)
         }

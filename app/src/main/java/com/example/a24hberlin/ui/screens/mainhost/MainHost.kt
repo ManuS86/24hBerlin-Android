@@ -37,6 +37,7 @@ import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -46,6 +47,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.NavGraph
 import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.utilitybars.FilterBar
+import com.example.a24hberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
 import com.example.a24hberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
 import com.example.a24hberlin.ui.theme.Offline
@@ -56,13 +58,15 @@ import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.viewmodel.ConnectionEvent
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.utils.SetSystemBarColorsToLight
 import kotlinx.coroutines.launch
 
 @Composable
 fun MainHost(
     connectivityVM: ConnectivityViewModel = viewModel(),
-    eventVM: EventViewModel = viewModel()
+    eventVM: EventViewModel = viewModel(),
+    settingsVM: SettingsViewModel = viewModel()
 ) {
     val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
@@ -143,6 +147,8 @@ fun MainHost(
         onDispose {}
     }
 
+    ScheduleReminderEffect(eventVM)
+
     Scaffold(
         topBar = {
             Column {
@@ -157,9 +163,10 @@ fun MainHost(
                     onSearchClosed = {
                         haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = false
-                        eventVM.updateSearchText("")
+                        eventVM.updateSearchText(TextFieldValue(""))
                     },
-                    navController = navController
+                    navController = navController,
+                    eventVM = eventVM
                 )
 
                 val showFilterBar = currentRoute in listOf(
@@ -168,7 +175,7 @@ fun MainHost(
                 )
 
                 if (showFilterBar) {
-                    FilterBar()
+                    FilterBar(eventVM)
                 }
             }
         },
@@ -178,7 +185,7 @@ fun MainHost(
                     navController,
                     onTabSelected = {
                         showSearchBarState.value = false
-                        eventVM.updateSearchText("")
+                        eventVM.updateSearchText(TextFieldValue(""))
                     }
                 )
             }
@@ -231,7 +238,10 @@ fun MainHost(
 
             NavGraph(
                 navController = navController,
-                bottomBarState = bottomBarState
+                bottomBarState = bottomBarState,
+                connectivityVM = connectivityVM,
+                eventVM = eventVM,
+                settingsVM = settingsVM
             )
         }
     }

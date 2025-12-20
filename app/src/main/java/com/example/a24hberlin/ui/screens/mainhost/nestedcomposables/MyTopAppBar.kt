@@ -28,11 +28,9 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.Screen
@@ -48,11 +46,11 @@ fun MyTopAppBar(
     onSearchIconClick: () -> Unit,
     onSearchClosed: () -> Unit,
     navController: NavHostController,
-    eventVM: EventViewModel = viewModel()
+    eventVM: EventViewModel
 ) {
     val haptic = LocalHapticFeedback.current
 
-    val searchText by eventVM.searchText.collectAsStateWithLifecycle()
+    val searchTextValue by eventVM.searchTextFieldValue.collectAsStateWithLifecycle()
 
     val backButtonRoutes = remember {
         setOf(Screen.ReAuthWrapper.route)
@@ -124,8 +122,8 @@ fun MyTopAppBar(
                     }
                 } else {
                     SearchBar(
-                        searchText = TextFieldValue(searchText),
-                        onSearchTextChanged = { eventVM.updateSearchText(it.text) },
+                        searchText = searchTextValue,
+                        onSearchTextChanged = { eventVM.updateSearchText(it) },
                         onSearchClosed = onSearchClosed
                     )
                 }

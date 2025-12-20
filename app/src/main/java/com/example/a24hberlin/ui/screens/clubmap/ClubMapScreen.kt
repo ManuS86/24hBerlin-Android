@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
@@ -36,7 +35,7 @@ import com.google.maps.android.compose.rememberMarkerState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ClubMapScreen(eventVM: EventViewModel = viewModel()) {
+fun ClubMapScreen(eventVM: EventViewModel) {
     val haptic = LocalHapticFeedback.current
     val sheetState = rememberModalBottomSheetState()
 

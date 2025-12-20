@@ -32,7 +32,6 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.managers.LanguageChangeHelper
@@ -53,8 +52,8 @@ import com.example.a24hberlin.ui.screens.settings.nestedcomposables.elements.Set
 fun SettingsScreen(
     navController: NavHostController,
     bottomBarState: MutableState<Boolean>,
-    eventVM: EventViewModel = viewModel(),
-    settingsVM: SettingsViewModel = viewModel()
+    eventVM: EventViewModel,
+    settingsVM: SettingsViewModel
 ) {
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current

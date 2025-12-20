@@ -12,13 +12,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.ui.screens.auth.AuthWrapper
-import com.example.a24hberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
 import com.example.a24hberlin.ui.theme.AppTheme
-import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
-import com.example.a24hberlin.ui.viewmodel.EventViewModel
-import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -28,12 +23,6 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             AppTheme {
-                viewModel<ConnectivityViewModel>()
-                viewModel<EventViewModel>()
-                viewModel<SettingsViewModel>()
-
-                ScheduleReminderEffect()
-
                 Scaffold(
                     modifier = Modifier
                         .fillMaxSize(),

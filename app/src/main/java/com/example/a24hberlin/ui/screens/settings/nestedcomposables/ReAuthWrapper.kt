@@ -22,7 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
@@ -34,7 +33,7 @@ import com.example.a24hberlin.ui.theme.regularPadding
 @Composable
 fun ReAuthWrapper(
     from: String,
-    settingsVM: SettingsViewModel = viewModel()
+    settingsVM: SettingsViewModel
 ) {
     val firebaseError by settingsVM.firebaseError.collectAsStateWithLifecycle()
     val isReauthenticated by settingsVM.isReauthenticated.collectAsStateWithLifecycle()

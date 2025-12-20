@@ -15,11 +15,17 @@ import com.example.a24hberlin.ui.screens.events.EventsScreen
 import com.example.a24hberlin.ui.screens.myevents.MyEventsScreen
 import com.example.a24hberlin.ui.screens.settings.SettingsScreen
 import com.example.a24hberlin.ui.screens.settings.nestedcomposables.ReAuthWrapper
+import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel
+import com.example.a24hberlin.ui.viewmodel.EventViewModel
+import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
+    connectivityVM: ConnectivityViewModel,
+    eventVM: EventViewModel,
+    settingsVM: SettingsViewModel
 ) {
     NavHost(
         navController = navController,
@@ -32,7 +38,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            EventsScreen()
+            EventsScreen(connectivityVM, eventVM)
         }
         composable(
             Screen.ClubMap.route,
@@ -41,7 +47,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            ClubMapScreen()
+            ClubMapScreen(eventVM)
         }
         composable(
             route = Screen.MyEvents.route,
@@ -50,7 +56,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            MyEventsScreen()
+            MyEventsScreen(connectivityVM, eventVM)
         }
         composable(
             route = Screen.Settings.route,
@@ -59,7 +65,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            SettingsScreen(navController, bottomBarState)
+            SettingsScreen(navController, bottomBarState, eventVM, settingsVM)
         }
         composable(
             route = Screen.ReAuthWrapper.route,
@@ -79,7 +85,7 @@ fun NavGraph(
         ) { backStackEntry ->
             val from = backStackEntry.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM) ?: ""
 
-            ReAuthWrapper(from = from)
+            ReAuthWrapper(from, settingsVM)
         }
     }
 }
