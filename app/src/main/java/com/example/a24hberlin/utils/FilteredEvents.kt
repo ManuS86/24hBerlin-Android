@@ -29,8 +29,9 @@ fun filteredEvents(
         } ?: true
 
         val eventTypeMatches = selectedEventType == null ||
-                event.eventType?.values.orEmpty().any {
-                    it.cleanToAnnotatedString().text == selectedEventType.label
+                event.eventType?.values.orEmpty().any { rawValue ->
+                    val cleanedText = rawValue.cleanToAnnotatedString().text
+                    EventType.fromString(cleanedText) == selectedEventType
                 }
 
         val soundMatches = selectedSound == null ||

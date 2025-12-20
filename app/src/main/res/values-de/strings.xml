@@ -8,6 +8,7 @@
     <string name="april">Apr</string>
     <string name="are_you_sure_you_want_to_delete_your_account">Bist du sicher, dass du deinen Account löschen willst?</string>
     <string name="are_you_sure_you_want_to_log_out_q">Bist du sicher, dass du dich ausloggen willst?</string>
+    <string name="art_and_culture">Kunst &amp; Kultur</string>
     <string name="august">Aug</string>
     <string name="back">Zurück</string>
     <string name="back_online">Wieder online</string>
@@ -23,7 +24,7 @@
     <string name="clear_filters">Filter zurücksetzen</string>
     <string name="clear_search">Suche zurücksetzen</string>
     <string name="club_map">Clubmap</string>
-    <string name="come_back_and_check_out_the_latest_events">Komm zurück und schaue dir die neuesten Events an.</string>
+    <string name="come_back_and_check_out_the_latest_events">Komm zurück und checke die neuesten Events.</string>
     <string name="concert">Konzert</string>
     <string name="confirm">Bestätigen</string>
     <string name="confirm_new_password">Neues Passwort bestätigen</string>
@@ -68,9 +69,6 @@
     <string name="january">Jan</string>
     <string name="july">Jul</string>
     <string name="june">Jun</string>
-    <string name="konzert">Konzert</string>
-    <string name="konzert_party">Konzert, Party</string>
-    <string name="kunst_kultur">Kunst &amp; Kultur</string>
     <string name="language_settings">Spracheinstellungen</string>
     <string name="location">Ort</string>
     <string name="log_in">Einloggen</string>
@@ -81,6 +79,7 @@
     <string name="march">Mär</string>
     <string name="may">Mai</string>
     <string name="mon">MO</string>
+    <string name="music">Musik</string>
     <string name="my_events">Meine Events</string>
     <string name="new_email">Neue E-Mail</string>
     <string name="new_password">Neues Passwort</string>
@@ -91,7 +90,6 @@
     <string name="november">Nov</string>
     <string name="october">Okt</string>
     <string name="party">Party</string>
-    <string name="party_concert">Party, Konzert</string>
     <string name="password">Passwort</string>
     <string name="password_changed_successfully">Passwort wurde erfolgreich geändert.</string>
     <string name="password_must_be_at_least_8_characters_long">Passwort muss aus min. 8 Zeichen bestehen.</string>
@@ -123,8 +121,6 @@
     <string name="share_link">Link teilen</string>
     <string name="show_filters">Filter anzeigen</string>
     <string name="show_password">Passwort verstecken</string>
-    <string name="sound">Klang</string>
-    <string name="sounds">Klänge</string>
     <string name="sun">SO</string>
     <string name="system_default">Wie System</string>
     <string name="terms_of_service">Nutzungsbedingungen</string>
@@ -134,13 +130,10 @@
     <string name="try_logging_in_again">Versuche erneut einzuloggen.</string>
     <string name="tue">DI</string>
     <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Kulturprogramm</string>
-    <string name="type">Eventart</string>
-    <string name="types">Arten</string>
-    <string name="venue">Veranstaltungsort</string>
-    <string name="venue_">Ort</string>
+    <string name="type">Art</string>
+    <string name="venue">Ort</string>
     <string name="verify_password">Password bestätigen</string>
     <string name="we_miss_you">Wir vermissen dich!</string>
     <string name="wed">MI</string>
     <string name="yes">JA</string>
-    <string name="your_position">Deine Position</string>
 </resources>

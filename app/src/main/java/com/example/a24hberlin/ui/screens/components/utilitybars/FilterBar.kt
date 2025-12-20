@@ -73,8 +73,8 @@ fun FilterBar(eventVM: EventViewModel) {
     val monthOptions = rememberSaveable(now()) {
         listOf<Month?>(null) + Month.dynamicOrder
     }
-    val eventTypeLabels = rememberSaveable {
-        EventType.entries.map { it.label }
+    val eventTypeOptions = remember(context) {
+        EventType.entries.map { context.getString(it.labelRes) }
     }
 
     val selectedEventType by eventVM.selectedEventType.collectAsStateWithLifecycle()
@@ -170,13 +170,15 @@ fun FilterBar(eventVM: EventViewModel) {
                         label = stringResource(R.string.type),
                         selectedValue = selectedEventType,
                         onValueSelected = { eventVM.updateEventType(it) },
-                        options = eventTypeLabels,
-                        stringToItem = { str -> EventType.entries.firstOrNull { it.label == str } },
-                        itemToLabel = { it?.label }
+                        options = eventTypeOptions,
+                        stringToItem = { clickedString ->
+                            EventType.entries.find { context.getString(it.labelRes) == clickedString }
+                        },
+                        itemToLabel = { it?.let { context.getString(it.labelRes) } }
                     )
 
                     FilterDropdown(
-                        label = stringResource(R.string.sound),
+                        label = stringResource(R.string.music),
                         selectedValue = selectedSound,
                         onValueSelected = { eventVM.updateSound(it) },
                         options = uniqueSounds,
@@ -185,7 +187,7 @@ fun FilterBar(eventVM: EventViewModel) {
                     )
 
                     FilterDropdown(
-                        label = stringResource(R.string.venue_),
+                        label = stringResource(R.string.venue),
                         selectedValue = selectedVenue,
                         onValueSelected = { eventVM.updateVenue(it) },
                         options = uniqueLocations,

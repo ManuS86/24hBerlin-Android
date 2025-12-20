@@ -8,6 +8,7 @@
     <string name="april">Apr</string>
     <string name="are_you_sure_you_want_to_delete_your_account">Are you sure you want to delete your account?</string>
     <string name="are_you_sure_you_want_to_log_out_q">Are you sure you want to log out?</string>
+    <string name="art_and_culture">Art &amp; Culture</string>
     <string name="august">Aug</string>
     <string name="back">Back</string>
     <string name="back_online">Back online</string>
@@ -68,9 +69,6 @@
     <string name="january">Jan</string>
     <string name="july">Jul</string>
     <string name="june">Jun</string>
-    <string name="konzert">Concert</string>
-    <string name="konzert_party">Concert, Party</string>
-    <string name="kunst_kultur">Art &amp; Culture</string>
     <string name="language_settings">Language Settings</string>
     <string name="location">Location</string>
     <string name="log_in">Log in</string>
@@ -81,6 +79,7 @@
     <string name="march">Mar</string>
     <string name="may">May</string>
     <string name="mon">MO</string>
+    <string name="music">Music</string>
     <string name="my_events">My Events</string>
     <string name="new_email">New Email</string>
     <string name="new_password">New Password</string>
@@ -91,7 +90,6 @@
     <string name="november">Nov</string>
     <string name="october">Oct</string>
     <string name="party">Party</string>
-    <string name="party_concert">Party, Concert</string>
     <string name="password">Password</string>
     <string name="password_changed_successfully">Password changed successfully.</string>
     <string name="password_must_be_at_least_8_characters_long">Password must be at least 8 characters long.</string>
@@ -123,8 +121,6 @@
     <string name="share_link">Share Link</string>
     <string name="show_filters">Show Filters</string>
     <string name="show_password">Show Password</string>
-    <string name="sound">Sound</string>
-    <string name="sounds">Sounds</string>
     <string name="sun">SU</string>
     <string name="system_default">System Default</string>
     <string name="terms_of_service">Terms of Service</string>
@@ -134,13 +130,10 @@
     <string name="try_logging_in_again">Try logging in again.</string>
     <string name="tue">TU</string>
     <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Event Calendar</string>
-    <string name="type">Event Type</string>
-    <string name="types">Types</string>
+    <string name="type">Type</string>
     <string name="venue">Venue</string>
-    <string name="venue_">Venue</string>
     <string name="verify_password">Verify Password</string>
     <string name="we_miss_you">We miss you!</string>
     <string name="wed">WE</string>
     <string name="yes">YES</string>
-    <string name="your_position">Your Position</string>
 </resources>

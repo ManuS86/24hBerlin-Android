@@ -8,6 +8,11 @@ import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+sealed interface ConnectionEvent {
+    data object BackOnline : ConnectionEvent
+    data object LostConnection : ConnectionEvent
+}
+
 class ConnectivityViewModel : ViewModel() {
     val isNetworkAvailable = NetworkMonitor.isConnected
 
@@ -26,19 +31,12 @@ class ConnectivityViewModel : ViewModel() {
 
             NetworkMonitor.isConnected.collect { isConnected ->
                 if (lastState != null && lastState != isConnected) {
-                    if (isConnected) {
-                        _connectionEvent.send(ConnectionEvent.BackOnline)
-                    } else {
-                        _connectionEvent.send(ConnectionEvent.LostConnection)
-                    }
+                    val event =
+                        if (isConnected) ConnectionEvent.BackOnline else ConnectionEvent.LostConnection
+                    _connectionEvent.send(event)
                 }
                 lastState = isConnected
             }
         }
     }
-}
-
-sealed class ConnectionEvent {
-    data object BackOnline : ConnectionEvent()
-    data object LostConnection : ConnectionEvent()
 }
