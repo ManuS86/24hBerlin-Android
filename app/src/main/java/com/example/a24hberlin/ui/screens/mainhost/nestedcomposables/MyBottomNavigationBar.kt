@@ -67,7 +67,7 @@ fun MyBottomNavigationBar(
                     .layout { measurable, constraints ->
                         val placeable = measurable.measure(constraints)
                         layout(placeable.width, placeable.height) {
-                            placeable.placeRelative(0, 16)
+                            placeable.placeRelative(0, 18)
                         }
                     },
                 label = { Text(
