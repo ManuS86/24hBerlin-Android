@@ -17,8 +17,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a24hberlin.data.model.Event
@@ -26,7 +28,11 @@ import com.example.a24hberlin.ui.screens.components.event.item.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.utils.bitmapDescriptorFromVector
+import com.example.a24hberlin.utils.getMarkerResourceId
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.MapsInitializer
+import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -37,21 +43,39 @@ import com.google.maps.android.compose.rememberMarkerState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClubMapScreen(eventVM: EventViewModel) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val sheetState = rememberModalBottomSheetState()
-
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
 
     var selectedEvent: Event? by remember { mutableStateOf(null) }
-    var showEventSheet by remember { mutableStateOf(false) }
+    var iconCache by remember { mutableStateOf(mapOf<Int, BitmapDescriptor>()) }
 
-    val berlinLatLng = LatLng(52.5200, 13.4050)
+    val berlinCenter = LatLng(52.5200, 13.4050)
+
     val cameraPosition = LatLng(52.5100, 13.3400)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(cameraPosition, 9.5f)
     }
 
     var isInitialLoad by remember { mutableStateOf(true) }
+
+    LaunchedEffect(events) {
+        MapsInitializer.initialize(context)
+        val newCache = iconCache.toMutableMap()
+        var cacheUpdated = false
+
+        events.forEach { event ->
+            val resId = event.getMarkerResourceId()
+            if (!newCache.containsKey(resId)) {
+                bitmapDescriptorFromVector(context, resId)?.let {
+                    newCache[resId] = it
+                    cacheUpdated = true
+                }
+            }
+        }
+        if (cacheUpdated) iconCache = newCache
+    }
 
     @Suppress("AssignedValueIsNeverRead")
     LaunchedEffect(events) {
@@ -67,10 +91,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
     }
 
     DisposableEffect(Unit) {
-        onDispose {
-            showEventSheet = false
-            selectedEvent = null
-        }
+        onDispose { selectedEvent = null }
     }
 
     GoogleMap(
@@ -78,8 +99,8 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         cameraPositionState = cameraPositionState
     ) {
         events.reversed().forEachIndexed { index, event ->
-            val baseLat = event.lat ?: berlinLatLng.latitude
-            val baseLng = event.long ?: berlinLatLng.longitude
+            val baseLat = event.lat ?: berlinCenter.latitude
+            val baseLng = event.long ?: berlinCenter.longitude
 
             val finalLatLng = remember(event.id, index, event.name, baseLat, baseLng) {
                 val shift = 0.0001
@@ -94,12 +115,13 @@ fun ClubMapScreen(eventVM: EventViewModel) {
             key("${event.id}_$index") {
                 Marker(
                     state = rememberMarkerState(position = finalLatLng),
+                    anchor = Offset(0.5f, 0.9f),
+                    icon = iconCache[event.getMarkerResourceId()],
                     title = event.name,
                     snippet = if (event.lat == null) "Location approximate" else null,
                     onClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         selectedEvent = event
-                        showEventSheet = true
                         true
                     }
                 )
@@ -107,27 +129,28 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         }
     }
 
-    if (showEventSheet) {
+    selectedEvent?.let { event ->
+        LaunchedEffect(event.id) {
+            sheetState.show()
+        }
+
         @Suppress("AssignedValueIsNeverRead")
         ModalBottomSheet(
-            onDismissRequest = { showEventSheet = false },
+            onDismissRequest = { selectedEvent = null },
             containerColor = White,
             sheetState = sheetState
         ) {
             Column(
                 Modifier
-                    .padding(horizontal = regularPadding)
-                    .padding(bottom = halfPadding)
+                    .padding(horizontal = regularPadding, vertical = halfPadding)
                     .verticalScroll(rememberScrollState())
             ) {
-                selectedEvent?.let {
-                    EventItem(
-                        event = it,
-                        eventVM = eventVM,
-                        isExpandable = false,
-                        isInitiallyExpanded = true
-                    )
-                }
+                EventItem(
+                    event = event,
+                    eventVM = eventVM,
+                    isExpandable = false,
+                    isInitiallyExpanded = true
+                )
             }
         }
     }

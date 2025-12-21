@@ -1,11 +1,13 @@
 package com.example.a24hberlin.utils
 
 import android.text.Spanned
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
+import com.example.a24hberlin.R
 import com.example.a24hberlin.data.enums.Language
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.theme.ArtAndCulture
@@ -23,6 +25,21 @@ fun Event.getEventColor(): Color {
         eventTypes.any { it.isMatch("Party") } -> Party
         eventTypes.any { it.isMatch("Kunst & Kultur") } -> ArtAndCulture
         else -> Party
+    }
+}
+
+@DrawableRes
+fun Event.getMarkerResourceId(): Int {
+    val eventTypes = this.eventType?.values ?: emptySet()
+
+    fun String.isMatch(category: String) =
+        this.replace("&amp;", "&").equals(category, ignoreCase = true)
+
+    return when {
+        eventTypes.any { it.isMatch("Konzert") } -> R.drawable.ic_concert_location
+        eventTypes.any { it.isMatch("Party") } -> R.drawable.ic_party_location
+        eventTypes.any { it.isMatch("Kunst & Kultur") } -> R.drawable.ic_art_and_culture_location
+        else -> R.drawable.ic_party_location
     }
 }
 

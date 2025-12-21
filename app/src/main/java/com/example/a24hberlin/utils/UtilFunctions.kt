@@ -1,6 +1,30 @@
 package com.example.a24hberlin.utils
 
+import android.content.Context
+import android.graphics.Canvas
+import androidx.core.content.ContextCompat
 import com.example.a24hberlin.R
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import androidx.core.graphics.createBitmap
+
+fun bitmapDescriptorFromVector(
+    context: Context,
+    vectorResId: Int
+): BitmapDescriptor? {
+    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+
+    val width = drawable.intrinsicWidth.coerceAtLeast(1)
+    val height = drawable.intrinsicHeight.coerceAtLeast(1)
+
+    drawable.setBounds(0, 0, width, height)
+
+    val bm = createBitmap(width, height)
+    val canvas = Canvas(bm)
+    drawable.draw(canvas)
+
+    return BitmapDescriptorFactory.fromBitmap(bm)
+}
 
 fun checkPassword(password: String, confirmPassword: String): Int? {
     if (password != confirmPassword) {
