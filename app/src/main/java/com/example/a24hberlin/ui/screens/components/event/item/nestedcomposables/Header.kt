@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables
+package com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column

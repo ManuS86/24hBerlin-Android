@@ -22,7 +22,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
+import com.example.a24hberlin.ui.screens.components.event.item.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding

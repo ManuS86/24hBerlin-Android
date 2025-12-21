@@ -22,7 +22,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.utilityelements.AuthMessages
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
+import com.example.a24hberlin.ui.screens.components.utilityelements.AuthTextField
 import com.example.a24hberlin.ui.screens.components.utilityelements.TitleHeader
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.doublePadding
@@ -64,7 +64,7 @@ fun ForgotPasswordScreen(onClick: () -> Unit) {
         )
 
         LargeDarkButton(
-            label = stringResource(R.string.reset_password),
+            label = stringResource(R.string.reset_your_password),
             onClick = { authVM.resetPassword(email) }
         )
 

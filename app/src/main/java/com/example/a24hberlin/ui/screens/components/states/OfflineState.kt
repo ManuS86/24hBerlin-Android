@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.utilityelements
+package com.example.a24hberlin.ui.screens.components.states
 
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Column

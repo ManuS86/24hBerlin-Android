@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
+import com.example.a24hberlin.ui.screens.components.utilityelements.AuthTextField
 import com.example.a24hberlin.ui.viewmodel.SettingsViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
 import com.example.a24hberlin.ui.theme.largePadding
@@ -83,7 +83,7 @@ private fun PasswordReAuthForm(
 
         AuthTextField(
             label = stringResource(R.string.password),
-            placeholder = stringResource(R.string.re_enter_password),
+            placeholder = stringResource(R.string.re_enter_your_password),
             value = password,
             onValueChange = onPasswordChange,
             isPasswordField = true

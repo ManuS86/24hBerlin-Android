@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables
+package com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW

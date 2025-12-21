@@ -13,9 +13,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.a24hberlin.ui.screens.components.eventitem.EventItem
-import com.example.a24hberlin.ui.screens.components.utilityelements.NoEventsFoundState
-import com.example.a24hberlin.ui.screens.components.utilityelements.OfflineState
+import com.example.a24hberlin.ui.screens.components.event.item.EventItem
+import com.example.a24hberlin.ui.screens.components.states.NoEventsFoundState
+import com.example.a24hberlin.ui.screens.components.states.OfflineState
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.viewmodel.ConnectivityViewModel

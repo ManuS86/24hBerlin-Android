@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.eventdetailitem
+package com.example.a24hberlin.ui.screens.components.event.detailitem
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement.spacedBy
@@ -16,14 +16,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DetailCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.DirectionsCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.EntranceFeeCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.ImageCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LearnMoreLinkCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.LocationCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.MapCard
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables.TimeCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.DetailCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.DirectionsCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.EntranceFeeCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.ImageCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.LearnMoreLinkCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.LocationCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.MapCard
+import com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables.TimeCard
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.managers.ExternalMapNavigator
 import com.example.a24hberlin.ui.theme.halfPadding

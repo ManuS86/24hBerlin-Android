@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.eventitem
+package com.example.a24hberlin.ui.screens.components.event.item
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -26,12 +26,12 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.screens.components.buttons.BookmarkButton
-import com.example.a24hberlin.ui.screens.components.eventdetailitem.EventDetailItem
-import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Categories
-import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Header
-import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.ImageAndDate
-import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Location
-import com.example.a24hberlin.ui.screens.components.eventitem.nestedcomposables.Time
+import com.example.a24hberlin.ui.screens.components.event.detailitem.EventDetailItem
+import com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables.Categories
+import com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables.Header
+import com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables.ImageAndDate
+import com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables.Location
+import com.example.a24hberlin.ui.screens.components.event.item.nestedcomposables.Time
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.ui.theme.halfPadding

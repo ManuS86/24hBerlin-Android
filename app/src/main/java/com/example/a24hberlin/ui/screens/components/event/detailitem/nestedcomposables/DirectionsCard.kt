@@ -1,4 +1,4 @@
-package com.example.a24hberlin.ui.screens.components.eventdetailitem.nestedcomposables
+package com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border

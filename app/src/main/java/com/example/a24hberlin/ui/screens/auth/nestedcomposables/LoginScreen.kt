@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
+import com.example.a24hberlin.ui.screens.components.utilityelements.AuthTextField
 import com.example.a24hberlin.ui.screens.components.utilityelements.TitleHeader
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
