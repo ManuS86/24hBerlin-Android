@@ -20,15 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.Black
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.AuthTextButton
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
-import com.example.a24hberlin.ui.screens.components.images.AppLogo
 import com.example.a24hberlin.ui.screens.components.textfields.AuthTextField
+import com.example.a24hberlin.ui.screens.components.utilityelements.TitleHeader
 import com.example.a24hberlin.ui.viewmodel.AuthViewModel
 import com.example.a24hberlin.ui.theme.errorPadding
 import com.example.a24hberlin.ui.theme.doublePadding
@@ -57,19 +56,7 @@ fun LoginScreen(onClick: () -> Unit) {
                 .padding(top = halfPadding),
             horizontalAlignment = CenterHorizontally
         ) {
-            Text(
-                text = stringResource(R.string.twenty_four_hours_kulturprogramm),
-                maxLines = 2,
-                fontWeight = Black,
-                textAlign = Center,
-                style = typography.headlineLarge
-            )
-
-            Spacer(Modifier.height(regularPadding))
-
-            AppLogo()
-
-            Spacer(Modifier.height(regularPadding))
+            TitleHeader(Modifier.height(regularPadding))
 
             AuthTextField(
                 label = stringResource(R.string.email),
