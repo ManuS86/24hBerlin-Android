@@ -56,7 +56,6 @@ import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
 import com.example.a24hberlin.ui.theme.rippleRadius
 import com.example.a24hberlin.ui.theme.slightRounding
-import com.example.a24hberlin.ui.theme.microPadding
 import kotlinx.coroutines.launch
 import java.time.LocalDate.now
 
@@ -85,9 +84,7 @@ fun FilterBar(eventVM: EventViewModel) {
     val horizontalScrollState2 = rememberScrollState()
 
     Column(
-        modifier = Modifier
-            .background(Black)
-            .padding(top = microPadding)
+        modifier = Modifier.background(Black)
     ) {
         // --- Row 1: Months & Filter Button ---
         Row(
@@ -209,11 +206,7 @@ fun FilterBar(eventVM: EventViewModel) {
                                 role = Role.Button,
                                 onClick = {
                                     haptic.performHapticFeedback(TextHandleMove)
-
-                                    // Reset all Data States
                                     eventVM.clearAllFilters()
-
-                                    // Reset UI Scroll States
                                     scope.launch {
                                         horizontalScrollState.animateScrollTo(0)
                                         horizontalScrollState2.animateScrollTo(0)

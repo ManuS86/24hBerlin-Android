@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -28,13 +27,14 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
-import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.example.a24hberlin.R
 import com.example.a24hberlin.navigation.Screen
 import com.example.a24hberlin.ui.screens.components.utilitybars.SearchBar
+import com.example.a24hberlin.ui.theme.halfPadding
+import com.example.a24hberlin.ui.theme.slightRounding
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,14 +70,14 @@ fun MyTopAppBar(
         title = {
             Row(
                 verticalAlignment = CenterVertically,
-                horizontalArrangement = spacedBy(8.dp)
+                horizontalArrangement = spacedBy(halfPadding)
             ) {
                 Box(
                     modifier = Modifier
                         .size(32.dp)
                         .background(
                             color = White,
-                            shape = RoundedCornerShape(8.dp)
+                            shape = RoundedCornerShape(slightRounding)
                         ),
                     contentAlignment = Center
                 ) {
@@ -89,15 +89,9 @@ fun MyTopAppBar(
                     )
                 }
 
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = Ellipsis,
-                    fontWeight = SemiBold
-                )
+                Text(text = title, fontWeight = SemiBold)
             }
         },
-        modifier = Modifier.heightIn(max = 80.dp),
         navigationIcon = {
             if (showBackButton) {
                 IconButton(onClick = {
