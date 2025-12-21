@@ -16,13 +16,13 @@ sealed class Screen(
     data object Settings : Screen("settings", R.string.app_name)
 
     // --- Nested/Utility Screens ---
-    data object ReAuthWrapper : Screen("reauth_wrapper/{from}", R.string.re_authenticate) {
+    data object ReAuthWrapper : Screen("re_auth_wrapper/{from}", R.string.re_authenticate) {
         const val ARG_FROM = "from"
 
         val navArguments = listOf(
             navArgument(ARG_FROM) { type = NavType.StringType }
         )
 
-        fun createRoute(from: String): String = "reauth_wrapper/$from"
+        fun createRoute(from: String): String = "re_auth_wrapper/$from"
     }
 }

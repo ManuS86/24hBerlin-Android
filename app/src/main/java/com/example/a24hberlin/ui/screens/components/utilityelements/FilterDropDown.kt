@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -40,9 +41,8 @@ fun <T> FilterDropdown(
     label: String,
     selectedValue: T?,
     onValueSelected: (T?) -> Unit,
-    options: List<String>,
-    stringToItem: (String) -> T?,
-    itemToLabel: (T?) -> String?
+    options: List<T>,
+    itemToLabel: @Composable (T) -> String
 ) {
     val haptic = LocalHapticFeedback.current
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -50,13 +50,15 @@ fun <T> FilterDropdown(
     val arrowAlpha = if (selectedValue != null) 1f else 0.8f
     val contentAlpha = if (selectedValue != null) 1f else 0.5f
 
+    val allOptions = remember(options) { listOf<T?>(null) + options }
+
     Column(
         modifier = Modifier
             .padding(top = microPadding)
             .padding(bottom = halfPadding)
     ) {
         OutlinedButton(
-            onClick = { isExpanded = !isExpanded },
+            onClick = { isExpanded = true },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp),
@@ -96,33 +98,18 @@ fun <T> FilterDropdown(
             onDismissRequest = { isExpanded = false },
             containerColor = White
         ) {
-            DropdownMenuItem(
-                text = {
-                    Text(
-                        text = label,
-                        overflow = Ellipsis,
-                        modifier = Modifier.padding(end = halfPadding)
-                    )
-                },
-                onClick = {
-                    haptic.performHapticFeedback(TextHandleMove)
-                    onValueSelected(null)
-                    isExpanded = false
-                }
-            )
-
-            options.forEach { option ->
+            allOptions.forEach { option ->
                 DropdownMenuItem(
                     text = {
                         Text(
-                            text = option,
+                            text = option?.let { itemToLabel(it) } ?: label,
                             overflow = Ellipsis,
                             modifier = Modifier.padding(end = halfPadding)
                         )
                     },
                     onClick = {
                         haptic.performHapticFeedback(TextHandleMove)
-                        onValueSelected(stringToItem(option))
+                        onValueSelected(option)
                         isExpanded = false
                     }
                 )

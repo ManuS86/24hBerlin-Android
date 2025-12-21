@@ -56,7 +56,7 @@ fun MyEventsScreen(
                     items = bookmarks,
                     key = { bookmark -> bookmark.id }
                 ) { bookmark ->
-                    EventItem(bookmark)
+                    EventItem(bookmark, eventVM)
                 }
             }
         }

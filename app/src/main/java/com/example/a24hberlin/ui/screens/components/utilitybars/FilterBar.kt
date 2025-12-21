@@ -73,9 +73,7 @@ fun FilterBar(eventVM: EventViewModel) {
     val monthOptions = rememberSaveable(now()) {
         listOf<Month?>(null) + Month.dynamicOrder
     }
-    val eventTypeOptions = remember(context) {
-        EventType.entries.map { context.getString(it.labelRes) }
-    }
+    val eventTypeOptions = remember(context) { EventType.entries }
 
     val selectedEventType by eventVM.selectedEventType.collectAsStateWithLifecycle()
     val selectedMonth by eventVM.selectedMonth.collectAsStateWithLifecycle()
@@ -171,10 +169,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         selectedValue = selectedEventType,
                         onValueSelected = { eventVM.updateEventType(it) },
                         options = eventTypeOptions,
-                        stringToItem = { clickedString ->
-                            EventType.entries.find { context.getString(it.labelRes) == clickedString }
-                        },
-                        itemToLabel = { it?.let { context.getString(it.labelRes) } }
+                        itemToLabel = { type -> stringResource(type.labelRes) }
                     )
 
                     FilterDropdown(
@@ -182,8 +177,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         selectedValue = selectedSound,
                         onValueSelected = { eventVM.updateSound(it) },
                         options = uniqueSounds,
-                        stringToItem = { it },
-                        itemToLabel = { it }
+                        itemToLabel = { sound -> sound }
                     )
 
                     FilterDropdown(
@@ -191,8 +185,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         selectedValue = selectedVenue,
                         onValueSelected = { eventVM.updateVenue(it) },
                         options = uniqueLocations,
-                        stringToItem = { it },
-                        itemToLabel = { it }
+                        itemToLabel = { venue -> venue }
                     )
                 }
 

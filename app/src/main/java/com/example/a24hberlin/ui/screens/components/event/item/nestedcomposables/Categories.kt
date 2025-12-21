@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import com.example.a24hberlin.R
@@ -23,17 +22,14 @@ fun Categories(
     eventType: Map<String, String>?,
     sounds: Map<String, String>?
 ) {
-    val context = LocalContext.current
     val textColor = White.copy(0.8f)
 
     Column(verticalArrangement = spacedBy(halfPadding)) {
     eventType?.let { type ->
-        val translatedAndCleanedTypes = remember(type) {
-            eventType.values.joinToString(", ") { rawValue ->
+        val typeItems = remember(type) {
+            type.values.map { rawValue ->
                 val cleaned = rawValue.cleanToAnnotatedString().text
-                EventType.fromString(cleaned)?.let {
-                    context.getString(it.labelRes)
-                } ?: cleaned
+                EventType.fromString(cleaned)?.labelRes ?: cleaned
             }
         }
 
@@ -47,7 +43,7 @@ fun Categories(
                 )
 
                 Text(
-                    text = translatedAndCleanedTypes,
+                    text = buildJoinedString(typeItems),
                     style = typography.bodyMedium
                 )
             }
@@ -71,6 +67,28 @@ fun Categories(
                     text = joinedSounds,
                     style = typography.bodyMedium
                 )
+            }
+        }
+    }
+}
+
+/**
+ * A helper function to safely join mixed Res IDs and Strings.
+ * Since this is a Composable, we can call stringResource() here.
+ */
+@Composable
+private fun buildJoinedString(items: List<Any>): String {
+    if (items.isEmpty()) return ""
+
+    return buildString {
+        items.forEachIndexed { index, item ->
+            val resolved = when (item) {
+                is Int -> stringResource(item)
+                else -> item.toString()
+            }
+            append(resolved)
+            if (index < items.lastIndex) {
+                append(", ")
             }
         }
     }

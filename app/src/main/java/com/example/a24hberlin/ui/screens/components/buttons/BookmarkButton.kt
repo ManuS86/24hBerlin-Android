@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.theme.rippleRadius
@@ -27,7 +26,7 @@ import com.example.a24hberlin.ui.viewmodel.EventViewModel
 @Composable
 fun BookmarkButton(
     event: Event,
-    eventVM: EventViewModel = viewModel()
+    eventVM: EventViewModel
 ) {
     val haptic = LocalHapticFeedback.current
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()

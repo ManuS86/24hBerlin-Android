@@ -12,9 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
@@ -26,6 +26,7 @@ import com.example.a24hberlin.ui.screens.components.event.item.EventItem
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -41,16 +42,28 @@ fun ClubMapScreen(eventVM: EventViewModel) {
 
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
 
-    var selectedEvent: Event? by rememberSaveable { mutableStateOf(null) }
-    var showEventSheet by rememberSaveable { mutableStateOf(false) }
+    var selectedEvent: Event? by remember { mutableStateOf(null) }
+    var showEventSheet by remember { mutableStateOf(false) }
 
     val berlinLatLng = LatLng(52.5200, 13.4050)
+    val cameraPosition = LatLng(52.5100, 13.3400)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
+        position = CameraPosition.fromLatLngZoom(cameraPosition, 9.5f)
     }
 
-    LaunchedEffect(Unit) {
-        cameraPositionState.position = CameraPosition.fromLatLngZoom(berlinLatLng, 11f)
+    var isInitialLoad by remember { mutableStateOf(true) }
+
+    @Suppress("AssignedValueIsNeverRead")
+    LaunchedEffect(events) {
+        if (isInitialLoad) {
+            isInitialLoad = false
+            return@LaunchedEffect
+        }
+
+        cameraPositionState.animate(
+            update = CameraUpdateFactory.newLatLngZoom(cameraPosition, 9.5f),
+            durationMs = 800
+        )
     }
 
     DisposableEffect(Unit) {
@@ -64,17 +77,25 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-        events.forEach { event ->
-            val eventLatLng = remember(event.id, event.lat, event.long) {
-                if (event.lat != null && event.long != null) {
-                    LatLng(event.lat, event.long)
-                } else null
+        events.reversed().forEachIndexed { index, event ->
+            val baseLat = event.lat ?: berlinLatLng.latitude
+            val baseLng = event.long ?: berlinLatLng.longitude
+
+            val finalLatLng = remember(event.id, index, event.name, baseLat, baseLng) {
+                val shift = 0.0001
+                val nameHash = event.name.hashCode()
+
+                val latOffset = ((nameHash + index) % 5) * shift
+                val lngOffset = ((nameHash + index) % 5) * shift
+
+                LatLng(baseLat + latOffset, baseLng + lngOffset)
             }
 
-            eventLatLng?.let { latLng ->
+            key("${event.id}_$index") {
                 Marker(
-                    state = rememberMarkerState(key = event.id, position = latLng),
+                    state = rememberMarkerState(position = finalLatLng),
                     title = event.name,
+                    snippet = if (event.lat == null) "Location approximate" else null,
                     onClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         selectedEvent = event
@@ -102,6 +123,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
                 selectedEvent?.let {
                     EventItem(
                         event = it,
+                        eventVM = eventVM,
                         isExpandable = false,
                         isInitiallyExpanded = true
                     )

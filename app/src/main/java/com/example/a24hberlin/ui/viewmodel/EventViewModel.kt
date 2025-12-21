@@ -172,9 +172,6 @@ class EventViewModel(
     }
 
     fun clearAllFilters() {
-        val empty = TextFieldValue("")
-        _searchTextFieldValue.value = empty
-        savedStateHandle[KEY_SEARCH_TEXT] = ""
         savedStateHandle[KEY_EVENT_TYPE] = null
         savedStateHandle[KEY_MONTH] = null
         savedStateHandle[KEY_SOUND] = null
