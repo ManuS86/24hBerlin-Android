@@ -1,8 +1,9 @@
 package com.example.a24hberlin.ui.screens.mainhost.nestedcomposables
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
@@ -13,13 +14,12 @@ import androidx.compose.material3.NavigationBarItemDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,7 +31,6 @@ fun MyBottomNavigationBar(
     navController: NavHostController,
     onTabSelected: () -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
     val items = navItemsData
 
     NavigationBar(
@@ -49,7 +48,6 @@ fun MyBottomNavigationBar(
                 selected = selected,
                 onClick = {
                     if (currentRoute != item.route) {
-                        haptic.performHapticFeedback(TextHandleMove)
                         onTabSelected()
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.startDestinationId) { saveState = true }
@@ -59,20 +57,26 @@ fun MyBottomNavigationBar(
                     }
                 },
                 icon = {
-                    Icon(
-                        imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
-                        contentDescription = label,
-                        modifier = Modifier.offset(y = 6.dp)
-                    )
+                    Column(
+                        horizontalAlignment = CenterHorizontally,
+                        modifier = Modifier.padding(top = 6.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
+                            contentDescription = label
+                        )
+                        Text(
+                            text = label,
+                            style = typography.labelSmall,
+                            modifier = Modifier.padding(top = 2.dp)
+                        )
+                    }
                 },
                 modifier = Modifier
                     .windowInsetsPadding(NavigationBarDefaults.windowInsets)
                     .height(48.dp),
-                label = { Text(
-                    text = label,
-                    style = typography.labelSmall
-                ) },
-                alwaysShowLabel = true,
+                label = null,
+                alwaysShowLabel = false,
                 colors = colors(
                     selectedIconColor = White,
                     selectedTextColor = White,
