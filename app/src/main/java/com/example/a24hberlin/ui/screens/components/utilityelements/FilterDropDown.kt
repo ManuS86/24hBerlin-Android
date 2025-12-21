@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.ButtonDefaults
@@ -63,7 +62,7 @@ fun <T> FilterDropdown(
                 .fillMaxWidth()
                 .height(36.dp),
             border = BorderStroke(1.dp, White.copy(contentAlpha)),
-            shape = RoundedCornerShape(slightRounding),
+            shape = slightRounding,
             colors = ButtonDefaults.outlinedButtonColors(
                 contentColor = White.copy(contentAlpha),
                 containerColor = Transparent

@@ -56,7 +56,7 @@ fun SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(44.dp)
-            .padding(horizontal = regularPadding)
+            .padding(end = regularPadding)
             .padding(bottom = microPadding),
         textStyle = typography.bodyLarge.copy(color = White),
         cursorBrush = SolidColor(White),

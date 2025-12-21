@@ -27,6 +27,14 @@ class AuthViewModel(
     private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
+    companion object {
+        private const val TAG = "AuthViewModel"
+        private const val KEY_CONFIRMATION_MESSAGE = "confirmationMessage"
+        private const val KEY_ERROR_MESSAGE = "errorMessage"
+        private const val KEY_FIREBASE_ERROR = "firebaseError"
+        private const val KEY_PASSWORD_ERROR = "passwordError"
+    }
+
     private val auth = Firebase.auth
     private val db = FirebaseFirestore.getInstance()
     private val userRepo = UserRepositoryImpl(db)
@@ -43,10 +51,10 @@ class AuthViewModel(
             initialValue = permissionManager.hasNotificationPermission.value
         )
 
-    val confirmationMessageResId = savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
-    val errorMessageResId = savedStateHandle.getStateFlow("errorMessage", null as Int?)
-    val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
-    val passwordErrorResId = savedStateHandle.getStateFlow("passwordError", null as Int?)
+    val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
+    val errorMessageResId = savedStateHandle.getStateFlow(KEY_ERROR_MESSAGE, null as Int?)
+    val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
+    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
 
     init {
         auth.addAuthStateListener { firebaseAuth ->
@@ -59,12 +67,12 @@ class AuthViewModel(
     }
 
     fun register(email: String, password: String, confirmPassword: String) {
-        savedStateHandle["firebaseError"] = null
-        savedStateHandle["passwordError"] = null
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
+        savedStateHandle[KEY_PASSWORD_ERROR] = null
 
         val errorResId = checkPassword(password, confirmPassword)
 
-        savedStateHandle["passwordError"] = errorResId
+        savedStateHandle[KEY_PASSWORD_ERROR] = errorResId
 
         if (errorResId == null) {
             viewModelScope.launch {
@@ -73,15 +81,15 @@ class AuthViewModel(
                     auth.useAppLanguage()
                     auth.currentUser?.sendEmailVerification()
                 } catch (ex: Exception) {
-                    savedStateHandle["firebaseError"] = ex.localizedMessage
-                    Log.e("Registration", ex.toString())
+                    savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                    Log.e(TAG, "Registration: ${ex.toString()}")
                 }
             }
         }
     }
 
     fun login(email: String, password: String) {
-        savedStateHandle["errorMessage"] = null
+        savedStateHandle[KEY_ERROR_MESSAGE] = null
 
         viewModelScope.launch {
             try {
@@ -91,8 +99,8 @@ class AuthViewModel(
                     param(FirebaseAnalytics.Param.ITEM_NAME, "Email")
                 }
             } catch (ex: Exception) {
-                savedStateHandle["errorMessage"] = R.string.invalid_email_or_password
-                Log.e("Login", ex.toString())
+                savedStateHandle[KEY_ERROR_MESSAGE] = R.string.invalid_email_or_password
+                Log.e(TAG, "Login ${ex.toString()}")
             }
         }
     }
@@ -101,24 +109,24 @@ class AuthViewModel(
         viewModelScope.launch {
             try {
                 userRepo.resetPassword(email)
-                savedStateHandle["firebaseError"] = null
-                savedStateHandle["confirmationMessage"] = R.string.email_sent
+                savedStateHandle[KEY_FIREBASE_ERROR] = null
+                savedStateHandle[KEY_CONFIRMATION_MESSAGE] = R.string.email_sent
             } catch (ex: Exception) {
-                savedStateHandle["confirmationMessage"] = null
-                savedStateHandle["firebaseError"] = ex.localizedMessage
-                Log.e("Password reset requested", ex.toString())
+                savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
+                savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                Log.e(TAG, "Password reset requested: ${ex.toString()}")
             }
         }
     }
 
     fun clearErrorMessages() {
         clearErrorStates()
-        savedStateHandle["confirmationMessage"] = null
+        savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
     }
 
     private fun clearErrorStates() {
-        savedStateHandle["errorMessage"] = null
-        savedStateHandle["firebaseError"] = null
-        savedStateHandle["passwordError"] = null
+        savedStateHandle[KEY_ERROR_MESSAGE] = null
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
+        savedStateHandle[KEY_PASSWORD_ERROR] = null
     }
 }

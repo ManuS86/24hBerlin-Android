@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.components.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme.typography
@@ -39,11 +38,11 @@ fun SettingsButton(
             .fillMaxWidth()
             .shadow(
                 elevation = 2.dp,
-                shape = RoundedCornerShape(slightRounding),
+                shape = slightRounding,
                 ambientColor = Gray.copy(0.5f),
                 spotColor = Gray.copy(0.5f)
             ),
-        shape = RoundedCornerShape(slightRounding),
+        shape = slightRounding,
         colors = ButtonDefaults.buttonColors(
             containerColor = White,
             contentColor = Black

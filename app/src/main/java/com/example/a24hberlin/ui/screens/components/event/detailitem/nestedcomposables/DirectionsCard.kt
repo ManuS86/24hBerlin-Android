@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
@@ -33,6 +32,7 @@ import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
 import com.example.a24hberlin.ui.theme.Details
 import com.example.a24hberlin.ui.theme.TextOffBlack
+import com.example.a24hberlin.ui.theme.circle
 import com.example.a24hberlin.utils.getEventColor
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.mediumRounding
@@ -47,9 +47,9 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
             .fillMaxWidth()
             .border(
                 BorderStroke(1.dp, Details),
-                RoundedCornerShape(mediumRounding)
+                mediumRounding
             ),
-        shape = RoundedCornerShape(mediumRounding),
+        shape = mediumRounding,
         colors = cardColors(
             containerColor = White
         )
@@ -79,7 +79,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
 
             Card(
                 modifier = Modifier.size(40.dp),
-                shape = RoundedCornerShape(100),
+                shape = circle,
                 colors = cardColors(
                     containerColor = eventColor
                 )

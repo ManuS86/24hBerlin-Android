@@ -139,14 +139,8 @@ class EventViewModel(
         list.flatMap { it.sounds?.values ?: emptyList() }.distinct().sorted()
     }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
 
-    // --- INIT & LIFECYCLE ---
     init {
         userListener = userRepo.addUserListener { user -> _currentAppUser.value = user }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        userListener?.remove()
     }
 
     // --- ACTIONS: FILTERS & SEARCH ---
@@ -242,5 +236,10 @@ class EventViewModel(
 
     fun setupAbsenceReminder() {
         reminderScheduler.schedule14DayReminder()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        userListener?.remove()
     }
 }

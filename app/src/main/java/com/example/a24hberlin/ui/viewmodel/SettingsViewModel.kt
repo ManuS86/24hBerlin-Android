@@ -21,72 +21,99 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-private const val TAG = "SettingsViewModel"
-
 class SettingsViewModel(
     application: Application,
     private val savedStateHandle: SavedStateHandle
 ) : AndroidViewModel(application) {
 
-    private val db = FirebaseFirestore.getInstance()
-    private val userRepo = UserRepositoryImpl(db)
+    companion object {
+        private const val TAG = "SettingsViewModel"
+        private const val KEY_CONFIRMATION_MESSAGE = "confirmationMessage"
+        private const val KEY_FIREBASE_ERROR = "firebaseError"
+        private const val KEY_IS_PROBLEM_REPORT_SHEET_OPEN = "isProblemReportSheetOpen"
+        private const val KEY_IS_REAUTHENTICATED = "isReauthenticated"
+        private const val KEY_PASSWORD_ERROR = "passwordError"
+        private const val KEY_PROBLEM_REPORT_ALERT_MESSAGE = "problemReportAlertMessage"
+        private const val KEY_PUSH_NOTIFICATIONS_ENABLED = "pushNotificationsEnabled"
+        private const val KEY_SHOW_DELETE_ACCOUNT_ALERT = "showDeleteAccountAlert"
+        private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
+    }
+
+    private val userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance())
     private val notificationService = AndroidReminderScheduler(application.applicationContext)
 
-    val confirmationMessageResId =
-        savedStateHandle.getStateFlow("confirmationMessage", null as Int?)
-    val firebaseError = savedStateHandle.getStateFlow("firebaseError", null as String?)
-    val passwordErrorResId = savedStateHandle.getStateFlow("passwordError", null as Int?)
-
-    var isReauthenticated = savedStateHandle.getStateFlow("isReauthenticated", false)
-        private set
+    // --- STATEFLOWS (UI STATE) ---
+    val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
+    val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
+    val isProblemReportSheetOpen = savedStateHandle.getStateFlow(KEY_IS_PROBLEM_REPORT_SHEET_OPEN, false)
+    val isReauthenticated = savedStateHandle.getStateFlow(KEY_IS_REAUTHENTICATED, false)
+    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
+    val problemReportAlertMessage = savedStateHandle.getStateFlow<String?>(KEY_PROBLEM_REPORT_ALERT_MESSAGE, null)
+    var pushNotificationsEnabledState = savedStateHandle.getStateFlow(KEY_PUSH_NOTIFICATIONS_ENABLED, true)
+    val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
+    val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
 
     private val _language = MutableStateFlow<Language?>(null)
     val language: StateFlow<Language?> = _language.asStateFlow()
 
+    // --- LISTENERS & CACHE ---
     private var firebaseListener: ListenerRegistration? = null
     private var currentAppUser: AppUser? = null
 
-    val isBugReportSheetOpen = savedStateHandle.getStateFlow("isBugReportSheetOpen", false)
-    val bugReportAlertMessage = savedStateHandle.getStateFlow<String?>("bugReportAlertMessage", null)
-    val showLogoutAlert = savedStateHandle.getStateFlow("showLogoutAlert", false)
-    val showDeleteAccountAlert = savedStateHandle.getStateFlow("showDeleteAccountAlert", false)
-
-    var pushNotificationsEnabledState =
-        savedStateHandle.getStateFlow("pushNotificationsEnabled", true)
-
     init {
+        startUserListener()
+    }
+
+    private fun startUserListener() {
         if (firebaseListener == null) {
             firebaseListener = userRepo.addUserListener { user ->
                 currentAppUser = user
-
-                savedStateHandle["pushNotificationsEnabled"] =
-                    user?.settings?.pushNotificationsEnabled ?: false
-
+                savedStateHandle[KEY_PUSH_NOTIFICATIONS_ENABLED] = user?.settings?.pushNotificationsEnabled ?: false
                 _language.value = user?.settings?.language?.toLanguageOrNull()
             }
         }
     }
 
+    // --- PROBLEM REPORT ---
     fun openBugReport() {
-        savedStateHandle["isBugReportSheetOpen"] = true
+        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = true
     }
 
     fun closeBugReport() {
-        savedStateHandle["isBugReportSheetOpen"] = false
+        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = false
+    }
+
+    fun setProblemReportAlert(message: String?) {
+        savedStateHandle[KEY_PROBLEM_REPORT_ALERT_MESSAGE] = message
+    }
+
+    fun sendProblemReport(message: String, emptyMsg: String, successMsg: String) {
+        if (message.isBlank()) {
+            setProblemReportAlert(emptyMsg)
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                userRepo.sendBugReport(message)
+
+                setProblemReportAlert(successMsg)
+            } catch (ex: Exception) {
+                setProblemReportAlert(ex.localizedMessage ?: "An unknown error occurred")
+            }
+        }
+    }
+
+    // --- ALERTS ---
+    fun toggleDeleteAlert(show: Boolean) {
+        savedStateHandle[KEY_SHOW_DELETE_ACCOUNT_ALERT] = show
     }
 
     fun toggleLogoutAlert(show: Boolean) {
-        savedStateHandle["showLogoutAlert"] = show
+        savedStateHandle[KEY_SHOW_LOGOUT_ALERT] = show
     }
 
-    fun toggleDeleteAlert(show: Boolean) {
-        savedStateHandle["showDeleteAccountAlert"] = show
-    }
-
-    fun setBugReportAlert(message: String?) {
-        savedStateHandle["bugReportAlertMessage"] = message
-    }
-
+    // --- ACTIONS: USER SETTINGS ---
     fun changeLanguage(newLanguage: Language?) {
         val settings = Settings(
             pushNotificationsEnabled = pushNotificationsEnabledState.value,
@@ -117,26 +144,55 @@ class SettingsViewModel(
         }
     }
 
-    fun sendBugReport(message: String, emptyMsg: String, successMsg: String) {
-        if (message.isBlank()) {
-            setBugReportAlert(emptyMsg)
-            return
-        }
+    // --- ACTIONS: ACCOUNT & AUTH ---
+    fun reAuthenticate(password: String) {
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
 
         viewModelScope.launch {
             try {
-                userRepo.sendBugReport(message)
-
-                setBugReportAlert(successMsg)
+                userRepo.reAuthenticate(password)
+                savedStateHandle[KEY_IS_REAUTHENTICATED] = true
             } catch (ex: Exception) {
-                setBugReportAlert(ex.localizedMessage ?: "An unknown error occurred")
+                savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                Log.e(TAG, "Error during re-authentication.", ex)
             }
         }
     }
 
-    fun removeAllPendingNotifications(bookmarks: List<Event>) {
+    fun changeEmail(email: String) {
         viewModelScope.launch {
-            notificationService.cancelAllPendingReminders(bookmarks)
+            try {
+                userRepo.changeEmail(email)
+                savedStateHandle[KEY_FIREBASE_ERROR] = null
+                savedStateHandle[KEY_CONFIRMATION_MESSAGE] = R.string.email_changed_successfully
+            } catch (ex: Exception) {
+                savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
+                savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                Log.e(TAG, "Error changing email.", ex)
+            }
+        }
+    }
+
+    fun changePassword(password: String, confirmPassword: String) {
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
+        savedStateHandle[KEY_PASSWORD_ERROR] = null
+
+        val errorResId = checkPassword(password, confirmPassword)
+
+        savedStateHandle[KEY_PASSWORD_ERROR] = errorResId
+
+        if (errorResId == null) {
+            viewModelScope.launch {
+                try {
+                    userRepo.changePassword(password)
+                    savedStateHandle[KEY_PASSWORD_ERROR] = null
+                    savedStateHandle[KEY_CONFIRMATION_MESSAGE] = R.string.password_changed_successfully
+                } catch (ex: Exception) {
+                    savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
+                    savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                    Log.e(TAG, "Error changing password.", ex)
+                }
+            }
         }
     }
 
@@ -158,61 +214,17 @@ class SettingsViewModel(
         }
     }
 
-    fun changeEmail(email: String) {
+    // --- HELPERS ---
+    fun removeAllPendingNotifications(bookmarks: List<Event>) {
         viewModelScope.launch {
-            try {
-                userRepo.changeEmail(email)
-                savedStateHandle["firebaseError"] = null
-                savedStateHandle["confirmationMessage"] = R.string.email_changed_successfully
-            } catch (ex: Exception) {
-                savedStateHandle["confirmationMessage"] = null
-                savedStateHandle["firebaseError"] = ex.localizedMessage
-                Log.e(TAG, "Error changing email.", ex)
-            }
-        }
-    }
-
-    fun changePassword(password: String, confirmPassword: String) {
-        savedStateHandle["firebaseError"] = null
-        savedStateHandle["passwordError"] = null
-
-        val errorResId = checkPassword(password, confirmPassword)
-
-        savedStateHandle["passwordError"] = errorResId
-
-        if (errorResId == null) {
-            viewModelScope.launch {
-                try {
-                    userRepo.changePassword(password)
-                    savedStateHandle["passwordError"] = null
-                    savedStateHandle["confirmationMessage"] = R.string.password_changed_successfully
-                } catch (ex: Exception) {
-                    savedStateHandle["confirmationMessage"] = null
-                    savedStateHandle["firebaseError"] = ex.localizedMessage
-                    Log.e(TAG, "Error changing password.", ex)
-                }
-            }
-        }
-    }
-
-    fun reAuthenticate(password: String) {
-        savedStateHandle["firebaseError"] = null
-
-        viewModelScope.launch {
-            try {
-                userRepo.reAuthenticate(password)
-                savedStateHandle["isReauthenticated"] = true
-            } catch (ex: Exception) {
-                savedStateHandle["firebaseError"] = ex.localizedMessage
-                Log.e(TAG, "Error during re-authentication.", ex)
-            }
+            notificationService.cancelAllPendingReminders(bookmarks)
         }
     }
 
     fun clearErrorMessages() {
-        savedStateHandle["confirmationMessage"] = null
-        savedStateHandle["firebaseError"] = null
-        savedStateHandle["passwordError"] = null
+        savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
+        savedStateHandle[KEY_PASSWORD_ERROR] = null
     }
 
     override fun onCleared() {

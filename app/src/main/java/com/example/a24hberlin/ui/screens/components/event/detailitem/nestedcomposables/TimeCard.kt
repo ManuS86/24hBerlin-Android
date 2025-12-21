@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.WatchLater
@@ -35,7 +34,7 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(mediumRounding),
+        shape = mediumRounding,
         colors = cardColors(
             containerColor = Details
         )

@@ -1,7 +1,6 @@
 package com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomposables
 
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Image
@@ -35,7 +34,7 @@ fun ImageCard(imageURL: String?) {
             contentScale = Crop,
             modifier = Modifier
                 .height(detailImageSize)
-                .clip(RoundedCornerShape(mediumRounding))
+                .clip(mediumRounding)
         )
     }
 }

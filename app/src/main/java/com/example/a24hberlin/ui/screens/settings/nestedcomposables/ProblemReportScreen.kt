@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults.colors
@@ -19,18 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.R
 import com.example.a24hberlin.ui.screens.components.buttons.LargeDarkButton
 import com.example.a24hberlin.ui.theme.TextOffBlack
 import com.example.a24hberlin.ui.theme.largePadding
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
+import com.example.a24hberlin.ui.theme.reportProblemTextFieldSize
 import com.example.a24hberlin.ui.theme.slightRounding
 import kotlin.Int.Companion.MAX_VALUE
 
 @Composable
-fun BugReportScreen(
+fun ReportProblemScreen(
     onSend: (String) -> Unit
 ) {
     var bugReport by rememberSaveable { mutableStateOf("") }
@@ -48,9 +47,9 @@ fun BugReportScreen(
             onValueChange = { bugReport = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .height(reportProblemTextFieldSize),
             maxLines = MAX_VALUE,
-            shape = RoundedCornerShape(slightRounding),
+            shape = slightRounding,
             colors = colors(
                 focusedBorderColor = Gray.copy(0.5f),
                 unfocusedBorderColor = Gray.copy(0.5f),

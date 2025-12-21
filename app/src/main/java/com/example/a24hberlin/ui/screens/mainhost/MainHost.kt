@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Wifi
 import androidx.compose.material.icons.rounded.WifiOff
@@ -206,7 +205,7 @@ fun MainHost(
                     },
                     containerColor = if (isOffline) Offline else Online,
                     contentColor = White,
-                    shape = RoundedCornerShape(slightRounding),
+                    shape = slightRounding,
                 ) {
                     Row(
                         verticalAlignment = CenterVertically,

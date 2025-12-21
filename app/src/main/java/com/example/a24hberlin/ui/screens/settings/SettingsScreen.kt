@@ -59,8 +59,8 @@ fun SettingsScreen(
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
 
-    val isBugReportSheetOpen by settingsVM.isBugReportSheetOpen.collectAsStateWithLifecycle()
-    val bugReportAlertMessage by settingsVM.bugReportAlertMessage.collectAsStateWithLifecycle()
+    val isBugReportSheetOpen by settingsVM.isProblemReportSheetOpen.collectAsStateWithLifecycle()
+    val bugReportAlertMessage by settingsVM.problemReportAlertMessage.collectAsStateWithLifecycle()
     val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
     val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
     val language by settingsVM.language.collectAsStateWithLifecycle()

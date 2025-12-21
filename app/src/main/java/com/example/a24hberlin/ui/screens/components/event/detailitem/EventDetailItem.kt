@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
@@ -70,7 +69,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
         if (isExpandable) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(mediumRounding),
+                shape = mediumRounding,
                 colors = cardColors(
                     containerColor = Details
                 )

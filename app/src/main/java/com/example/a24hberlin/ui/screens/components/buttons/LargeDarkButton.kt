@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.components.buttons
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme.typography
@@ -34,7 +33,7 @@ fun LargeDarkButton(
             containerColor = Black,
             contentColor = White
         ),
-        shape = RoundedCornerShape(slightRounding),
+        shape = slightRounding,
         modifier = Modifier
             .padding(top = largePadding)
             .fillMaxWidth()

@@ -9,7 +9,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -18,7 +17,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.example.a24hberlin.R
-import com.example.a24hberlin.ui.theme.rippleRadius
+import com.example.a24hberlin.ui.theme.roundRipple
 
 @Composable
 fun ShareButton(context: Context, permalink: String) {
@@ -30,7 +29,7 @@ fun ShareButton(context: Context, permalink: String) {
         modifier = Modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(bounded = false, radius = rippleRadius),
+                indication = roundRipple,
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)

@@ -2,7 +2,6 @@ package com.example.a24hberlin.ui.screens.components.event.detailitem.nestedcomp
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,8 +12,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.example.a24hberlin.data.model.Event
+import com.example.a24hberlin.ui.theme.mapPreviewHeight
 import com.example.a24hberlin.ui.theme.mediumRounding
 import com.example.a24hberlin.utils.bitmapDescriptorFromVector
 import com.example.a24hberlin.utils.getMarkerResourceId
@@ -26,6 +25,8 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+
+private const val MAP_DEFAULT_ZOOM = 14f
 
 @Composable
 fun MapCard(event: Event) {
@@ -40,7 +41,7 @@ fun MapCard(event: Event) {
 
     val venueMarkerState = rememberMarkerState(position = venue)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(venue, 14f)
+        position = CameraPosition.fromLatLngZoom(venue, MAP_DEFAULT_ZOOM)
     }
 
     LaunchedEffect(markerResId) {
@@ -51,8 +52,8 @@ fun MapCard(event: Event) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp),
-        shape = RoundedCornerShape(mediumRounding)
+            .height(mapPreviewHeight),
+        shape = mediumRounding
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxWidth(),

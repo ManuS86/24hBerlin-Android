@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.BrokenImage
 import androidx.compose.material.icons.filled.Image
@@ -57,7 +56,7 @@ fun ImageAndDate(
                 contentScale = Crop,
                 modifier = Modifier
                     .size(eventImageSize)
-                    .clip(RoundedCornerShape(mediumRounding))
+                    .clip(mediumRounding)
                     .padding(end = microPadding)
             )
         }

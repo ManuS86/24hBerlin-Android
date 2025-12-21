@@ -3,7 +3,6 @@ package com.example.a24hberlin.ui.screens.components.utilityelements
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -83,7 +82,7 @@ fun AuthTextField(
                 null
             },
             singleLine = true,
-            shape = RoundedCornerShape(slightRounding),
+            shape = slightRounding,
             colors = colors(
                 focusedBorderColor = Gray.copy(0.8f),
                 unfocusedBorderColor = Gray.copy(0.5f),

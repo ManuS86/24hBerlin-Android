@@ -40,6 +40,9 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
+private const val MAP_DEFAULT_ZOOM = 9.5f
+private const val ZOOM_ANIM_MS = 800
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClubMapScreen(eventVM: EventViewModel) {
@@ -55,7 +58,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
 
     val cameraPosition = LatLng(52.5100, 13.3400)
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(cameraPosition, 9.5f)
+        position = CameraPosition.fromLatLngZoom(cameraPosition, MAP_DEFAULT_ZOOM)
     }
 
     var isInitialLoad by remember { mutableStateOf(true) }
@@ -85,8 +88,8 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         }
 
         cameraPositionState.animate(
-            update = CameraUpdateFactory.newLatLngZoom(cameraPosition, 9.5f),
-            durationMs = 800
+            update = CameraUpdateFactory.newLatLngZoom(cameraPosition, MAP_DEFAULT_ZOOM),
+            durationMs = ZOOM_ANIM_MS
         )
     }
 

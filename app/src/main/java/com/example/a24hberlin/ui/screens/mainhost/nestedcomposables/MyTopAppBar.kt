@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
@@ -68,28 +67,32 @@ fun MyTopAppBar(
 
     TopAppBar(
         title = {
-            Row(
-                verticalAlignment = CenterVertically,
-                horizontalArrangement = spacedBy(halfPadding)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .background(
-                            color = White,
-                            shape = RoundedCornerShape(slightRounding)
-                        ),
-                    contentAlignment = Center
+            if (showSearchBar && showSearchComponent) {
+                SearchBar(
+                    searchText = searchTextValue,
+                    onSearchTextChanged = { eventVM.updateSearchText(it) },
+                    onSearchClosed = onSearchClosed
+                )
+            } else {
+                Row(
+                    verticalAlignment = CenterVertically,
+                    horizontalArrangement = spacedBy(halfPadding)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.app_logo),
-                        contentDescription = null,
-                        modifier = Modifier.size(30.dp),
-                        tint = null
-                    )
+                    Box(
+                        modifier = Modifier
+                            .size(32.dp)
+                            .background(color = White, shape = slightRounding),
+                        contentAlignment = Center
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.app_logo),
+                            contentDescription = null,
+                            modifier = Modifier.size(30.dp),
+                            tint = null
+                        )
+                    }
+                    Text(text = title, fontWeight = SemiBold)
                 }
-
-                Text(text = title, fontWeight = SemiBold)
             }
         },
         navigationIcon = {
@@ -106,19 +109,11 @@ fun MyTopAppBar(
             }
         },
         actions = {
-            if (showSearchComponent) {
-                if (!showSearchBar) {
-                    IconButton(onClick = onSearchIconClick) {
-                        Icon(
-                            imageVector = Icons.Filled.Search,
-                            contentDescription = stringResource(R.string.search)
-                        )
-                    }
-                } else {
-                    SearchBar(
-                        searchText = searchTextValue,
-                        onSearchTextChanged = { eventVM.updateSearchText(it) },
-                        onSearchClosed = onSearchClosed
+            if (showSearchComponent && !showSearchBar) {
+                IconButton(onClick = onSearchIconClick) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = stringResource(R.string.search)
                     )
                 }
             }

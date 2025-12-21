@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForwardIos
 import androidx.compose.material3.Card
@@ -48,11 +47,11 @@ fun AccountDetailsSection(
             .fillMaxWidth()
             .shadow(
                 elevation = 2.dp,
-                shape = RoundedCornerShape(slightRounding),
+                shape = slightRounding,
                 ambientColor = Gray.copy(0.5f),
                 spotColor = Gray.copy(0.5f)
             ),
-        shape = RoundedCornerShape(slightRounding),
+        shape = slightRounding,
         colors = cardColors(
             containerColor = White,
             contentColor = Black

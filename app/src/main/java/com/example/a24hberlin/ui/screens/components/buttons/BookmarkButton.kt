@@ -7,7 +7,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkAdd
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -20,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.a24hberlin.R
 import com.example.a24hberlin.data.model.Event
-import com.example.a24hberlin.ui.theme.rippleRadius
+import com.example.a24hberlin.ui.theme.roundRipple
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 
 @Composable
@@ -44,7 +43,7 @@ fun BookmarkButton(
             .size(28.dp)
             .clickable(
                 interactionSource = interactionSource,
-                indication = ripple(bounded = false, radius = rippleRadius),
+                indication = roundRipple,
                 role = Role.Button,
                 onClick = {
                     haptic.performHapticFeedback(TextHandleMove)

@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Tune
@@ -26,7 +25,6 @@ import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +52,7 @@ import com.example.a24hberlin.ui.screens.components.utilityelements.FilterDropdo
 import com.example.a24hberlin.ui.viewmodel.EventViewModel
 import com.example.a24hberlin.ui.theme.halfPadding
 import com.example.a24hberlin.ui.theme.regularPadding
-import com.example.a24hberlin.ui.theme.rippleRadius
+import com.example.a24hberlin.ui.theme.roundRipple
 import com.example.a24hberlin.ui.theme.slightRounding
 import kotlinx.coroutines.launch
 import java.time.LocalDate.now
@@ -109,7 +107,7 @@ fun FilterBar(eventVM: EventViewModel) {
                             eventVM.updateMonth(if (isSelected) null else month)
                         },
                         modifier = Modifier.height(32.dp),
-                        shape = RoundedCornerShape(slightRounding),
+                        shape = slightRounding,
                         contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
                         colors = buttonColors(DarkGray.copy(if (isSelected) 0.9f else 0.5f))
                     ) {
@@ -131,7 +129,7 @@ fun FilterBar(eventVM: EventViewModel) {
                     .padding(start = halfPadding)
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
-                        indication = ripple(bounded = false, radius = rippleRadius),
+                        indication = roundRipple,
                         role = Role.Button,
                         onClick = {
                             haptic.performHapticFeedback(TextHandleMove)
@@ -202,7 +200,7 @@ fun FilterBar(eventVM: EventViewModel) {
                             .padding(start = halfPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = ripple(bounded = false, radius = rippleRadius),
+                                indication = roundRipple,
                                 role = Role.Button,
                                 onClick = {
                                     haptic.performHapticFeedback(TextHandleMove)
