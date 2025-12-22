@@ -6,7 +6,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -22,7 +21,6 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>,
     connectivityVM: ConnectivityViewModel,
     eventVM: EventViewModel,
     settingsVM: SettingsViewModel
@@ -65,7 +63,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            SettingsScreen(navController, bottomBarState, eventVM, settingsVM)
+            SettingsScreen(navController, eventVM, settingsVM)
         }
         composable(
             route = Screen.ReAuthWrapper.route,

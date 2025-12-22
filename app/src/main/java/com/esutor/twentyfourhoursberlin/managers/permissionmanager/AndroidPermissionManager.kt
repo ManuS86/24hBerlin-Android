@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class AndroidPermissionManager(
-    private val context: Context
+    context: Context
 ) : PermissionManager {
     override val _hasNotificationPermission = MutableStateFlow(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

@@ -16,7 +16,6 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -39,7 +38,6 @@ import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 @Composable
 fun AccountDetailsSection(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>,
     haptic: HapticFeedback
 ) {
     Card(
@@ -61,26 +59,16 @@ fun AccountDetailsSection(
         SettingsCardItem(
             title = stringResource(R.string.change_email),
             haptic = haptic,
-            onClick = {
-                bottomBarState.value = false
-                navController.navigate(Screen.ReAuthWrapper.createRoute("email"))
-            }
+            onClick = { navController.navigate(Screen.ReAuthWrapper.createRoute("email")) }
         )
 
-        HorizontalDivider(
-            modifier = Modifier
-                .padding(horizontal = regularPadding),
-            color = LightGray
-        )
+        HorizontalDivider(modifier = Modifier.padding(horizontal = regularPadding), color = LightGray)
 
         // Change Password
         SettingsCardItem(
             title = stringResource(R.string.change_password),
             haptic = haptic,
-            onClick = {
-                bottomBarState.value = false
-                navController.navigate(Screen.ReAuthWrapper.createRoute("password"))
-            }
+            onClick = { navController.navigate(Screen.ReAuthWrapper.createRoute("password")) }
         )
     }
 }

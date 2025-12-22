@@ -16,7 +16,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,7 +50,6 @@ import com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.el
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    bottomBarState: MutableState<Boolean>,
     eventVM: EventViewModel,
     settingsVM: SettingsViewModel
 ) {
@@ -102,7 +100,7 @@ fun SettingsScreen(
         ) {
             // A. Account Details
             SettingsSectionTitle(R.string.account_details)
-            AccountDetailsSection(navController, bottomBarState, haptic)
+            AccountDetailsSection(navController, haptic)
 
             // B. App Settings
             SettingsSectionTitle(R.string.app_settings)

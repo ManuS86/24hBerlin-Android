@@ -25,4 +25,15 @@ sealed class Screen(
 
         fun createRoute(from: String): String = "re_auth_wrapper/$from"
     }
+
+    companion object {
+        val allScreens: List<Screen>
+            get() = Screen::class.sealedSubclasses.mapNotNull { it.objectInstance }
+
+        fun fromRoute(route: String?): Screen? {
+            if (route == null) return null
+            val cleanPath = route.substringBefore("/")
+            return allScreens.find { it.route.substringBefore("/") == cleanPath }
+        }
+    }
 }

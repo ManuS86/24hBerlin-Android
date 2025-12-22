@@ -27,7 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.esutor.twentyfourhoursberlin.navigation.navItemsData
 
 @Composable
-fun MyBottomNavigationBar(
+fun MainBottomNavigationBar(
     navController: NavHostController,
     onTabSelected: () -> Unit
 ) {

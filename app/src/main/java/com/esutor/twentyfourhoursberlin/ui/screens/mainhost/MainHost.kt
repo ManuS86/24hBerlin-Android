@@ -1,43 +1,28 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Wifi
-import androidx.compose.material.icons.rounded.WifiOff
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -48,135 +33,81 @@ import com.esutor.twentyfourhoursberlin.navigation.NavGraph
 import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
-import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
-import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
-import com.esutor.twentyfourhoursberlin.ui.theme.Offline
-import com.esutor.twentyfourhoursberlin.ui.theme.Online
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
-import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectionEvent
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.ConnectivitySnackbarHost
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainBottomNavigationBar
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainTopAppBar
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
-import kotlinx.coroutines.launch
 
 @Composable
 fun MainHost() {
+// --- ViewModels & Controllers ---
     val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    // --- ViewModels ---
-    val connectivityVM: ConnectivityViewModel =
-        viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
-    val eventVM: EventViewModel =
-        viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
-    val settingsVM: SettingsViewModel =
-        viewModel(factory = ViewModelFactoryHelper.provideSettingsViewModelFactory())
-
-    // --- Connectivity Logic ---
-    val isOnline by connectivityVM.isConnected.collectAsStateWithLifecycle()
-    val noInternetMsg = stringResource(R.string.no_internet_connection)
-    val backOnlineMsg = stringResource(R.string.back_online)
+    val connectivityVM: ConnectivityViewModel = viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
+    val eventVM: EventViewModel = viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
+    val settingsVM: SettingsViewModel = viewModel(factory = ViewModelFactoryHelper.provideSettingsViewModelFactory())
 
     // --- Navigation & UI State ---
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val bottomBarState = remember { mutableStateOf(true) }
+
+    val mainTabRoutes = remember {
+        Screen.allScreens.filter { it.titleResId == R.string.app_name }.map { it.route }
+    }
+    val isMainTab = remember(currentRoute) { currentRoute in mainTabRoutes }
+    val showFilterBar = remember(currentRoute) {
+        currentRoute in listOf(Screen.Events.route, Screen.ClubMap.route)
+    }
+
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val showSearchBar by showSearchBarState
 
-    // --- AppBar Title Logic ---
-    val appBarTitleResId = remember(currentRoute, navBackStackEntry) {
-        if (currentRoute?.startsWith(Screen.ReAuthWrapper.route) == true) {
-            val from = navBackStackEntry?.arguments?.getString("from")
-            when (from) {
-                "email" -> R.string.change_email
-                "password" -> R.string.change_password
-                else -> R.string.re_authenticate
-            }
-        } else {
-            when (currentRoute) {
-                Screen.Events.route -> Screen.Events.titleResId
-                Screen.ClubMap.route -> Screen.ClubMap.titleResId
-                Screen.MyEvents.route -> Screen.MyEvents.titleResId
-                Screen.Settings.route -> Screen.Settings.titleResId
-                else -> Screen.Events.titleResId
-            } ?: R.string.events
-        }
+    val closeSearch = {
+        haptic.performHapticFeedback(TextHandleMove)
+        showSearchBarState.value = false
+        eventVM.updateSearchText(TextFieldValue(""))
     }
-    val currentAppBarTitle = stringResource(id = appBarTitleResId)
 
-    // --- Effects ---
-    LaunchedEffect(isOnline) {
-        if (isOnline) {
-            snackbarHostState.currentSnackbarData?.let { data ->
-                if (data.visuals.message == noInternetMsg) {
-                    data.dismiss()
+    // --- Title Logic ---
+    val appBarTitleResId = remember(currentRoute, navBackStackEntry, isMainTab) {
+        when {
+            isMainTab -> R.string.app_name
+            currentRoute?.startsWith(Screen.ReAuthWrapper.route.substringBefore("/")) == true -> {
+                when (navBackStackEntry?.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM)) {
+                    "email" -> R.string.change_email
+                    "password" -> R.string.change_password
+                    else -> R.string.re_authenticate
                 }
             }
+            else -> Screen.fromRoute(currentRoute)?.titleResId ?: R.string.events
         }
     }
 
-    LaunchedEffect(Unit) {
-        connectivityVM.connectionEvent.collect { event ->
-            when (event) {
-                is ConnectionEvent.LostConnection -> {
-                    launch {
-                        snackbarHostState.showSnackbar(
-                            message = noInternetMsg,
-                            duration = SnackbarDuration.Indefinite,
-                            withDismissAction = true
-                        )
-                    }
-                }
-
-                is ConnectionEvent.BackOnline -> {
-                    snackbarHostState.currentSnackbarData?.dismiss()
-
-                    launch {
-                        snackbarHostState.showSnackbar(
-                            message = backOnlineMsg,
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    DisposableEffect(currentRoute) {
-        bottomBarState.value = currentRoute != Screen.ReAuthWrapper.route
-        onDispose {}
-    }
-
+    // --- Side Effects ---
+    SetSystemBarColorsToLight(false)
+    ConnectivitySnackbarEffect(connectivityVM, snackbarHostState)
     ScheduleReminderEffect(eventVM)
 
+    // --- Title Logic ---
     Scaffold(
         topBar = {
             Column {
-                MyTopAppBar(
-                    title = currentAppBarTitle,
+                MainTopAppBar(
+                    title = stringResource(appBarTitleResId),
                     currentRoute = currentRoute,
                     showSearchBar = showSearchBar,
                     onSearchIconClick = {
                         haptic.performHapticFeedback(TextHandleMove)
                         showSearchBarState.value = !showSearchBarState.value
                     },
-                    onSearchClosed = {
-                        haptic.performHapticFeedback(TextHandleMove)
-                        showSearchBarState.value = false
-                        eventVM.updateSearchText(TextFieldValue(""))
-                    },
+                    onSearchClosed = closeSearch,
                     navController = navController,
                     eventVM = eventVM
-                )
-
-                val showFilterBar = currentRoute in listOf(
-                    Screen.Events.route,
-                    Screen.ClubMap.route
                 )
 
                 if (showFilterBar) {
@@ -185,48 +116,14 @@ fun MainHost() {
             }
         },
         bottomBar = {
-            if (bottomBarState.value) {
-                MyBottomNavigationBar(
-                    navController,
-                    onTabSelected = {
-                        showSearchBarState.value = false
-                        eventVM.updateSearchText(TextFieldValue(""))
-                    }
+            if (isMainTab) {
+                MainBottomNavigationBar(
+                    navController = navController,
+                    onTabSelected = closeSearch
                 )
             }
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState) { data ->
-                val lostConnMessage = stringResource(R.string.no_internet_connection)
-                val isOffline = data.visuals.message == lostConnMessage
-
-                Snackbar(
-                    modifier = Modifier.padding(mediumPadding),
-                    action = {
-                        data.visuals.actionLabel?.let { label ->
-                            TextButton(onClick = { data.performAction() }) {
-                                Text(label, color = White)
-                            }
-                        }
-                    },
-                    containerColor = if (isOffline) Offline else Online,
-                    contentColor = White,
-                    shape = slightRounding,
-                ) {
-                    Row(
-                        verticalAlignment = CenterVertically,
-                        horizontalArrangement = spacedBy(halfPadding)
-                    ) {
-                        Icon(
-                            imageVector = if (isOffline) Icons.Rounded.WifiOff else Icons.Rounded.Wifi,
-                            contentDescription = null,
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Text(data.visuals.message)
-                    }
-                }
-            }
-        },
+        snackbarHost = { ConnectivitySnackbarHost(snackbarHostState) },
         contentWindowInsets = WindowInsets.safeDrawing
     ) { paddingValues ->
         Surface(
@@ -243,13 +140,45 @@ fun MainHost() {
 
             NavGraph(
                 navController = navController,
-                bottomBarState = bottomBarState,
                 connectivityVM = connectivityVM,
                 eventVM = eventVM,
                 settingsVM = settingsVM
             )
         }
     }
+}
 
-    SetSystemBarColorsToLight(false)
+@Composable
+private fun ConnectivitySnackbarEffect(
+    viewModel: ConnectivityViewModel,
+    hostState: SnackbarHostState
+) {
+    val isOnline by viewModel.isConnected.collectAsStateWithLifecycle()
+    val noInternetMsg = stringResource(R.string.no_internet_connection)
+    val backOnlineMsg = stringResource(R.string.back_online)
+
+    val wasPreviouslyOffline = remember { mutableStateOf(false) }
+    val isInitialComposition = remember { mutableStateOf(true) }
+
+    LaunchedEffect(isOnline) {
+        if (isOnline) {
+            hostState.currentSnackbarData?.let {
+                if (it.visuals.message == noInternetMsg) it.dismiss()
+            }
+
+            if (!isInitialComposition.value && wasPreviouslyOffline.value) {
+                hostState.showSnackbar(backOnlineMsg, duration = SnackbarDuration.Short)
+                wasPreviouslyOffline.value = false
+            }
+        } else {
+            wasPreviouslyOffline.value = true
+            hostState.showSnackbar(
+                message = noInternetMsg,
+                duration = SnackbarDuration.Indefinite,
+                withDismissAction = true
+            )
+        }
+
+        isInitialComposition.value = false
+    }
 }

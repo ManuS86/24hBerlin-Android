@@ -38,7 +38,7 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTopAppBar(
+fun MainTopAppBar(
     title: String,
     currentRoute: String?,
     showSearchBar: Boolean,

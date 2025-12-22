@@ -40,7 +40,7 @@ class EventViewModel(
     private val savedStateHandle: SavedStateHandle,
     private val eventRepo: EventRepository,
     private val userRepo: UserRepository,
-    private val permissionManager: AndroidPermissionManager,
+    permissionManager: AndroidPermissionManager,
     private val reminderScheduler: AndroidReminderScheduler
 ) : AndroidViewModel(application) {
 
