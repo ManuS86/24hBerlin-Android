@@ -21,7 +21,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.Language
 import com.esutor.twentyfourhoursberlin.data.model.Event
@@ -39,8 +38,8 @@ fun AppSettingsSection(
     pushNotificationsEnabled: Boolean,
     bookmarks: List<Event>,
     haptic: HapticFeedback,
-    eventVM: EventViewModel = viewModel(),
-    settingsVM: SettingsViewModel = viewModel()
+    settingsVM: SettingsViewModel,
+    eventVM: EventViewModel
 ) {
     Card(
         modifier = Modifier

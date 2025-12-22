@@ -14,13 +14,14 @@ import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-object ReminderConstants {
-    const val ABSENCE_REMINDER_ID = 9999
-}
-
 class AndroidReminderScheduler(
     private val context: Context
 ) : ReminderScheduler {
+
+    companion object {
+        const val ABSENCE_REMINDER_ID = 9999
+    }
+
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     private val pendingIntentFlags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -36,7 +37,7 @@ class AndroidReminderScheduler(
         val zonedTriggerDateTime = triggerDateTime.atZone(userTimeZone)
         val triggerMillis = zonedTriggerDateTime.toInstant().toEpochMilli()
 
-        val notificationId = ReminderConstants.ABSENCE_REMINDER_ID
+        val notificationId = ABSENCE_REMINDER_ID
 
         val intent = createIntent(
             notificationId,
@@ -131,7 +132,7 @@ class AndroidReminderScheduler(
     override fun cancelAllPendingReminders(bookmarks: List<Event>) {
         alarmManager.cancel(
             createPendingIntent(
-                ReminderConstants.ABSENCE_REMINDER_ID,
+                ABSENCE_REMINDER_ID,
                 Intent(context, ReminderReceiver::class.java)
             )
         )

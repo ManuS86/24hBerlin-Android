@@ -18,35 +18,27 @@ class EventRepositoryImpl(private val apiService: EventApi) : EventRepository {
         withContext(Dispatchers.Default) {
             val eventsMap = loadEvents()
 
-            eventsMap.map { (id, event) ->
-                event.id = id
-                event
-            }.flatMap { event ->
-                buildList {
-                    add(event)
-
-                    event.repeats?.forEachIndexed { index, repeatData ->
-                        if (index == 0) return@forEachIndexed
-
+            eventsMap.flatMap { (originalId, event) ->
+                if (event.repeats.isNullOrEmpty()) {
+                    event.id = originalId
+                    listOf(event)
+                } else {
+                    event.repeats.mapIndexed { index, repeatData ->
                         val startTimeSeconds = repeatData.getOrNull(0)
                         val endTimeSeconds = repeatData.getOrNull(1)
 
-                        add(
-                            event.copy(
-                                id = "${event.id}-${index}",
-                                startSecs = startTimeSeconds?.toString() ?: event.startSecs,
-                                endSecs = endTimeSeconds,
-                                repeats = null
-                            )
+                        event.copy(
+                            id = "$originalId-$index",
+                            startSecs = startTimeSeconds?.toString() ?: event.startSecs,
+                            endSecs = endTimeSeconds,
+                            repeats = null
                         )
                     }
                 }
             }.filter { event ->
                 val now = LocalDateTime.now()
                 val eventDateTime = event.end ?: event.start
-                eventDateTime.isEqual(now) || eventDateTime.isAfter(now)
-            }.sortedBy {
-                it.start
-            }
+                eventDateTime.isAfter(now) || eventDateTime.isEqual(now)
+            }.sortedBy { it.start }
         }
 }

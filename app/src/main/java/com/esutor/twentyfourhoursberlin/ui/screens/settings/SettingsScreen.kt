@@ -111,10 +111,10 @@ fun SettingsScreen(
             AccountDetailsSection(navController, haptic)
 
             SettingsSectionTitle(R.string.app_settings)
-            AppSettingsSection(language, pushNotificationsEnabled, bookmarks, haptic)
+            AppSettingsSection(language, pushNotificationsEnabled, bookmarks, haptic, settingsVM, eventVM)
 
             SettingsSectionTitle(R.string.help_and_feedback)
-            HelpAndFeedbackSection(context)
+            HelpAndFeedbackSection(context, settingsVM)
 
             Spacer(Modifier.padding(regularPadding))
 
@@ -135,6 +135,7 @@ fun SettingsScreen(
 
         SettingsOverlays(
             context = context,
+            settingsVM = settingsVM,
             isBugReportSheetOpen = isBugReportSheetOpen,
             bugReportAlertMessage = bugReportAlertMessage,
             showLogoutAlert = showLogoutAlert,

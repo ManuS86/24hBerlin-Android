@@ -11,7 +11,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
 import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.core.net.toUri
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.SettingsButton
 import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
@@ -20,7 +19,7 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 @Composable
 fun HelpAndFeedbackSection(
     context: Context,
-    settingsVM: SettingsViewModel = viewModel()
+    settingsVM: SettingsViewModel
 ) {
 // Report a Problem
     SettingsButton(
