@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.receivers
+package com.esutor.twentyfourhoursberlin.notifications
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -7,9 +7,9 @@ import android.content.Intent
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.esutor.twentyfourhoursberlin.workers.ImageNotificationWorker
 
 class ReminderReceiver : BroadcastReceiver() {
+
     companion object {
         const val EXTRA_NOTIFICATION_ID = "notificationId"
         const val EXTRA_TITLE = "title"

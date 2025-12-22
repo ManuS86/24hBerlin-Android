@@ -6,7 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.data.repository.UserRepository
+import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics

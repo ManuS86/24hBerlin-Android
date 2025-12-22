@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.notifications.schedule
+package com.esutor.twentyfourhoursberlin.notifications.reminderscheduler
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -10,7 +10,7 @@ import android.util.Log
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventReminderType
 import com.esutor.twentyfourhoursberlin.data.model.Event
-import com.esutor.twentyfourhoursberlin.receivers.ReminderReceiver
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver
 import java.time.LocalDateTime
 import java.time.ZoneId
 

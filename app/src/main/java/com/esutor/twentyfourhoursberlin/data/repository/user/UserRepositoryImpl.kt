@@ -1,5 +1,6 @@
-package com.esutor.twentyfourhoursberlin.data.repository
+package com.esutor.twentyfourhoursberlin.data.repository.user
 
+import android.os.Build
 import android.util.Log
 import com.esutor.twentyfourhoursberlin.BuildConfig
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
@@ -157,7 +158,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
                 "user_email" to auth.currentUser?.email,
                 "timestamp" to FieldValue.serverTimestamp(),
                 "app_version" to BuildConfig.VERSION_NAME,
-                "device_info" to android.os.Build.MODEL
+                "device_info" to Build.MODEL
             )
 
             db.collection("bug_reports")

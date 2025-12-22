@@ -10,8 +10,8 @@ import com.esutor.twentyfourhoursberlin.data.enums.Language
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.data.model.Settings
-import com.esutor.twentyfourhoursberlin.data.repository.UserRepository
-import com.esutor.twentyfourhoursberlin.notifications.schedule.AndroidReminderScheduler
+import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.esutor.twentyfourhoursberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.ListenerRegistration

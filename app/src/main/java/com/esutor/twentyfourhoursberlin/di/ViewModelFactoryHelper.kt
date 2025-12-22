@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.esutor.twentyfourhoursberlin.data.api.EventApi
-import com.esutor.twentyfourhoursberlin.data.repository.EventRepositoryImpl
-import com.esutor.twentyfourhoursberlin.data.repository.UserRepositoryImpl
+import com.esutor.twentyfourhoursberlin.data.repository.events.EventRepositoryImpl
+import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepositoryImpl
 import com.esutor.twentyfourhoursberlin.managers.internetcopnnectionobserver.AndroidConnectivityObserver
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
-import com.esutor.twentyfourhoursberlin.notifications.schedule.AndroidReminderScheduler
+import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel

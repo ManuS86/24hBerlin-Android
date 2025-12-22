@@ -11,10 +11,10 @@ import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Event
-import com.esutor.twentyfourhoursberlin.data.repository.EventRepository
-import com.esutor.twentyfourhoursberlin.data.repository.UserRepository
+import com.esutor.twentyfourhoursberlin.data.repository.events.EventRepository
+import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
-import com.esutor.twentyfourhoursberlin.notifications.schedule.AndroidReminderScheduler
+import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.filteredEvents
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Dispatchers

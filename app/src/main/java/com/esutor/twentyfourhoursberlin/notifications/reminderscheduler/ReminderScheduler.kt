@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.notifications.schedule
+package com.esutor.twentyfourhoursberlin.notifications.reminderscheduler
 
 import com.esutor.twentyfourhoursberlin.data.enums.EventReminderType
 import com.esutor.twentyfourhoursberlin.data.model.Event

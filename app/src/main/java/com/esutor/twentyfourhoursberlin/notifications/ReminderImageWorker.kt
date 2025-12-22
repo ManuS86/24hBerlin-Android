@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.workers
+package com.esutor.twentyfourhoursberlin.notifications
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -10,7 +10,6 @@ import coil3.request.ImageRequest
 import coil3.request.SuccessResult
 import coil3.request.allowHardware
 import coil3.toBitmap
-import com.esutor.twentyfourhoursberlin.notifications.NotificationService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 

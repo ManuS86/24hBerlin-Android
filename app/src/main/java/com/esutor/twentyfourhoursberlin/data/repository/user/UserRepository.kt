@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.data.repository
+package com.esutor.twentyfourhoursberlin.data.repository.user
 
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Settings

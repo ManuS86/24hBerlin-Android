@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.data.repository
+package com.esutor.twentyfourhoursberlin.data.repository.events
 
 import com.esutor.twentyfourhoursberlin.data.model.Event
 
