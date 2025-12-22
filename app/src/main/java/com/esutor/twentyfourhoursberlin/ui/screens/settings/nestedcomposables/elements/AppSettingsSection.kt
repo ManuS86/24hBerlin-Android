@@ -122,7 +122,7 @@ fun AppSettingsSection(
                         }
                         eventVM.setupAbsenceReminder()
                     } else {
-                        settingsVM.removeAllPendingNotifications(bookmarks)
+                        settingsVM.cancelAllReminders(bookmarks)
                     }
                 },
                 colors = SwitchDefaults.colors(uncheckedTrackColor = LightGray.copy(0.5f))

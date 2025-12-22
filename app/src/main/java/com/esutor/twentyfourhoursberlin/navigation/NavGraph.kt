@@ -63,7 +63,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            SettingsScreen(navController, eventVM, settingsVM)
+            SettingsScreen(navController, settingsVM, eventVM)
         }
         composable(
             route = Screen.ReAuthWrapper.route,

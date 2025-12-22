@@ -10,11 +10,18 @@ import androidx.core.os.LocaleListCompat
 
 class LanguageChangeHelper {
     fun setLanguage(context: Context, languageCode: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java)
-                .applicationLocales = LocaleList.forLanguageTags(languageCode)
+        val locales = if (languageCode.isEmpty()) {
+            LocaleListCompat.getEmptyLocaleList()
         } else {
-            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode))
+            LocaleListCompat.forLanguageTags(languageCode)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val localeList = if (languageCode.isEmpty()) LocaleList.getEmptyLocaleList()
+            else LocaleList.forLanguageTags(languageCode)
+            context.getSystemService(LocaleManager::class.java).applicationLocales = localeList
+        } else {
+            AppCompatDelegate.setApplicationLocales(locales)
         }
 
         if (context is Activity) {

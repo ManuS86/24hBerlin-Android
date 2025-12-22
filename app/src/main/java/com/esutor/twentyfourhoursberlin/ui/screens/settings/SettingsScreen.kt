@@ -3,7 +3,7 @@ package com.esutor.twentyfourhoursberlin.ui.screens.settings
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
-import android.content.res.Resources
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -50,39 +51,47 @@ import com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.el
 @Composable
 fun SettingsScreen(
     navController: NavHostController,
-    eventVM: EventViewModel,
-    settingsVM: SettingsViewModel
+    settingsVM: SettingsViewModel,
+    eventVM: EventViewModel
 ) {
+    // --- Context & Helpers ---
     val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
+    val languageChangeHelper = remember { LanguageChangeHelper() }
 
+    // --- State observation ---
+    val language by settingsVM.language.collectAsStateWithLifecycle()
     val isBugReportSheetOpen by settingsVM.isProblemReportSheetOpen.collectAsStateWithLifecycle()
     val bugReportAlertMessage by settingsVM.problemReportAlertMessage.collectAsStateWithLifecycle()
     val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
     val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
-    val language by settingsVM.language.collectAsStateWithLifecycle()
     val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
-
     val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
+    val currentLanguageCode by settingsVM.currentLanguageCode.collectAsStateWithLifecycle()
 
-    val languageChangeHelper = remember { LanguageChangeHelper() }
-    var previousLanguageCode by remember {
-        mutableStateOf(
-            language?.languageCode ?: Resources.getSystem().configuration.locales[0].language
-        )
+    // --- Language lifecycle ---
+    var appliedLanguageCode by rememberSaveable {
+        mutableStateOf(AppCompatDelegate.getApplicationLocales()[0]?.language ?: "")
     }
 
-    LaunchedEffect(language) {
-        val languageCode = language?.languageCode
-            ?: Resources.getSystem().configuration.locales[1].language
-
-        if (languageCode != previousLanguageCode) {
-            previousLanguageCode = languageCode
-            languageChangeHelper.setLanguage(context, languageCode)
+    LaunchedEffect(currentLanguageCode) {
+        if (currentLanguageCode != appliedLanguageCode) {
+            appliedLanguageCode = currentLanguageCode
+            languageChangeHelper.setLanguage(context, currentLanguageCode)
         }
     }
 
+    // --- Actions ---
+    val onShareApp = {
+        val intent = Intent(ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.esutor.twentyfourhoursberlin")
+        }
+        context.startActivity(Intent.createChooser(intent, "Share Link"))
+    }
+
+    // --- UI layout ---
     Box(Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.background),
@@ -98,47 +107,32 @@ fun SettingsScreen(
                 .padding(horizontal = regularPadding)
                 .padding(bottom = regularPadding)
         ) {
-            // A. Account Details
             SettingsSectionTitle(R.string.account_details)
             AccountDetailsSection(navController, haptic)
 
-            // B. App Settings
             SettingsSectionTitle(R.string.app_settings)
             AppSettingsSection(language, pushNotificationsEnabled, bookmarks, haptic)
 
-            // C. Help and Feedback
             SettingsSectionTitle(R.string.help_and_feedback)
             HelpAndFeedbackSection(context)
 
             Spacer(Modifier.padding(regularPadding))
 
-            // D. Share App
             SettingsButton(
                 label = stringResource(R.string.share_24hBerlin),
                 fontWeight = Normal,
                 textAlign = Start,
-                onClick = {
-                    val intent = Intent(ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(
-                            EXTRA_TEXT,
-                            "https://play.google.com/store/apps/details?id=com.esutor.twentyfourhoursberlin"
-                        )
-                    }
-                    context.startActivity(Intent.createChooser(intent, "Share Link"))
-                }
+                onClick = onShareApp
             )
 
             Spacer(Modifier.padding(regularPadding))
 
-            // E. Session Management and Version
             AccountManagementSection(
                 onLogoutClick = { settingsVM.toggleLogoutAlert(true) },
                 onDeleteClick = { settingsVM.toggleDeleteAlert(true) }
             )
         }
 
-        // F. Alerts and BottomSheets
         SettingsOverlays(
             context = context,
             isBugReportSheetOpen = isBugReportSheetOpen,

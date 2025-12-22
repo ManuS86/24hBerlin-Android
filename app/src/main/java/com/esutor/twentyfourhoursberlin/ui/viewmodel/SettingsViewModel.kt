@@ -15,9 +15,10 @@ import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidR
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.esutor.twentyfourhoursberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.ListenerRegistration
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -33,6 +34,7 @@ class SettingsViewModel(
         private const val KEY_FIREBASE_ERROR = "firebaseError"
         private const val KEY_IS_PROBLEM_REPORT_SHEET_OPEN = "isProblemReportSheetOpen"
         private const val KEY_IS_REAUTHENTICATED = "isReauthenticated"
+        private const val KEY_LANGUAGE = "selectedLanguage"
         private const val KEY_PASSWORD_ERROR = "passwordError"
         private const val KEY_PROBLEM_REPORT_ALERT_MESSAGE = "problemReportAlertMessage"
         private const val KEY_PUSH_NOTIFICATIONS_ENABLED = "pushNotificationsEnabled"
@@ -40,7 +42,7 @@ class SettingsViewModel(
         private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
     }
 
-    // --- STATEFLOWS (UI STATE) ---
+    // --- UI state ---
     val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
     val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
     val isProblemReportSheetOpen = savedStateHandle.getStateFlow(KEY_IS_PROBLEM_REPORT_SHEET_OPEN, false)
@@ -50,11 +52,13 @@ class SettingsViewModel(
     var pushNotificationsEnabledState = savedStateHandle.getStateFlow(KEY_PUSH_NOTIFICATIONS_ENABLED, true)
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
+    val language = savedStateHandle.getStateFlow<Language?>(KEY_LANGUAGE, null)
 
-    private val _language = MutableStateFlow<Language?>(null)
-    val language: StateFlow<Language?> = _language.asStateFlow()
+    val currentLanguageCode: StateFlow<String> = language
+        .map { it?.languageCode ?: "" }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
 
-    // --- LISTENERS & CACHE ---
+    // --- Listeners and Cache ---
     private var firebaseListener: ListenerRegistration? = null
     private var currentAppUser: AppUser? = null
 
@@ -67,52 +71,15 @@ class SettingsViewModel(
             firebaseListener = userRepo.addUserListener { user ->
                 currentAppUser = user
                 savedStateHandle[KEY_PUSH_NOTIFICATIONS_ENABLED] = user?.settings?.pushNotificationsEnabled ?: false
-                _language.value = user?.settings?.language?.toLanguageOrNull()
+                savedStateHandle[KEY_LANGUAGE] = user?.settings?.language?.toLanguageOrNull()
             }
         }
     }
 
-    // --- PROBLEM REPORT ---
-    fun openBugReport() {
-        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = true
-    }
-
-    fun closeBugReport() {
-        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = false
-    }
-
-    fun setProblemReportAlert(message: String?) {
-        savedStateHandle[KEY_PROBLEM_REPORT_ALERT_MESSAGE] = message
-    }
-
-    fun sendProblemReport(message: String, emptyMsg: String, successMsg: String) {
-        if (message.isBlank()) {
-            setProblemReportAlert(emptyMsg)
-            return
-        }
-
-        viewModelScope.launch {
-            try {
-                userRepo.sendBugReport(message)
-
-                setProblemReportAlert(successMsg)
-            } catch (ex: Exception) {
-                setProblemReportAlert(ex.localizedMessage ?: "An unknown error occurred")
-            }
-        }
-    }
-
-    // --- ALERTS ---
-    fun toggleDeleteAlert(show: Boolean) {
-        savedStateHandle[KEY_SHOW_DELETE_ACCOUNT_ALERT] = show
-    }
-
-    fun toggleLogoutAlert(show: Boolean) {
-        savedStateHandle[KEY_SHOW_LOGOUT_ALERT] = show
-    }
-
-    // --- ACTIONS: USER SETTINGS ---
+    // --- User Settings actions ---
     fun changeLanguage(newLanguage: Language?) {
+        savedStateHandle[KEY_LANGUAGE] = newLanguage
+
         val settings = Settings(
             pushNotificationsEnabled = pushNotificationsEnabledState.value,
             language = newLanguage?.label
@@ -130,7 +97,7 @@ class SettingsViewModel(
     fun changePushNotifications(enabled: Boolean) {
         val settings = Settings(
             pushNotificationsEnabled = enabled,
-            language = _language.value?.label
+            language = language.value?.label
         )
 
         viewModelScope.launch {
@@ -142,7 +109,7 @@ class SettingsViewModel(
         }
     }
 
-    // --- ACTIONS: ACCOUNT & AUTH ---
+    // --- Account and Auth actions ---
     fun reAuthenticate(password: String) {
         savedStateHandle[KEY_FIREBASE_ERROR] = null
 
@@ -212,10 +179,53 @@ class SettingsViewModel(
         }
     }
 
-    // --- HELPERS ---
-    fun removeAllPendingNotifications(bookmarks: List<Event>) {
+    // --- Problem reporting ---
+    fun openBugReport() {
+        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = true
+    }
+
+    fun closeBugReport() {
+        savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = false
+    }
+
+    fun setProblemReportAlert(message: String?) {
+        savedStateHandle[KEY_PROBLEM_REPORT_ALERT_MESSAGE] = message
+    }
+
+    fun sendProblemReport(message: String, emptyMsg: String, successMsg: String) {
+        if (message.isBlank()) {
+            setProblemReportAlert(emptyMsg)
+            return
+        }
+
         viewModelScope.launch {
-            reminderScheduler.cancelAllPendingReminders(bookmarks)
+            try {
+                userRepo.sendBugReport(message)
+
+                setProblemReportAlert(successMsg)
+            } catch (ex: Exception) {
+                setProblemReportAlert(ex.localizedMessage ?: "An unknown error occurred")
+            }
+        }
+    }
+
+    // --- UI overlay controls ---
+    fun toggleDeleteAlert(show: Boolean) {
+        savedStateHandle[KEY_SHOW_DELETE_ACCOUNT_ALERT] = show
+    }
+
+    fun toggleLogoutAlert(show: Boolean) {
+        savedStateHandle[KEY_SHOW_LOGOUT_ALERT] = show
+    }
+
+    // --- Notification and cleanup helpers ---
+    fun cancelAllReminders(bookmarks: List<Event>) {
+        viewModelScope.launch {
+            try {
+                reminderScheduler.cancelAllPendingReminders(bookmarks)
+            } catch (ex: Exception) {
+                Log.e(TAG, "Failed to cancel reminders", ex)
+            }
         }
     }
 
