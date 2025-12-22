@@ -1,4 +1,3 @@
-import com.android.build.gradle.ProguardFiles.getDefaultProguardFile
 import org.gradle.kotlin.dsl.android
 import org.gradle.kotlin.dsl.composeCompiler
 import org.gradle.kotlin.dsl.ksp
@@ -15,13 +14,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.a24hberlin"
+    namespace = "com.esutor.twentyfourhoursberlin"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.a24hberlin"
+        applicationId = "com.esutor.twentyfourhoursberlin"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 

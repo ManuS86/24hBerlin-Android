@@ -8,8 +8,8 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.a24hberlin" />
-                  <option name="mobileSdkAppId" value="1:1095749043096:android:fb23a331b81ea43f6261ed" />
+                  <option name="appId" value="com.esutor.twentyfourhoursberlin" />
+                  <option name="mobileSdkAppId" value="1:1095749043096:android:8b4abe6f4df1f7f26261ed" />
                   <option name="projectId" value="hberlin-android" />
                   <option name="projectNumber" value="1095749043096" />
                 </ConnectionSetting>

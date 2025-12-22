@@ -1,0 +1,255 @@
+package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Wifi
+import androidx.compose.material.icons.rounded.WifiOff
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Alignment.Companion.CenterVertically
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.di.ViewModelFactoryHelper
+import com.esutor.twentyfourhoursberlin.navigation.NavGraph
+import com.esutor.twentyfourhoursberlin.navigation.Screen
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MyBottomNavigationBar
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MyTopAppBar
+import com.esutor.twentyfourhoursberlin.ui.theme.Offline
+import com.esutor.twentyfourhoursberlin.ui.theme.Online
+import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectionEvent
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
+import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
+import kotlinx.coroutines.launch
+
+@Composable
+fun MainHost() {
+    val haptic = LocalHapticFeedback.current
+    val navController = rememberNavController()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    // --- ViewModels ---
+    val connectivityVM: ConnectivityViewModel =
+        viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
+    val eventVM: EventViewModel =
+        viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
+    val settingsVM: SettingsViewModel =
+        viewModel(factory = ViewModelFactoryHelper.provideSettingsViewModelFactory())
+
+    // --- Connectivity Logic ---
+    val isOnline by connectivityVM.isConnected.collectAsStateWithLifecycle()
+    val noInternetMsg = stringResource(R.string.no_internet_connection)
+    val backOnlineMsg = stringResource(R.string.back_online)
+
+    // --- Navigation & UI State ---
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val bottomBarState = remember { mutableStateOf(true) }
+    val showSearchBarState = rememberSaveable { mutableStateOf(false) }
+    val showSearchBar by showSearchBarState
+
+    // --- AppBar Title Logic ---
+    val appBarTitleResId = remember(currentRoute, navBackStackEntry) {
+        if (currentRoute?.startsWith(Screen.ReAuthWrapper.route) == true) {
+            val from = navBackStackEntry?.arguments?.getString("from")
+            when (from) {
+                "email" -> R.string.change_email
+                "password" -> R.string.change_password
+                else -> R.string.re_authenticate
+            }
+        } else {
+            when (currentRoute) {
+                Screen.Events.route -> Screen.Events.titleResId
+                Screen.ClubMap.route -> Screen.ClubMap.titleResId
+                Screen.MyEvents.route -> Screen.MyEvents.titleResId
+                Screen.Settings.route -> Screen.Settings.titleResId
+                else -> Screen.Events.titleResId
+            } ?: R.string.events
+        }
+    }
+    val currentAppBarTitle = stringResource(id = appBarTitleResId)
+
+    // --- Effects ---
+    LaunchedEffect(isOnline) {
+        if (isOnline) {
+            snackbarHostState.currentSnackbarData?.let { data ->
+                if (data.visuals.message == noInternetMsg) {
+                    data.dismiss()
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        connectivityVM.connectionEvent.collect { event ->
+            when (event) {
+                is ConnectionEvent.LostConnection -> {
+                    launch {
+                        snackbarHostState.showSnackbar(
+                            message = noInternetMsg,
+                            duration = SnackbarDuration.Indefinite,
+                            withDismissAction = true
+                        )
+                    }
+                }
+
+                is ConnectionEvent.BackOnline -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+
+                    launch {
+                        snackbarHostState.showSnackbar(
+                            message = backOnlineMsg,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    DisposableEffect(currentRoute) {
+        bottomBarState.value = currentRoute != Screen.ReAuthWrapper.route
+        onDispose {}
+    }
+
+    ScheduleReminderEffect(eventVM)
+
+    Scaffold(
+        topBar = {
+            Column {
+                MyTopAppBar(
+                    title = currentAppBarTitle,
+                    currentRoute = currentRoute,
+                    showSearchBar = showSearchBar,
+                    onSearchIconClick = {
+                        haptic.performHapticFeedback(TextHandleMove)
+                        showSearchBarState.value = !showSearchBarState.value
+                    },
+                    onSearchClosed = {
+                        haptic.performHapticFeedback(TextHandleMove)
+                        showSearchBarState.value = false
+                        eventVM.updateSearchText(TextFieldValue(""))
+                    },
+                    navController = navController,
+                    eventVM = eventVM
+                )
+
+                val showFilterBar = currentRoute in listOf(
+                    Screen.Events.route,
+                    Screen.ClubMap.route
+                )
+
+                if (showFilterBar) {
+                    FilterBar(eventVM)
+                }
+            }
+        },
+        bottomBar = {
+            if (bottomBarState.value) {
+                MyBottomNavigationBar(
+                    navController,
+                    onTabSelected = {
+                        showSearchBarState.value = false
+                        eventVM.updateSearchText(TextFieldValue(""))
+                    }
+                )
+            }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState) { data ->
+                val lostConnMessage = stringResource(R.string.no_internet_connection)
+                val isOffline = data.visuals.message == lostConnMessage
+
+                Snackbar(
+                    modifier = Modifier.padding(mediumPadding),
+                    action = {
+                        data.visuals.actionLabel?.let { label ->
+                            TextButton(onClick = { data.performAction() }) {
+                                Text(label, color = White)
+                            }
+                        }
+                    },
+                    containerColor = if (isOffline) Offline else Online,
+                    contentColor = White,
+                    shape = slightRounding,
+                ) {
+                    Row(
+                        verticalAlignment = CenterVertically,
+                        horizontalArrangement = spacedBy(halfPadding)
+                    ) {
+                        Icon(
+                            imageVector = if (isOffline) Icons.Rounded.WifiOff else Icons.Rounded.Wifi,
+                            contentDescription = null,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(data.visuals.message)
+                    }
+                }
+            }
+        },
+        contentWindowInsets = WindowInsets.safeDrawing
+    ) { paddingValues ->
+        Surface(
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Image(
+                painter = painterResource(R.drawable.background),
+                contentDescription = null,
+                contentScale = FillBounds,
+                modifier = Modifier.fillMaxSize()
+            )
+
+            NavGraph(
+                navController = navController,
+                bottomBarState = bottomBarState,
+                connectivityVM = connectivityVM,
+                eventVM = eventVM,
+                settingsVM = settingsVM
+            )
+        }
+    }
+
+    SetSystemBarColorsToLight(false)
+}

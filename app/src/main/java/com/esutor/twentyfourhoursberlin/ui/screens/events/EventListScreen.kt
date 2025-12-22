@@ -1,0 +1,64 @@
+package com.esutor.twentyfourhoursberlin.ui.screens.events
+
+import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
+import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsFoundState
+import com.esutor.twentyfourhoursberlin.ui.screens.components.states.OfflineState
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
+import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+
+@Composable
+fun EventsScreen(
+    connectivityVM: ConnectivityViewModel,
+    eventVM: EventViewModel
+) {
+    val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
+    val isNetworkAvailable by connectivityVM.isConnected.collectAsStateWithLifecycle()
+    val listState = rememberLazyListState()
+
+    LaunchedEffect(events.size) {
+        if (events.isNotEmpty()) {
+            listState.scrollToItem(0)
+        }
+    }
+
+    Column {
+        if (events.isEmpty()) {
+            if (isNetworkAvailable) {
+                NoEventsFoundState()
+            } else {
+                OfflineState()
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = regularPadding),
+                verticalArrangement = spacedBy(halfPadding),
+                state = listState,
+                contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
+            ) {
+                items(
+                    items = events,
+                    key = { event -> event.id }
+                ) { event ->
+                    EventItem(event, eventVM)
+                }
+            }
+        }
+    }
+}
