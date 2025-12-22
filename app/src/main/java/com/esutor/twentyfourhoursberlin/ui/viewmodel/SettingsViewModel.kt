@@ -56,7 +56,7 @@ class SettingsViewModel(
 
     val currentLanguageCode: StateFlow<String> = language
         .map { it?.languageCode ?: "" }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "")
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "")
 
     // --- Listeners and Cache ---
     private var firebaseListener: ListenerRegistration? = null

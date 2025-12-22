@@ -53,7 +53,7 @@ class EventViewModel(
         private const val KEY_VENUE = "selected_venue"
     }
 
-    // --- DATA STATES ---
+    // --- Data states ---
     private var userListener: ListenerRegistration? = null
 
     private val _currentAppUser = MutableStateFlow<AppUser?>(null)
@@ -62,9 +62,9 @@ class EventViewModel(
     private val _events = MutableStateFlow<List<Event>>(emptyList())
     private val events: StateFlow<List<Event>> = _events
         .onStart { loadEvents() }
-        .stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+        .stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
-    // --- FILTER & SEARCH STATES ---
+    // --- Filter & Search states ---
     val selectedEventType = savedStateHandle.getStateFlow<EventType?>(KEY_EVENT_TYPE, null)
     val selectedMonth = savedStateHandle.getStateFlow<Month?>(KEY_MONTH, null)
     val selectedSound = savedStateHandle.getStateFlow<String?>(KEY_SOUND, null)
@@ -77,7 +77,7 @@ class EventViewModel(
 
     val hasNotificationPermission: StateFlow<Boolean> = permissionManager.hasNotificationPermission
 
-    // --- COMPUTED FLOWS ---
+    // --- Computed flows ---
     private val filterCriteria = combine(
         selectedMonth,
         selectedEventType,
@@ -85,7 +85,7 @@ class EventViewModel(
         selectedVenue
     ) { month, type, sound, venue ->
         EventFilters(month, type, sound, venue)
-    }.stateIn(viewModelScope, WhileSubscribed(5000), EventFilters())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), EventFilters())
 
     val filteredEvents: StateFlow<List<Event>> = combine(
         events,
@@ -100,13 +100,13 @@ class EventViewModel(
             selectedSound = filters.sound,
             selectedVenue = filters.venue
         )
-    }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     val bookmarks: StateFlow<List<Event>> = combine(currentAppUser, events) { user, eventsList ->
         val bookmarkIds = user?.bookmarkIDs?.toSet() ?: emptySet()
         if (bookmarkIds.isEmpty()) emptyList()
         else eventsList.filter { it.id in bookmarkIds }
-    }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     val filteredBookmarks = combine(
         bookmarks,
@@ -120,26 +120,26 @@ class EventViewModel(
             selectedSound = null,
             selectedVenue = null
         )
-    }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
-    // --- DATA HELPERS ---
+    // --- Data helpers ---
     val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
         eventsList.mapNotNull { it.locationName?.trim()?.replaceFirstChar { char ->
             if (char.isLowerCase()) char.titlecase() else char.toString()
         }}
             .distinct()
             .sorted()
-    }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     val uniqueSounds = events.map { list ->
         list.flatMap { it.sounds?.values ?: emptyList() }.distinct().sorted()
-    }.stateIn(viewModelScope, WhileSubscribed(5000), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     init {
         userListener = userRepo.addUserListener { user -> _currentAppUser.value = user }
     }
 
-    // --- ACTIONS: FILTERS & SEARCH ---
+    // --- Filter & Search actions ---
     fun updateEventType(type: EventType?) {
         savedStateHandle[KEY_EVENT_TYPE] = if (selectedEventType.value == type) null else type
     }
@@ -168,7 +168,7 @@ class EventViewModel(
         savedStateHandle[KEY_VENUE] = null
     }
 
-    // --- ACTIONS: EVENTS & BOOKMARKS ---
+    // --- Event & Bookmark actions ---
     private fun loadEvents() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
