@@ -63,11 +63,11 @@ fun ClubMapScreen(eventVM: EventViewModel) {
     var isInitialLoad by remember { mutableStateOf(true) }
 
     val positionedEvents = remember(events) {
-        val grouped = events.groupBy {
+        val grouped = events?.groupBy {
             "${it.lat ?: BERLIN_CENTER.latitude},${it.long ?: BERLIN_CENTER.longitude}"
         }
 
-        grouped.flatMap { (_, eventList) ->
+        grouped?.flatMap { (_, eventList) ->
             eventList.mapIndexed { index, event ->
                 val baseLat = event.lat ?: BERLIN_CENTER.latitude
                 val baseLng = event.long ?: BERLIN_CENTER.longitude
@@ -88,7 +88,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         val newCache = iconCache.toMutableMap()
         var cacheUpdated = false
 
-        events.forEach { event ->
+        events?.forEach { event ->
             val resId = event.getMarkerResourceId()
             if (!newCache.containsKey(resId)) {
                 bitmapDescriptorFromVector(context, resId)?.let {
@@ -120,7 +120,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-        positionedEvents.forEach { (event, finalLatLng) ->
+        positionedEvents?.forEach { (event, finalLatLng) ->
             key(event.id) {
                 Marker(
                     state = rememberMarkerState(position = finalLatLng),

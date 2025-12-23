@@ -56,7 +56,8 @@ class EventViewModel(
     // --- Sources of Truth (Backing States) ---
     private var userListener: ListenerRegistration? = null
     private val _currentAppUser = MutableStateFlow<AppUser?>(null)
-    private val _events = MutableStateFlow<List<Event>>(emptyList())
+    private val _events = MutableStateFlow<List<Event>?>(null)
+    private val _isLoadingFinished = MutableStateFlow(false)
     private val _loadingProgress = MutableStateFlow(0f)
     private val _searchTextFieldValue = MutableStateFlow(
         TextFieldValue(savedStateHandle.get<String>(KEY_SEARCH_TEXT) ?: "")
@@ -64,13 +65,18 @@ class EventViewModel(
 
     // --- Public UI & App States ---
     val currentAppUser = _currentAppUser.asStateFlow()
+    val isLoadingFinished = _isLoadingFinished.asStateFlow()
     val loadingProgress = _loadingProgress.asStateFlow()
     val searchTextFieldValue = _searchTextFieldValue.asStateFlow()
     val hasNotificationPermission = permissionManager.hasNotificationPermission
 
-    private val events: StateFlow<List<Event>> = _events
+    private var isDone: Boolean
+        get() = _isLoadingFinished.value
+        set(value) { _isLoadingFinished.value = value }
+
+    private val events: StateFlow<List<Event>?> = _events
         .onStart { loadEvents() }
-        .stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
+        .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     // --- Filter Inputs (SavedStateHandle) ---
     val selectedEventType = savedStateHandle.getStateFlow<EventType?>(KEY_EVENT_TYPE, null)
@@ -85,9 +91,11 @@ class EventViewModel(
     }.stateIn(viewModelScope, WhileSubscribed(5000L), EventFilters())
 
     // --- Computed Outputs (Derived Lists) ---
-    val filteredEvents: StateFlow<List<Event>> = combine(
+    val filteredEvents: StateFlow<List<Event>?> = combine(
         events, searchTextFieldValue, filterCriteria
     ) { eventsList, textValue, filters ->
+        if (eventsList == null) return@combine null
+
         filteredEvents(
             events = eventsList,
             searchText = textValue,
@@ -96,10 +104,10 @@ class EventViewModel(
             selectedSound = filters.sound,
             selectedVenue = filters.venue
         )
-    }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
+    }.stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     val bookmarks: StateFlow<List<Event>?> = combine(currentAppUser, events) { user, eventsList ->
-        if (user == null || eventsList.isEmpty()) return@combine null
+        if (user == null || eventsList == null) return@combine null
 
         val bookmarkIds = user.bookmarkIDs.toSet()
         eventsList.filter { it.id in bookmarkIds }
@@ -121,16 +129,14 @@ class EventViewModel(
         )
     }.stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
-    val uniqueLocations: StateFlow<List<String>> = events.map { eventsList ->
-        eventsList.mapNotNull { it.locationName?.trim()?.replaceFirstChar { char ->
-            if (char.isLowerCase()) char.titlecase() else char.toString()
-        }}
-            .distinct()
-            .sorted()
+    val uniqueLocations: StateFlow<List<String>> = events.map { list ->
+        list?.mapNotNull { it.locationName?.trim()?.replaceFirstChar { c -> c.uppercase() } }
+            ?.distinct()?.sorted() ?: emptyList()
     }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
-    val uniqueSounds = events.map { list ->
-        list.flatMap { it.sounds?.values ?: emptyList() }.distinct().sorted()
+    val uniqueSounds: StateFlow<List<String>> = events.map { list ->
+        list?.flatMap { it.sounds?.values ?: emptyList() }
+            ?.distinct()?.sorted() ?: emptyList()
     }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     // --- Lifecycle & Data Loading ---
@@ -148,11 +154,17 @@ class EventViewModel(
                 _loadingProgress.value = 0.9f
                 _events.emit(finalEvents)
                 _loadingProgress.value = 1.0f
+                setLoadingFinished()
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading events from repository.", e)
                 _loadingProgress.value = 1.0f
+                setLoadingFinished()
             }
         }
+    }
+
+    fun setLoadingFinished() {
+        isDone = true
     }
 
     // --- Filter & Search actions ---
@@ -186,7 +198,7 @@ class EventViewModel(
 
     // --- Event & Bookmark actions ---
     fun addBookmarkId(bookmarkId: String) {
-        val event = _events.value.find { it.id == bookmarkId } ?: return
+        val event = _events.value?.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -202,7 +214,7 @@ class EventViewModel(
     }
 
     fun removeBookmarkId(bookmarkId: String) {
-        val event = _events.value.find { it.id == bookmarkId } ?: return
+        val event = _events.value?.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {

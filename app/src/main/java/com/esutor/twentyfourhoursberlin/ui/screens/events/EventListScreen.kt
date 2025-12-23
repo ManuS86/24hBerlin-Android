@@ -32,43 +32,33 @@ fun EventsScreen(
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isConnected.collectAsStateWithLifecycle()
 
-    // Filter & Search states used as keys for Scroll-to-Top
-    val searchText by eventVM.searchTextFieldValue.collectAsStateWithLifecycle()
-    val selectedType by eventVM.selectedEventType.collectAsStateWithLifecycle()
-    val selectedMonth by eventVM.selectedMonth.collectAsStateWithLifecycle()
-    val selectedSound by eventVM.selectedSound.collectAsStateWithLifecycle()
-    val selectedVenue by eventVM.selectedVenue.collectAsStateWithLifecycle()
-
     // --- UI State ---
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
-    LaunchedEffect(
-        searchText.text,
-        selectedType,
-        selectedMonth,
-        selectedSound,
-        selectedVenue
-    ) {
-        if (events.isNotEmpty()) {
+    LaunchedEffect(events) {
+        if (events.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
             listState.scrollToItem(0)
         }
     }
 
     // --- Layout ---
     Column(Modifier.fillMaxSize()) {
-        if (events.isEmpty()) {
+        if (events != null && events!!.isEmpty()) {
             if (isNetworkAvailable) NoEventsState() else OfflineState()
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
-                contentPadding = PaddingValues(horizontal = regularPadding, vertical = halfPadding),
+                contentPadding = PaddingValues(
+                    horizontal = regularPadding,
+                    vertical = halfPadding
+                ),
                 verticalArrangement = spacedBy(halfPadding)
             ) {
                 itemsIndexed(
-                    items = events,
+                    items = events ?: emptyList(),
                     key = { _, event -> event.id }
                 ) { index, event ->
                     EventItem(
@@ -77,10 +67,7 @@ fun EventsScreen(
                         onCollapse = {
                             scope.launch {
                                 delay(50)
-                                listState.animateScrollToItem(
-                                    index = index,
-                                    scrollOffset = -30
-                                )
+                                listState.animateScrollToItem(index, -30)
                             }
                         }
                     )

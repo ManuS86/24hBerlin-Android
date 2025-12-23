@@ -1,5 +1,6 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables
 
+import android.content.res.Configuration.ORIENTATION_PORTRAIT
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -8,7 +9,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarDefaults
+import androidx.compose.material3.NavigationBarDefaults.windowInsets
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults.colors
 import androidx.compose.material3.Text
@@ -20,6 +21,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,9 +33,13 @@ fun MainBottomNavigationBar(
     navController: NavHostController,
     onTabSelected: () -> Unit
 ) {
+    val configuration = LocalConfiguration.current
     val items = navItemsData
+    val isPortrait = configuration.orientation == ORIENTATION_PORTRAIT
+
 
     NavigationBar(
+        modifier = if (isPortrait) Modifier else Modifier.height(52.dp),
         containerColor = Black,
         windowInsets = WindowInsets(0, 0, 0, 0),
     ) {
@@ -73,7 +79,7 @@ fun MainBottomNavigationBar(
                     }
                 },
                 modifier = Modifier
-                    .windowInsetsPadding(NavigationBarDefaults.windowInsets)
+                    .windowInsetsPadding(if (isPortrait) windowInsets else WindowInsets(bottom = 0))
                     .height(48.dp),
                 label = null,
                 alwaysShowLabel = false,

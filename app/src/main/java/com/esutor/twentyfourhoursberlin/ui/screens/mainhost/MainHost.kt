@@ -3,18 +3,21 @@ package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides.Companion.Horizontal
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -56,15 +59,17 @@ fun MainHost() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val mainTabRoutes = remember {
-        Screen.allScreens.filter { it.titleResId == R.string.app_name }.map { it.route }
+    val isMainTab by remember(currentRoute) {
+        derivedStateOf {
+            Screen.allScreens.any { it.route == currentRoute && it.titleResId == R.string.app_name }
+        }
     }
-    val isMainTab = remember(currentRoute) { currentRoute in mainTabRoutes }
-    val showFilterBar = remember(currentRoute) {
-        currentRoute in listOf(Screen.Events.route, Screen.ClubMap.route)
-    }
+    val showFilterBar = currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
+
     val loadingProgress by eventVM.loadingProgress.collectAsStateWithLifecycle()
-    var showLoadingScreen by rememberSaveable { mutableStateOf(true) }
+    val isFinished by eventVM.isLoadingFinished.collectAsStateWithLifecycle()
+
+    val showOverlay by remember { derivedStateOf { !isFinished } }
 
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val showSearchBar by showSearchBarState
@@ -98,7 +103,7 @@ fun MainHost() {
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             topBar = {
-                Column {
+                Column(Modifier.windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))) {
                     MainTopAppBar(
                         title = stringResource(appBarTitleResId),
                         currentRoute = currentRoute,
@@ -119,14 +124,16 @@ fun MainHost() {
             },
             bottomBar = {
                 if (isMainTab) {
-                    MainBottomNavigationBar(
-                        navController = navController,
-                        onTabSelected = closeSearch
-                    )
+                    Column(Modifier.windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))) {
+                        MainBottomNavigationBar(
+                            navController = navController,
+                            onTabSelected = closeSearch
+                        )
+                    }
                 }
             },
             snackbarHost = { ConnectivitySnackbarHost(snackbarHostState) },
-            contentWindowInsets = WindowInsets.safeDrawing
+            contentWindowInsets = WindowInsets.navigationBars
         ) { paddingValues ->
             Surface(
                 Modifier
@@ -144,8 +151,11 @@ fun MainHost() {
             }
         }
 
-        if (showLoadingScreen) {
-            LoadingOverlay(progressValue = loadingProgress) { showLoadingScreen = false }
+        if (showOverlay) {
+            LoadingOverlay(
+                progressValue = loadingProgress,
+                onFinished = { eventVM.setLoadingFinished() }
+            )
         }
     }
 }
