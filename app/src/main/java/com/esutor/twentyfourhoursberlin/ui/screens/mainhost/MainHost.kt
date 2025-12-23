@@ -1,20 +1,20 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -31,9 +31,11 @@ import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
-import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.ConnectivitySnackbarHost
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.LoadingOverlay
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.connectivitysnackbar.ConnectivitySnackbarHost
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainBottomNavigationBar
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainTopAppBar
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.connectivitysnackbar.ConnectivitySnackbarEffect
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
@@ -61,6 +63,8 @@ fun MainHost() {
     val showFilterBar = remember(currentRoute) {
         currentRoute in listOf(Screen.Events.route, Screen.ClubMap.route)
     }
+    val loadingProgress by eventVM.loadingProgress.collectAsStateWithLifecycle()
+    var showLoadingScreen by rememberSaveable { mutableStateOf(true) }
 
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val showSearchBar by showSearchBarState
@@ -91,87 +95,57 @@ fun MainHost() {
     ConnectivitySnackbarEffect(connectivityVM, snackbarHostState)
     ScheduleReminderEffect(eventVM)
 
-    // --- Title Logic ---
-    Scaffold(
-        topBar = {
-            Column {
-                MainTopAppBar(
-                    title = stringResource(appBarTitleResId),
-                    currentRoute = currentRoute,
-                    showSearchBar = showSearchBar,
-                    onSearchIconClick = {
-                        haptic.performHapticFeedback(TextHandleMove)
-                        showSearchBarState.value = !showSearchBarState.value
-                    },
-                    onSearchClosed = closeSearch,
-                    navController = navController,
-                    eventVM = eventVM
-                )
+    Box(modifier = Modifier.fillMaxSize()) {
+        Scaffold(
+            topBar = {
+                Column {
+                    MainTopAppBar(
+                        title = stringResource(appBarTitleResId),
+                        currentRoute = currentRoute,
+                        showSearchBar = showSearchBar,
+                        onSearchIconClick = {
+                            haptic.performHapticFeedback(TextHandleMove)
+                            showSearchBarState.value = !showSearchBarState.value
+                        },
+                        onSearchClosed = closeSearch,
+                        navController = navController,
+                        eventVM = eventVM
+                    )
 
-                if (showFilterBar) {
-                    FilterBar(eventVM)
+                    if (showFilterBar) {
+                        FilterBar(eventVM)
+                    }
                 }
-            }
-        },
-        bottomBar = {
-            if (isMainTab) {
-                MainBottomNavigationBar(
+            },
+            bottomBar = {
+                if (isMainTab) {
+                    MainBottomNavigationBar(
+                        navController = navController,
+                        onTabSelected = closeSearch
+                    )
+                }
+            },
+            snackbarHost = { ConnectivitySnackbarHost(snackbarHostState) },
+            contentWindowInsets = WindowInsets.safeDrawing
+        ) { paddingValues ->
+            Surface(
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+            ) {
+                Background()
+
+                NavGraph(
                     navController = navController,
-                    onTabSelected = closeSearch
+                    connectivityVM = connectivityVM,
+                    eventVM = eventVM,
+                    settingsVM = settingsVM
                 )
             }
-        },
-        snackbarHost = { ConnectivitySnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing
-    ) { paddingValues ->
-        Surface(
-            Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            Background()
-
-            NavGraph(
-                navController = navController,
-                connectivityVM = connectivityVM,
-                eventVM = eventVM,
-                settingsVM = settingsVM
-            )
-        }
-    }
-}
-
-@Composable
-private fun ConnectivitySnackbarEffect(
-    viewModel: ConnectivityViewModel,
-    hostState: SnackbarHostState
-) {
-    val isOnline by viewModel.isConnected.collectAsStateWithLifecycle()
-    val noInternetMsg = stringResource(R.string.no_internet_connection)
-    val backOnlineMsg = stringResource(R.string.back_online)
-
-    val wasPreviouslyOffline = remember { mutableStateOf(false) }
-    val isInitialComposition = remember { mutableStateOf(true) }
-
-    LaunchedEffect(isOnline) {
-        if (isOnline) {
-            hostState.currentSnackbarData?.let {
-                if (it.visuals.message == noInternetMsg) it.dismiss()
-            }
-
-            if (!isInitialComposition.value && wasPreviouslyOffline.value) {
-                hostState.showSnackbar(backOnlineMsg, duration = SnackbarDuration.Short)
-                wasPreviouslyOffline.value = false
-            }
-        } else {
-            wasPreviouslyOffline.value = true
-            hostState.showSnackbar(
-                message = noInternetMsg,
-                duration = SnackbarDuration.Indefinite,
-                withDismissAction = true
-            )
         }
 
-        isInitialComposition.value = false
+        if (showLoadingScreen) {
+            LoadingOverlay(progressValue = loadingProgress) { showLoadingScreen = false }
+        }
     }
 }

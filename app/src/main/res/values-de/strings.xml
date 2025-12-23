@@ -88,7 +88,7 @@
     <string name="please_describe_the_bug">Bitte beschreibe den Fehler.</string>
     <string name="please_re_enter_your_password">Bitte gib dein Passwort erneut ein</string>
     <string name="privacy_policy">Datenschutz</string>
-    <string name="push_notifications">Push Benachrichtigungen</string>
+    <string name="notifications">Benachrichtigungen</string>
     <string name="re_authenticate">Re-authentifizieren</string>
     <string name="re_enter_your_password">Passwort erneut eingeben</string>
     <string name="register">Registrieren</string>

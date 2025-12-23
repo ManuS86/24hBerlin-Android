@@ -35,7 +35,7 @@ import kotlin.collections.forEach
 @Composable
 fun AppSettingsSection(
     language: Language?,
-    pushNotificationsEnabled: Boolean,
+    notificationsEnabled: Boolean,
     bookmarks: List<Event>,
     haptic: HapticFeedback,
     settingsVM: SettingsViewModel,
@@ -81,7 +81,7 @@ fun AppSettingsSection(
 
     Spacer(Modifier.padding(microPadding))
 
-    // Push Notifications
+    // Notifications
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,20 +104,20 @@ fun AppSettingsSection(
             verticalAlignment = CenterVertically
         ) {
             Text(
-                text = stringResource(R.string.push_notifications),
+                text = stringResource(R.string.notifications),
                 modifier = Modifier.padding(vertical = regularPadding)
             )
 
             Spacer(Modifier.weight(1f))
 
             Switch(
-                checked = pushNotificationsEnabled,
+                checked = notificationsEnabled,
                 onCheckedChange = { isChecked ->
                     haptic.performHapticFeedback(TextHandleMove)
-                    settingsVM.changePushNotifications(isChecked)
+                    settingsVM.changeNotificationPermission(isChecked)
                     if (isChecked) {
                         bookmarks.forEach { bookmark ->
-                            eventVM.addBookmarkPushNotifications(bookmark)
+                            eventVM.addBookmarkReminder(bookmark)
                         }
                         eventVM.setupAbsenceReminder()
                     } else {

@@ -14,10 +14,8 @@ class EventRepositoryImpl(private val apiService: EventApi) : EventRepository {
             result.events
         }
 
-    override suspend fun getEventsWithProcessedData(): List<Event> =
+    override suspend fun processEventData(eventsMap: Map<String, Event>): List<Event> =
         withContext(Dispatchers.Default) {
-            val eventsMap = loadEvents()
-
             eventsMap.flatMap { (originalId, event) ->
                 if (event.repeats.isNullOrEmpty()) {
                     event.id = originalId

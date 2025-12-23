@@ -5,6 +5,7 @@ import androidx.compose.material3.ripple
 import androidx.compose.ui.unit.dp
 
 // --- Spacing & Padding ---
+val extraLargePadding = 64.dp
 val doublePadding = 32.dp
 val largePadding = 24.dp
 val regularPadding = 16.dp

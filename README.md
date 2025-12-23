@@ -17,7 +17,7 @@ Features:
 - Function to share and bookmark events
 - Various filters for events, club map and bookmarks
 - Club Map with all events visualized and clickable map markers to open event info
-- Push notification reminders for bookmarks
+- Notification reminders for bookmarks
 - Email and Password account creation with Firebase
 - Data storing in Firestore
 - Settings with account detail change option and ability to share app and delete account

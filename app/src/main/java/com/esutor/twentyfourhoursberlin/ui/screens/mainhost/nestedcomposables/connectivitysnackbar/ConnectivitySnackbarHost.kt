@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables
+package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.connectivitysnackbar
 
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Row

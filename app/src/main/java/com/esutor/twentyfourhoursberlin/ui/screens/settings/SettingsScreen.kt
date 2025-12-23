@@ -64,7 +64,7 @@ fun SettingsScreen(
     val bugReportAlertMessage by settingsVM.problemReportAlertMessage.collectAsStateWithLifecycle()
     val showLogoutAlert by settingsVM.showLogoutAlert.collectAsStateWithLifecycle()
     val showDeleteAccountAlert by settingsVM.showDeleteAccountAlert.collectAsStateWithLifecycle()
-    val pushNotificationsEnabled by settingsVM.pushNotificationsEnabledState.collectAsStateWithLifecycle()
+    val notificationsEnabled by settingsVM.notificationsEnabledState.collectAsStateWithLifecycle()
     val bookmarks by eventVM.bookmarks.collectAsStateWithLifecycle()
     val currentLanguageCode by settingsVM.currentLanguageCode.collectAsStateWithLifecycle()
 
@@ -104,7 +104,14 @@ fun SettingsScreen(
             AccountDetailsSection(navController, haptic)
 
             SettingsSectionTitle(R.string.app_settings)
-            AppSettingsSection(language, pushNotificationsEnabled, bookmarks, haptic, settingsVM, eventVM)
+            AppSettingsSection(
+                language = language,
+                notificationsEnabled = notificationsEnabled,
+                bookmarks = bookmarks ?: emptyList(),
+                haptic = haptic,
+                settingsVM = settingsVM,
+                eventVM = eventVM
+            )
 
             SettingsSectionTitle(R.string.help_and_feedback)
             HelpAndFeedbackSection(context, settingsVM)

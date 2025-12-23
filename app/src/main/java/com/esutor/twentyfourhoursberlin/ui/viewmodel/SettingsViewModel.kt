@@ -37,7 +37,7 @@ class SettingsViewModel(
         private const val KEY_LANGUAGE = "selectedLanguage"
         private const val KEY_PASSWORD_ERROR = "passwordError"
         private const val KEY_PROBLEM_REPORT_ALERT_MESSAGE = "problemReportAlertMessage"
-        private const val KEY_PUSH_NOTIFICATIONS_ENABLED = "pushNotificationsEnabled"
+        private const val KEY_NOTIFICATIONS_ENABLED = "notificationsEnabled"
         private const val KEY_SHOW_DELETE_ACCOUNT_ALERT = "showDeleteAccountAlert"
         private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
     }
@@ -49,7 +49,7 @@ class SettingsViewModel(
     val isReauthenticated = savedStateHandle.getStateFlow(KEY_IS_REAUTHENTICATED, false)
     val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
     val problemReportAlertMessage = savedStateHandle.getStateFlow<String?>(KEY_PROBLEM_REPORT_ALERT_MESSAGE, null)
-    var pushNotificationsEnabledState = savedStateHandle.getStateFlow(KEY_PUSH_NOTIFICATIONS_ENABLED, true)
+    var notificationsEnabledState = savedStateHandle.getStateFlow(KEY_NOTIFICATIONS_ENABLED, true)
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
     val language = savedStateHandle.getStateFlow<Language?>(KEY_LANGUAGE, null)
@@ -70,7 +70,7 @@ class SettingsViewModel(
         if (firebaseListener == null) {
             firebaseListener = userRepo.addUserListener { user ->
                 currentAppUser = user
-                savedStateHandle[KEY_PUSH_NOTIFICATIONS_ENABLED] = user?.settings?.pushNotificationsEnabled ?: false
+                savedStateHandle[KEY_NOTIFICATIONS_ENABLED] = user?.settings?.notificationsEnabled ?: false
                 savedStateHandle[KEY_LANGUAGE] = user?.settings?.language?.toLanguageOrNull()
             }
         }
@@ -81,7 +81,7 @@ class SettingsViewModel(
         savedStateHandle[KEY_LANGUAGE] = newLanguage
 
         val settings = Settings(
-            pushNotificationsEnabled = pushNotificationsEnabledState.value,
+            notificationsEnabled = notificationsEnabledState.value,
             language = newLanguage?.label
         )
 
@@ -94,9 +94,9 @@ class SettingsViewModel(
         }
     }
 
-    fun changePushNotifications(enabled: Boolean) {
+    fun changeNotificationPermission(enabled: Boolean) {
         val settings = Settings(
-            pushNotificationsEnabled = enabled,
+            notificationsEnabled = enabled,
             language = language.value?.label
         )
 
@@ -104,7 +104,7 @@ class SettingsViewModel(
             try {
                 userRepo.updateUserInformation(null, settings)
             } catch (ex: Exception) {
-                Log.e(TAG, "Error changing push notifications setting.", ex)
+                Log.e(TAG, "Error changing notification setting.", ex)
             }
         }
     }

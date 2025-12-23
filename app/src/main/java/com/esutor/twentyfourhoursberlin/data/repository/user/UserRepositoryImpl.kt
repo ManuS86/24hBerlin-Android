@@ -128,7 +128,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
                 bookmarkId?.let { this["bookmarkIDs"] = FieldValue.arrayUnion(it) }
                 settings?.let {
                     this["settings"] = mapOf(
-                        "pushNotificationsEnabled" to it.pushNotificationsEnabled,
+                        "notificationsEnabled" to it.notificationsEnabled,
                         "language" to it.language
                     )
                 }

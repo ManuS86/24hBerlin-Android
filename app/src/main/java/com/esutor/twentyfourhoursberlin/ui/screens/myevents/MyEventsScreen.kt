@@ -13,6 +13,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsFoundState
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.OfflineState
@@ -28,35 +29,39 @@ fun MyEventsScreen(
 ) {
     val bookmarks by eventVM.filteredBookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isConnected.collectAsStateWithLifecycle()
-
     val listState = rememberLazyListState()
 
     LaunchedEffect(bookmarks) {
-        if (bookmarks.isNotEmpty()) {
+        if (!bookmarks.isNullOrEmpty()) {
             listState.animateScrollToItem(0)
         }
     }
 
     Column(Modifier.fillMaxSize()) {
-        if (bookmarks.isEmpty()) {
-            if (isNetworkAvailable) {
-                NoEventsFoundState()
-            } else {
-                OfflineState()
+        when (bookmarks){
+            null -> {}
+
+            emptyList<Event>() -> {
+                if (isNetworkAvailable) {
+                    NoEventsFoundState()
+                } else {
+                    OfflineState()
+                }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .padding(horizontal = regularPadding),
-                verticalArrangement = spacedBy(halfPadding),
-                state = listState,
-                contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
-            ) {
-                items(
-                    items = bookmarks,
-                    key = { bookmark -> bookmark.id }
-                ) { bookmark ->
-                    EventItem(bookmark, eventVM)
+
+            else -> {
+                LazyColumn(
+                    modifier = Modifier.padding(horizontal = regularPadding),
+                    verticalArrangement = spacedBy(halfPadding),
+                    state = listState,
+                    contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
+                ) {
+                    items(
+                        items = bookmarks!!,
+                        key = { bookmark -> bookmark.id }
+                    ) { bookmark ->
+                        EventItem(bookmark, eventVM)
+                    }
                 }
             }
         }

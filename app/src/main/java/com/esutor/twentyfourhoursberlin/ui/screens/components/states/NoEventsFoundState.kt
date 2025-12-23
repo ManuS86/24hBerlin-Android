@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 
 @Composable
@@ -23,6 +24,7 @@ fun NoEventsFoundState() {
             .padding(regularPadding),
         contentAlignment = Alignment.Center
     ) {
+        Background()
         Text(
             text = stringResource(R.string.no_events_available),
             style = typography.headlineMedium,

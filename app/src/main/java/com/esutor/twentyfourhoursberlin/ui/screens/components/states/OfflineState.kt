@@ -19,6 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 
 @Composable
@@ -30,6 +31,8 @@ fun OfflineState() {
         verticalArrangement = Center,
         horizontalAlignment = CenterHorizontally
     ) {
+        Background()
+
         Icon(
             imageVector = Icons.Rounded.WifiOff,
             contentDescription = null,

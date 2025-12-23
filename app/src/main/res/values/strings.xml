@@ -88,7 +88,7 @@
     <string name="please_describe_the_bug">Please describe the bug.</string>
     <string name="please_re_enter_your_password">Please re-enter your password</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="push_notifications">Push Notifications</string>
+    <string name="notifications">Notifications</string>
     <string name="re_authenticate">Re-Authenticate</string>
     <string name="re_enter_your_password">Re-enter your password</string>
     <string name="register">Register</string>

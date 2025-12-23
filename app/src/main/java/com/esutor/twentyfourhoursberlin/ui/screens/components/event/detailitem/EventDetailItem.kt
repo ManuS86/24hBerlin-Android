@@ -76,7 +76,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
             ) {
                 Icon(
                     imageVector = Default.KeyboardArrowUp,
-                    contentDescription = "Decollapse",
+                    contentDescription = "Collapse",
                     tint = Gray,
                     modifier = Modifier
                         .fillMaxWidth()
