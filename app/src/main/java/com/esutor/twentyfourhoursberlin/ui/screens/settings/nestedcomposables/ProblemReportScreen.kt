@@ -58,15 +58,12 @@ fun ReportProblemScreen(
             )
         )
 
-        LargeDarkButton(
-            label = stringResource(R.string.send_bug_report),
-            onClick = {
-                onSend(bugReport)
-                if (bugReport.isNotBlank()) {
-                    bugReport = ""
-                }
+        LargeDarkButton(stringResource(R.string.send_bug_report)) {
+            onSend(bugReport)
+            if (bugReport.isNotBlank()) {
+                bugReport = ""
             }
-        )
+        }
 
         Spacer(Modifier.padding(largePadding))
     }

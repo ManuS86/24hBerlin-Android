@@ -103,16 +103,13 @@ fun RegisterScreen(
             firebaseError = firebaseError
         )
 
-        LargeDarkButton(
-            label = stringResource(R.string.register),
-            onClick = {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
-                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                } else {
-                    authVM.register(email, password, confirmPassword)
-                }
+        LargeDarkButton(stringResource(R.string.register)) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
+                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                authVM.register(email, password, confirmPassword)
             }
-        )
+        }
 
         Spacer(Modifier.weight(1f))
         LoginPrompt(onClick)

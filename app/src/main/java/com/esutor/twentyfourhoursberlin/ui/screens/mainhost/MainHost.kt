@@ -1,6 +1,5 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,9 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -32,6 +29,7 @@ import com.esutor.twentyfourhoursberlin.di.ViewModelFactoryHelper
 import com.esutor.twentyfourhoursberlin.navigation.NavGraph
 import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.ConnectivitySnackbarHost
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainBottomNavigationBar
@@ -131,12 +129,7 @@ fun MainHost() {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            Image(
-                painter = painterResource(R.drawable.background),
-                contentDescription = null,
-                contentScale = FillBounds,
-                modifier = Modifier.fillMaxSize()
-            )
+            Background()
 
             NavGraph(
                 navController = navController,

@@ -1,6 +1,5 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,14 +16,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
-import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.errorPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
@@ -41,15 +39,10 @@ fun ReAuthWrapper(
     var password by rememberSaveable { mutableStateOf("") }
 
     Box(Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.background),
-            contentDescription = null,
-            contentScale = FillBounds,
-            modifier = Modifier.fillMaxSize()
-        )
+        Background()
 
         if (isReauthenticated) {
-            if (from == "email") ChangeEmailScreen() else ChangePasswordScreen()
+            if (from == "email") ChangeEmailScreen(settingsVM) else ChangePasswordScreen(settingsVM)
         } else {
             PasswordReAuthForm(
                 settingsVM = settingsVM,
@@ -98,11 +91,7 @@ private fun PasswordReAuthForm(
             )
         }
 
-        LargeDarkButton(
-            label = stringResource(R.string.verify_password),
-            onClick = { settingsVM.reAuthenticate(password) }
-            )
-
+        LargeDarkButton(stringResource(R.string.verify_password)) { settingsVM.reAuthenticate(password) }
         Spacer(Modifier.weight(1f))
     }
 }

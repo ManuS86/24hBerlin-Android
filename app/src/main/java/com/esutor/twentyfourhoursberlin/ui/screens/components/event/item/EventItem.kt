@@ -9,8 +9,12 @@ import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -35,6 +39,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.utils.getEventColor
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
+import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 
@@ -71,7 +76,8 @@ fun EventItem(
                 this
             }
         }
-        .padding(regularPadding)
+        .padding(top = regularPadding)
+        .padding(horizontal = regularPadding)
 
     Column(
         Modifier
@@ -116,6 +122,19 @@ fun EventItem(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = End
                     ) {
+                        Spacer(Modifier.weight(0.5f))
+
+                        Column(Modifier
+                            .padding(top = regularPadding)
+                            .padding(bottom = microPadding)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = null
+                            )
+                        }
+
+                        Spacer(Modifier.weight(1f))
                         BookmarkButton(event, eventVM)
                     }
                 }
