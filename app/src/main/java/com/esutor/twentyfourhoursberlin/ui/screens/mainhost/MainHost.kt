@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -44,6 +47,7 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainHost() {
 // --- ViewModels & Controllers ---
@@ -65,6 +69,7 @@ fun MainHost() {
         }
     }
     val showFilterBar = currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val loadingProgress by eventVM.loadingProgress.collectAsStateWithLifecycle()
     val isFinished by eventVM.isLoadingFinished.collectAsStateWithLifecycle()
@@ -102,10 +107,16 @@ fun MainHost() {
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                Column(Modifier.windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))) {
+                Column(Modifier
+                    .windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))
+                ) {
                     MainTopAppBar(
                         title = stringResource(appBarTitleResId),
+                        scrollBehavior = scrollBehavior,
                         currentRoute = currentRoute,
                         showSearchBar = showSearchBar,
                         onSearchIconClick = {

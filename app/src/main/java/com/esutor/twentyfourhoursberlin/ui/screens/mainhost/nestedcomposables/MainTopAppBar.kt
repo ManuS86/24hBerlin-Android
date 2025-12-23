@@ -14,12 +14,14 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -40,6 +42,7 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 @Composable
 fun MainTopAppBar(
     title: String,
+    scrollBehavior: TopAppBarScrollBehavior,
     currentRoute: String?,
     showSearchBar: Boolean,
     onSearchIconClick: () -> Unit,
@@ -119,9 +122,12 @@ fun MainTopAppBar(
             }
         },
         colors = topAppBarColors(
-            titleContentColor = White,
+            containerColor = Black,
+            scrolledContainerColor = Black,
             navigationIconContentColor = White,
+            titleContentColor = White,
             actionIconContentColor = White
-        )
+        ),
+        scrollBehavior = scrollBehavior
     )
 }
