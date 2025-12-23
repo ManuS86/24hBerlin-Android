@@ -7,13 +7,14 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
@@ -21,7 +22,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -59,25 +62,9 @@ fun EventItem(
     isExpandable: Boolean = true,
     isInitiallyExpanded: Boolean = false
 ) {
-    var showDetail by remember { mutableStateOf(isInitiallyExpanded) }
+    var showDetail by rememberSaveable { mutableStateOf(isInitiallyExpanded) }
     val eventColor = event.getEventColor()
-
-    val rowModifier = Modifier
-        .fillMaxWidth()
-        .background(eventColor)
-        .run {
-            if (isExpandable) {
-                clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = null,
-                    onClick = { showDetail = !showDetail }
-                )
-            } else {
-                this
-            }
-        }
-        .padding(top = regularPadding)
-        .padding(horizontal = regularPadding)
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         Modifier
@@ -86,72 +73,63 @@ fun EventItem(
             .background(White)
     ) {
         CompositionLocalProvider(LocalContentColor provides White) {
-            Row(rowModifier) {
-                ImageAndDate(
-                    event.imageURL,
-                    event.start,
-                    event.end
-                )
+            Box(Modifier.fillMaxWidth().background(eventColor)) {
 
-                Column(
-                    horizontalAlignment = Start,
-                    verticalArrangement = spacedBy(halfPadding)
-                ) {
-                    Header(
-                        event.name,
-                        event.permalink,
-                        event.subtitle
-                    )
-
-                    Categories(
-                        event.eventType,
-                        event.sounds
-                    )
-
-                    Time(
-                        event.start,
-                        event.end
-                    )
-
-                    Location(
-                        event.locationName,
-                        event.address
-                    )
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = End
-                    ) {
-                        Spacer(Modifier.weight(0.5f))
-
-                        Column(Modifier
-                            .padding(top = regularPadding)
-                            .padding(bottom = microPadding)
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.KeyboardArrowDown,
-                                contentDescription = null
-                            )
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .run {
+                            if (isExpandable) {
+                                clickable(
+                                    interactionSource = interactionSource,
+                                    indication = null,
+                                    onClick = { showDetail = !showDetail }
+                                )
+                            } else this
                         }
+                        .padding(top = regularPadding)
+                        .padding(horizontal = regularPadding)
+                ) {
+                    ImageAndDate(event.imageURL, event.start, event.end)
 
-                        Spacer(Modifier.weight(1f))
-                        BookmarkButton(event, eventVM)
+                    Column(
+                        horizontalAlignment = Start,
+                        verticalArrangement = spacedBy(halfPadding),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Header(event.name, event.permalink, event.subtitle)
+                        Categories(event.eventType, event.sounds)
+                        Time(event.start, event.end)
+                        Location(event.locationName, event.address)
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = regularPadding),
+                            horizontalArrangement = End
+                        ) {
+                            BookmarkButton(event, eventVM)
+                        }
                     }
+                }
+
+                if (isExpandable) {
+                    Icon(
+                        imageVector = if (showDetail) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(BottomCenter)
+                            .padding(bottom = microPadding)
+                    )
                 }
             }
         }
 
         if (showDetail) {
-            val onDetailClose: () -> Unit = {
-                if (isExpandable) {
-                    showDetail = false
-                }
-            }
-
             EventDetailItem(
                 event = event,
                 isExpandable = isExpandable,
-                showDetailToggle = onDetailClose
+                showDetailToggle = { if (isExpandable) showDetail = false }
             )
         }
     }
