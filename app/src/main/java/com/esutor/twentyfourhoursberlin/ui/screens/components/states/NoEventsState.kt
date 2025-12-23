@@ -17,7 +17,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Ba
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 
 @Composable
-fun NoEventsFoundState() {
+fun NoEventsState() {
     Box(
         modifier = Modifier
             .fillMaxSize()

@@ -36,7 +36,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            EventsScreen(connectivityVM, eventVM)
+            EventsScreen(eventVM, connectivityVM)
         }
         composable(
             Screen.ClubMap.route,
@@ -54,7 +54,7 @@ fun NavGraph(
             popEnterTransition = { EnterTransition.None },
             popExitTransition = { ExitTransition.None }
         ) {
-            MyEventsScreen(connectivityVM, eventVM)
+            MyEventsScreen(eventVM, connectivityVM)
         }
         composable(
             route = Screen.Settings.route,

@@ -1,5 +1,6 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.event.item
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,7 +23,6 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Start
@@ -60,17 +60,22 @@ fun EventItem(
     event: Event,
     eventVM: EventViewModel,
     isExpandable: Boolean = true,
-    isInitiallyExpanded: Boolean = false
+    isInitiallyExpanded: Boolean = false,
+    onCollapse: () -> Unit = {}
 ) {
-    var showDetail by rememberSaveable { mutableStateOf(isInitiallyExpanded) }
+    var showDetail by remember { mutableStateOf(isInitiallyExpanded) }
     val eventColor = event.getEventColor()
     val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         Modifier
             .clip(mediumRounding)
-            .border(BorderStroke(0.5.dp, TextOffBlack), mediumRounding)
+            .border(
+                BorderStroke(if (showDetail) 0.5.dp else 0.dp, TextOffBlack),
+                mediumRounding
+            )
             .background(White)
+            .animateContentSize()
     ) {
         CompositionLocalProvider(LocalContentColor provides White) {
             Box(Modifier.fillMaxWidth().background(eventColor)) {
@@ -83,7 +88,10 @@ fun EventItem(
                                 clickable(
                                     interactionSource = interactionSource,
                                     indication = null,
-                                    onClick = { showDetail = !showDetail }
+                                    onClick = {
+                                        if (showDetail) onCollapse()
+                                        showDetail = !showDetail
+                                    }
                                 )
                             } else this
                         }
@@ -129,7 +137,12 @@ fun EventItem(
             EventDetailItem(
                 event = event,
                 isExpandable = isExpandable,
-                showDetailToggle = { if (isExpandable) showDetail = false }
+                showDetailToggle = {
+                    if (isExpandable) {
+                        onCollapse()
+                        showDetail = false
+                    }
+                }
             )
         }
     }

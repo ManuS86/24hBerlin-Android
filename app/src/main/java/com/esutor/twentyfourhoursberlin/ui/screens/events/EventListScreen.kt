@@ -4,59 +4,86 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
-import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsFoundState
+import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsState
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.OfflineState
-import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
-import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
+import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun EventsScreen(
-    connectivityVM: ConnectivityViewModel,
-    eventVM: EventViewModel
+    eventVM: EventViewModel,
+    connectivityVM: ConnectivityViewModel
 ) {
+    // --- State Observation ---
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isConnected.collectAsStateWithLifecycle()
-    val listState = rememberLazyListState()
 
-    LaunchedEffect(events.size) {
+    // Filter & Search states used as keys for Scroll-to-Top
+    val searchText by eventVM.searchTextFieldValue.collectAsStateWithLifecycle()
+    val selectedType by eventVM.selectedEventType.collectAsStateWithLifecycle()
+    val selectedMonth by eventVM.selectedMonth.collectAsStateWithLifecycle()
+    val selectedSound by eventVM.selectedSound.collectAsStateWithLifecycle()
+    val selectedVenue by eventVM.selectedVenue.collectAsStateWithLifecycle()
+
+    // --- UI State ---
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+
+    // --- Side Effects ---
+    LaunchedEffect(
+        searchText.text,
+        selectedType,
+        selectedMonth,
+        selectedSound,
+        selectedVenue
+    ) {
         if (events.isNotEmpty()) {
             listState.scrollToItem(0)
         }
     }
 
-    Column {
+    // --- Layout ---
+    Column(Modifier.fillMaxSize()) {
         if (events.isEmpty()) {
-            if (isNetworkAvailable) {
-                NoEventsFoundState()
-            } else {
-                OfflineState()
-            }
+            if (isNetworkAvailable) NoEventsState() else OfflineState()
         } else {
             LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = regularPadding),
-                verticalArrangement = spacedBy(halfPadding),
+                modifier = Modifier.fillMaxSize(),
                 state = listState,
-                contentPadding = PaddingValues(top = halfPadding, bottom = halfPadding)
+                contentPadding = PaddingValues(horizontal = regularPadding, vertical = halfPadding),
+                verticalArrangement = spacedBy(halfPadding)
             ) {
-                items(
+                itemsIndexed(
                     items = events,
-                    key = { event -> event.id }
-                ) { event ->
-                    EventItem(event, eventVM)
+                    key = { _, event -> event.id }
+                ) { index, event ->
+                    EventItem(
+                        event = event,
+                        eventVM = eventVM,
+                        onCollapse = {
+                            scope.launch {
+                                delay(50)
+                                listState.animateScrollToItem(
+                                    index = index,
+                                    scrollOffset = -30
+                                )
+                            }
+                        }
+                    )
                 }
             }
         }
