@@ -27,9 +27,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction.Companion.Search
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,7 +46,6 @@ fun SearchBar(
     onSearchClosed: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
-    val haptic = LocalHapticFeedback.current
 
     BasicTextField(
         value = searchText,
@@ -61,13 +58,8 @@ fun SearchBar(
         textStyle = typography.bodyLarge.copy(color = White),
         cursorBrush = SolidColor(White),
         singleLine = true,
-        keyboardOptions = KeyboardOptions(
-            imeAction = Search,
-            keyboardType = KeyboardType.Text
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = { focusManager.clearFocus() }
-        ),
+        keyboardOptions = KeyboardOptions(imeAction = Search, keyboardType = KeyboardType.Text),
+        keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
         decorationBox = { innerTextField ->
             DecorationBox(
                 value = searchText.text,
@@ -85,7 +77,6 @@ fun SearchBar(
                 },
                 leadingIcon = {
                     IconButton(onClick = {
-                        haptic.performHapticFeedback(TextHandleMove)
                         focusManager.clearFocus()
                         onSearchClosed()
                     }) {
@@ -98,10 +89,7 @@ fun SearchBar(
                 },
                 trailingIcon = {
                     if (searchText.text.isNotEmpty()) {
-                        IconButton(onClick = {
-                            haptic.performHapticFeedback(TextHandleMove)
-                            onSearchTextChanged(TextFieldValue(""))
-                        }) {
+                        IconButton(onClick = { onSearchTextChanged(TextFieldValue("")) }) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = stringResource(R.string.clear_search),

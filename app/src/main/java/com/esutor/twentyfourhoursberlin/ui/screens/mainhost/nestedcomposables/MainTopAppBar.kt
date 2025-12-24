@@ -23,8 +23,6 @@ import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
@@ -50,8 +48,6 @@ fun MainTopAppBar(
     navController: NavHostController,
     eventVM: EventViewModel
 ) {
-    val haptic = LocalHapticFeedback.current
-
     val searchTextValue by eventVM.searchTextFieldValue.collectAsStateWithLifecycle()
 
     val backButtonRoutes = remember {
@@ -100,24 +96,15 @@ fun MainTopAppBar(
         },
         navigationIcon = {
             if (showBackButton) {
-                IconButton(onClick = {
-                    haptic.performHapticFeedback(TextHandleMove)
-                    navController.navigateUp()
-                }) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back)
-                    )
+                IconButton(onClick = { navController.navigateUp() }) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                 }
             }
         },
         actions = {
             if (showSearchComponent && !showSearchBar) {
                 IconButton(onClick = onSearchIconClick) {
-                    Icon(
-                        imageVector = Icons.Filled.Search,
-                        contentDescription = stringResource(R.string.search)
-                    )
+                    Icon(Icons.Filled.Search, stringResource(R.string.search))
                 }
             }
         },

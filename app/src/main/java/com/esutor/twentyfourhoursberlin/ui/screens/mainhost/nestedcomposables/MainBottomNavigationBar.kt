@@ -37,7 +37,6 @@ fun MainBottomNavigationBar(
     val items = navItemsData
     val isPortrait = configuration.orientation == ORIENTATION_PORTRAIT
 
-
     NavigationBar(
         modifier = if (isPortrait) Modifier else Modifier.height(52.dp),
         containerColor = Black,

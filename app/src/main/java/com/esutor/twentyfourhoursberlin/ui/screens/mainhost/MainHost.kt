@@ -15,15 +15,14 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -51,7 +50,6 @@ import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
 @Composable
 fun MainHost() {
 // --- ViewModels & Controllers ---
-    val haptic = LocalHapticFeedback.current
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -80,7 +78,6 @@ fun MainHost() {
     val showSearchBar by showSearchBarState
 
     val closeSearch = {
-        haptic.performHapticFeedback(TextHandleMove)
         showSearchBarState.value = false
         eventVM.updateSearchText(TextFieldValue(""))
     }
@@ -101,9 +98,14 @@ fun MainHost() {
     }
 
     // --- Side Effects ---
-    SetSystemBarColorsToLight(false)
     ConnectivitySnackbarEffect(connectivityVM, snackbarHostState)
     ScheduleReminderEffect(eventVM)
+    SetSystemBarColorsToLight(false)
+
+    LaunchedEffect(currentRoute) {
+        scrollBehavior.state.heightOffset = 0f
+        scrollBehavior.state.contentOffset = 0f
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
@@ -119,10 +121,7 @@ fun MainHost() {
                         scrollBehavior = scrollBehavior,
                         currentRoute = currentRoute,
                         showSearchBar = showSearchBar,
-                        onSearchIconClick = {
-                            haptic.performHapticFeedback(TextHandleMove)
-                            showSearchBarState.value = !showSearchBarState.value
-                        },
+                        onSearchIconClick = { showSearchBarState.value = !showSearchBarState.value },
                         onSearchClosed = closeSearch,
                         navController = navController,
                         eventVM = eventVM
