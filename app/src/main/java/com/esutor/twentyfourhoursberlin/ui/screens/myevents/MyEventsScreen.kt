@@ -37,7 +37,7 @@ fun MyEventsScreen(
     val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
-    LaunchedEffect(bookmarks) {
+    LaunchedEffect(bookmarks, bookmarks?.size) {
         if (!bookmarks.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
             listState.scrollToItem(0)
         }

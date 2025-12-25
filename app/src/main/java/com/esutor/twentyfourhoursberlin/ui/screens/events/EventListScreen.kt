@@ -37,8 +37,8 @@ fun EventsScreen(
     val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
-    LaunchedEffect(events) {
-        if (events.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
+    LaunchedEffect(events, events?.size) {
+        if (!events.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
             listState.scrollToItem(0)
         }
     }

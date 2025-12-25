@@ -98,7 +98,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
     }
 
     @Suppress("AssignedValueIsNeverRead")
-    LaunchedEffect(events) {
+    LaunchedEffect(events, events?.size) {
         if (isInitialLoad) {
             isInitialLoad = false
         } else {
