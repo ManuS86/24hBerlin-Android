@@ -69,9 +69,7 @@ fun MainHost() {
     val showFilterBar = currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val isFinished by eventVM.isLoadingFinished.collectAsStateWithLifecycle()
-
-    val isVisible by remember { derivedStateOf { !isFinished } }
+    val isLoading by eventVM.isLoading.collectAsStateWithLifecycle()
 
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val showSearchBar by showSearchBarState
@@ -158,6 +156,6 @@ fun MainHost() {
             }
         }
 
-        LoadingScreen(isVisible)
+        LoadingScreen(isLoading)
     }
 }

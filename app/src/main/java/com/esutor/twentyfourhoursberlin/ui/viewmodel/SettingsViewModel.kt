@@ -1,9 +1,8 @@
 package com.esutor.twentyfourhoursberlin.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.Language
@@ -22,11 +21,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    application: Application,
     private val savedStateHandle: SavedStateHandle,
     private val userRepo: UserRepository,
     private val reminderScheduler: AndroidReminderScheduler
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     companion object {
         private const val TAG = "SettingsViewModel"

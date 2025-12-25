@@ -16,6 +16,8 @@ class EventRepositoryImpl(private val apiService: EventApi) : EventRepository {
 
     override suspend fun processEventData(eventsMap: Map<String, Event>): List<Event> =
         withContext(Dispatchers.Default) {
+            val now = LocalDateTime.now()
+
             eventsMap.flatMap { (originalId, event) ->
                 if (event.repeats.isNullOrEmpty()) {
                     event.id = originalId
@@ -34,9 +36,13 @@ class EventRepositoryImpl(private val apiService: EventApi) : EventRepository {
                     }
                 }
             }.filter { event ->
-                val now = LocalDateTime.now()
                 val eventDateTime = event.end ?: event.start
                 eventDateTime.isAfter(now) || eventDateTime.isEqual(now)
             }.sortedBy { it.start }
         }
+
+    override suspend fun getProcessedEvents(): List<Event> {
+        val rawData = loadEvents()
+        return processEventData(rawData)
+    }
 }

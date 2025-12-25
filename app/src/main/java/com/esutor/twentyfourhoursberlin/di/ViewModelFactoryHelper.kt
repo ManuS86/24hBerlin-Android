@@ -28,7 +28,6 @@ object ViewModelFactoryHelper {
                 ?: throw IllegalStateException("Application missing")
 
             return AuthViewModel(
-                application = application,
                 savedStateHandle = extras.createSavedStateHandle(),
                 userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance()),
                 auth = Firebase.auth,
@@ -56,7 +55,6 @@ object ViewModelFactoryHelper {
                 ?: throw IllegalStateException("Application missing")
 
             return EventViewModel(
-                application = application,
                 savedStateHandle = extras.createSavedStateHandle(),
                 eventRepo = EventRepositoryImpl(EventApi),
                 userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance()),
@@ -73,7 +71,6 @@ object ViewModelFactoryHelper {
                 ?: throw IllegalStateException("Application missing")
 
             return SettingsViewModel(
-                application = application,
                 savedStateHandle = extras.createSavedStateHandle(),
                 userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance()),
                 reminderScheduler = AndroidReminderScheduler(application),

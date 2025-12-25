@@ -21,11 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
@@ -40,21 +36,15 @@ import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 fun LoadingScreen(
     isVisible: Boolean
 ) {
-    var animateTrigger by remember{ mutableStateOf(false) }
-
-    LaunchedEffect(isVisible) {
-        animateTrigger = isVisible
-    }
-
     val barExpansion by animateFloatAsState(
-        targetValue = if (animateTrigger) 1f else 0f,
-        animationSpec = tween(durationMillis = 350, easing = LinearOutSlowInEasing),
+        targetValue = if (isVisible) 1f else 0f,
+        animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
         label = "BarExpansion"
     )
 
     val animatedProgress by animateFloatAsState(
         targetValue = if (isVisible && barExpansion > 0.9f) 1f else 0f,
-        animationSpec = tween(durationMillis = 350, easing = LinearOutSlowInEasing),
+        animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
         label = "ProgressBarAnimation"
     )
 

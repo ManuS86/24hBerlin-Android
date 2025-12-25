@@ -1,9 +1,8 @@
 package com.esutor.twentyfourhoursberlin.ui.viewmodel
 
-import android.app.Application
 import android.util.Log
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
@@ -20,13 +19,12 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
-    application: Application,
     private val savedStateHandle: SavedStateHandle,
     private val userRepo: UserRepository,
     private val auth: FirebaseAuth,
     private val analytics: FirebaseAnalytics,
     private val permissionManager: AndroidPermissionManager
-) : AndroidViewModel(application) {
+) : ViewModel() {
 
     companion object {
         private const val TAG = "AuthViewModel"
