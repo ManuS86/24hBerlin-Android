@@ -13,7 +13,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
@@ -60,25 +59,29 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
                         fontWeight = Bold
                     )
 
-                    Column(horizontalAlignment = CenterHorizontally) {
-                        Text(
-                            text = start.format(
-                                DateTimeFormatter.ofPattern(
-                                    "MMMM d, yyyy HH:mm",
-                                    locale
-                                )
-                            ),
-                            style = typography.bodyLarge,
-                            color = DarkGray
-                        )
-
-                        end?.let {
+                    Column {
+                        Row {
                             Text(
-                                text = " - ",
+                                text = start.format(
+                                    DateTimeFormatter.ofPattern(
+                                        "MMMM d, yyyy HH:mm",
+                                        locale
+                                    )
+                                ),
                                 style = typography.bodyLarge,
                                 color = DarkGray
                             )
 
+                            end?.let {
+                                Text(
+                                    text = " - ",
+                                    style = typography.bodyLarge,
+                                    color = DarkGray
+                                )
+                            }
+                        }
+
+                        end?.let {
                             Text(
                                 text = end.format(
                                     DateTimeFormatter.ofPattern(
