@@ -12,8 +12,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,13 +25,8 @@ fun SettingsButton(
     textAlign: TextAlign,
     onClick: () -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
-
     Button(
-        onClick = {
-            haptic.performHapticFeedback(TextHandleMove)
-            onClick()
-        },
+        onClick = { onClick() },
         modifier = Modifier
             .fillMaxWidth()
             .shadow(

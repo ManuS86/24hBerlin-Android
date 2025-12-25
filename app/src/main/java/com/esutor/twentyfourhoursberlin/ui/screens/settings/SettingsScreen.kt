@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.font.FontWeight.Companion.Normal
@@ -54,7 +53,6 @@ fun SettingsScreen(
 ) {
     // --- Context & Helpers ---
     val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
     val scrollState = rememberScrollState()
     val languageChangeHelper = remember { LanguageChangeHelper() }
 
@@ -101,14 +99,13 @@ fun SettingsScreen(
                 .padding(bottom = regularPadding)
         ) {
             SettingsSectionTitle(R.string.account_details)
-            AccountDetailsSection(navController, haptic)
+            AccountDetailsSection(navController)
 
             SettingsSectionTitle(R.string.app_settings)
             AppSettingsSection(
                 language = language,
                 notificationsEnabled = notificationsEnabled,
                 bookmarks = bookmarks ?: emptyList(),
-                haptic = haptic,
                 settingsVM = settingsVM,
                 eventVM = eventVM
             )

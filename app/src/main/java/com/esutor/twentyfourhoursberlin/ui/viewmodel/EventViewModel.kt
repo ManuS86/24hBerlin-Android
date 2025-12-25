@@ -53,30 +53,30 @@ class EventViewModel(
         private const val KEY_VENUE = "selected_venue"
     }
 
-    // --- Sources of Truth (Backing States) ---
+    // --- UI & App States ---
     private var userListener: ListenerRegistration? = null
+
     private val _currentAppUser = MutableStateFlow<AppUser?>(null)
+    val currentAppUser = _currentAppUser.asStateFlow()
+
     private val _events = MutableStateFlow<List<Event>?>(null)
+    private val events: StateFlow<List<Event>?> = _events
+        .onStart { loadEvents() }
+        .stateIn(viewModelScope, WhileSubscribed(5000L), null)
+
     private val _isLoadingFinished = MutableStateFlow(false)
-    private val _loadingProgress = MutableStateFlow(0f)
+    val isLoadingFinished = _isLoadingFinished.asStateFlow()
+
     private val _searchTextFieldValue = MutableStateFlow(
         TextFieldValue(savedStateHandle.get<String>(KEY_SEARCH_TEXT) ?: "")
     )
-
-    // --- Public UI & App States ---
-    val currentAppUser = _currentAppUser.asStateFlow()
-    val isLoadingFinished = _isLoadingFinished.asStateFlow()
-    val loadingProgress = _loadingProgress.asStateFlow()
     val searchTextFieldValue = _searchTextFieldValue.asStateFlow()
+
     val hasNotificationPermission = permissionManager.hasNotificationPermission
 
     private var isDone: Boolean
         get() = _isLoadingFinished.value
         set(value) { _isLoadingFinished.value = value }
-
-    private val events: StateFlow<List<Event>?> = _events
-        .onStart { loadEvents() }
-        .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     // --- Filter Inputs (SavedStateHandle) ---
     val selectedEventType = savedStateHandle.getStateFlow<EventType?>(KEY_EVENT_TYPE, null)
@@ -147,17 +147,12 @@ class EventViewModel(
     private fun loadEvents() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _loadingProgress.value = 0.1f
                 val rawEvents = eventRepo.loadEvents()
-                _loadingProgress.value = 0.5f
                 val finalEvents = eventRepo.processEventData(rawEvents)
-                _loadingProgress.value = 0.9f
                 _events.emit(finalEvents)
-                _loadingProgress.value = 1.0f
                 setLoadingFinished()
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading events from repository.", e)
-                _loadingProgress.value = 1.0f
                 setLoadingFinished()
             }
         }

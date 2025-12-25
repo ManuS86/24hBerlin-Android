@@ -18,9 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
@@ -48,7 +46,6 @@ private const val SHIFT_AMOUNT = 0.00015
 @Composable
 fun ClubMapScreen(eventVM: EventViewModel) {
     val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
     val events by eventVM.filteredEvents.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState()
@@ -128,7 +125,6 @@ fun ClubMapScreen(eventVM: EventViewModel) {
                     title = event.name,
                     zIndex = if (selectedEvent?.id == event.id) 1f else 0f,
                     onClick = {
-                        haptic.performHapticFeedback(TextHandleMove)
                         selectedEvent = event
                         true
                     }

@@ -10,30 +10,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import com.esutor.twentyfourhoursberlin.ui.theme.circle
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 
 @Composable
 fun LargeDarkButton(
     label: String,
     onClick: () -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
-
     ElevatedButton(
-        onClick = {
-            haptic.performHapticFeedback(TextHandleMove)
-            onClick()
-        },
+        onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
             containerColor = Black,
             contentColor = White
         ),
-        shape = slightRounding,
+        shape = circle,
         modifier = Modifier
             .padding(top = largePadding)
             .fillMaxWidth()

@@ -11,8 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -27,7 +25,6 @@ fun BookmarkButton(
     event: Event,
     eventVM: EventViewModel
 ) {
-    val haptic = LocalHapticFeedback.current
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
 
     val interactionSource = remember { MutableInteractionSource() }
@@ -46,7 +43,6 @@ fun BookmarkButton(
                 indication = roundRipple,
                 role = Role.Button,
                 onClick = {
-                    haptic.performHapticFeedback(TextHandleMove)
                     if (!isBookmarked) {
                         eventVM.addBookmarkId(bookmarkId = event.id)
                     } else {

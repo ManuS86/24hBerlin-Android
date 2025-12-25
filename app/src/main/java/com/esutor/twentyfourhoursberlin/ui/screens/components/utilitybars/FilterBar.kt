@@ -10,22 +10,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Tune
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults.buttonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
+import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,14 +31,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
@@ -61,7 +58,6 @@ import java.time.LocalDate.now
 @Composable
 fun FilterBar(eventVM: EventViewModel) {
     val context = LocalContext.current
-    val haptic = LocalHapticFeedback.current
     val scope = rememberCoroutineScope()
 
     val uniqueLocations by eventVM.uniqueLocations.collectAsStateWithLifecycle()
@@ -102,20 +98,25 @@ fun FilterBar(eventVM: EventViewModel) {
                 monthOptions.forEach { month ->
                     val isSelected = selectedMonth == month
 
-                    Button(
-                        onClick = {
-                            haptic.performHapticFeedback(TextHandleMove)
-                            eventVM.updateMonth(if (isSelected) null else month)
-                        },
-                        modifier = Modifier.height(32.dp),
-                        shape = slightRounding,
-                        contentPadding = PaddingValues(horizontal = 0.dp, vertical = 0.dp),
-                        colors = buttonColors(DarkGray.copy(if (isSelected) 0.9f else 0.5f))
+                    Box(
+                        modifier = Modifier
+                            .height(32.dp)
+                            .background(
+                                color = DarkGray.copy(alpha = if (isSelected) 0.9f else 0.5f),
+                                shape = slightRounding
+                            )
+                            .clickable(
+                                interactionSource = remember { MutableInteractionSource() },
+                                indication = ripple(),
+                                onClick = { eventVM.updateMonth(if (isSelected) null else month) }
+                            )
+                            .padding(horizontal = 12.dp),
+                        contentAlignment = Center
                     ) {
                         Text(
                             text = month?.getStringResource(context) ?: stringResource(R.string.all),
                             fontWeight = SemiBold,
-                            color = White.copy(if (isSelected) 1f else 0.6f),
+                            color = White.copy(alpha = if (isSelected) 1f else 0.6f),
                             style = typography.bodyMedium
                         )
                     }
@@ -132,10 +133,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         interactionSource = remember { MutableInteractionSource() },
                         indication = roundRipple,
                         role = Role.Button,
-                        onClick = {
-                            haptic.performHapticFeedback(TextHandleMove)
-                            showFilters = !showFilters
-                        }
+                        onClick = { showFilters = !showFilters }
                     ),
                 tint = White
             )
@@ -204,7 +202,6 @@ fun FilterBar(eventVM: EventViewModel) {
                                 indication = roundRipple,
                                 role = Role.Button,
                                 onClick = {
-                                    haptic.performHapticFeedback(TextHandleMove)
                                     eventVM.clearAllFilters()
                                     scope.launch {
                                         horizontalScrollState.animateScrollTo(0)

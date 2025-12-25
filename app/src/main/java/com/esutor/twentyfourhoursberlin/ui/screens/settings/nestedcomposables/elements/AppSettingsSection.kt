@@ -17,8 +17,8 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
@@ -37,10 +37,11 @@ fun AppSettingsSection(
     language: Language?,
     notificationsEnabled: Boolean,
     bookmarks: List<Event>,
-    haptic: HapticFeedback,
     settingsVM: SettingsViewModel,
     eventVM: EventViewModel
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Card(
         modifier = Modifier
             .fillMaxWidth()

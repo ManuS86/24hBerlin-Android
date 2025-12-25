@@ -36,7 +36,7 @@ import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
-import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.LoadingOverlay
+import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.LoadingScreen
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.connectivitysnackbar.ConnectivitySnackbarHost
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainBottomNavigationBar
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainTopAppBar
@@ -69,10 +69,9 @@ fun MainHost() {
     val showFilterBar = currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
-    val loadingProgress by eventVM.loadingProgress.collectAsStateWithLifecycle()
     val isFinished by eventVM.isLoadingFinished.collectAsStateWithLifecycle()
 
-    val showOverlay by remember { derivedStateOf { !isFinished } }
+    val isVisible by remember { derivedStateOf { !isFinished } }
 
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val showSearchBar by showSearchBarState
@@ -107,15 +106,13 @@ fun MainHost() {
         scrollBehavior.state.contentOffset = 0f
     }
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(Modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier
                 .fillMaxSize()
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             topBar = {
-                Column(Modifier
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))
-                ) {
+                Column(Modifier.windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))) {
                     MainTopAppBar(
                         title = stringResource(appBarTitleResId),
                         scrollBehavior = scrollBehavior,
@@ -161,11 +158,6 @@ fun MainHost() {
             }
         }
 
-        if (showOverlay) {
-            LoadingOverlay(
-                progressValue = loadingProgress,
-                onFinished = { eventVM.setLoadingFinished() }
-            )
-        }
+        LoadingScreen(isVisible)
     }
 }

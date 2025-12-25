@@ -5,8 +5,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 
 @Composable
@@ -14,13 +12,8 @@ fun AuthTextButton(
     label: String,
     onClick: () -> Unit
 ) {
-    val haptic = LocalHapticFeedback.current
-
     TextButton(
-        {
-            haptic.performHapticFeedback(TextHandleMove)
-            onClick()
-        }
+        { onClick() }
     ) {
         Text(
             text = label,

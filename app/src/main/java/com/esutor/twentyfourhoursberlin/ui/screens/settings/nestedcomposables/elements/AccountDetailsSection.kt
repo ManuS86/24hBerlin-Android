@@ -24,8 +24,6 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
-import androidx.compose.ui.hapticfeedback.HapticFeedback
-import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -37,8 +35,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 
 @Composable
 fun AccountDetailsSection(
-    navController: NavHostController,
-    haptic: HapticFeedback
+    navController: NavHostController
 ) {
     Card(
         modifier = Modifier
@@ -58,7 +55,6 @@ fun AccountDetailsSection(
         // Change Email
         SettingsCardItem(
             title = stringResource(R.string.change_email),
-            haptic = haptic,
             onClick = { navController.navigate(Screen.ReAuthWrapper.createRoute("email")) }
         )
 
@@ -67,7 +63,6 @@ fun AccountDetailsSection(
         // Change Password
         SettingsCardItem(
             title = stringResource(R.string.change_password),
-            haptic = haptic,
             onClick = { navController.navigate(Screen.ReAuthWrapper.createRoute("password")) }
         )
     }
@@ -76,7 +71,6 @@ fun AccountDetailsSection(
 @Composable
 private fun SettingsCardItem(
     title: String,
-    haptic: HapticFeedback,
     onClick: () -> Unit
 ) {
     Row(
@@ -86,10 +80,7 @@ private fun SettingsCardItem(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = LocalIndication.current,
                 role = Role.Button,
-                onClick = {
-                    haptic.performHapticFeedback(TextHandleMove)
-                    onClick()
-                }
+                onClick = { onClick() }
             )
             .padding(regularPadding),
         verticalAlignment = CenterVertically
