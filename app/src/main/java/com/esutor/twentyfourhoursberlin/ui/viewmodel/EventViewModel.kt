@@ -63,7 +63,7 @@ class EventViewModel(
         .onStart { loadEvents() }
         .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
-    private val _isLoading = MutableStateFlow(false)
+    private val _isLoading: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val isLoading = _isLoading.asStateFlow()
 
     private val _searchTextFieldValue = MutableStateFlow(

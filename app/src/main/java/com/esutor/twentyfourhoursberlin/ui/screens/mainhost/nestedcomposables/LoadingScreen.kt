@@ -34,22 +34,22 @@ import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 
 @Composable
 fun LoadingScreen(
-    isVisible: Boolean
+    isVisible: Boolean?
 ) {
     val barExpansion by animateFloatAsState(
-        targetValue = if (isVisible) 1f else 0f,
+        targetValue = if (isVisible ?: false) 1f else 0f,
         animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
         label = "BarExpansion"
     )
 
     val animatedProgress by animateFloatAsState(
-        targetValue = if (isVisible && barExpansion > 0.9f) 1f else 0f,
+        targetValue = if (isVisible ?: false  && barExpansion > 0.9f) 1f else 0f,
         animationSpec = tween(durationMillis = 400, easing = LinearOutSlowInEasing),
         label = "ProgressBarAnimation"
     )
 
     AnimatedVisibility(
-        visible = isVisible,
+        visible = isVisible ?: true,
         enter = EnterTransition.None,
         exit = fadeOut(tween(300)) + scaleOut(
             targetScale = 1.5f,
