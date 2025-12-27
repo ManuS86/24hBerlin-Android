@@ -1,6 +1,5 @@
 package com.esutor.twentyfourhoursberlin.utils
 
-import android.text.Spanned
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
@@ -14,69 +13,66 @@ import com.esutor.twentyfourhoursberlin.ui.theme.ArtAndCulture
 import com.esutor.twentyfourhoursberlin.ui.theme.Concert
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 
-fun Event.getEventColor(): Color {
-    val eventTypes = this.eventType?.values ?: emptySet()
+// Events
+private fun Event.matches(category: String): Boolean {
+    return this.eventType?.values?.any {
+        it.replace("&amp;", "&").equals(category, ignoreCase = true)
+    } ?: false
+}
 
-    fun String.isMatch(category: String) =
-        this.replace("&amp;", "&").equals(category, ignoreCase = true)
-
-    return when {
-        eventTypes.any { it.isMatch("Konzert") } -> Concert
-        eventTypes.any { it.isMatch("Party") } -> Party
-        eventTypes.any { it.isMatch("Kunst & Kultur") } -> ArtAndCulture
-        else -> Party
-    }
+fun Event.getEventColor(): Color = when {
+    matches("Konzert") -> Concert
+    matches("Party") -> Party
+    matches("Kunst & Kultur") -> ArtAndCulture
+    else -> Party
 }
 
 @DrawableRes
-fun Event.getMarkerResourceId(): Int {
-    val eventTypes = this.eventType?.values ?: emptySet()
-
-    fun String.isMatch(category: String) =
-        this.replace("&amp;", "&").equals(category, ignoreCase = true)
-
-    return when {
-        eventTypes.any { it.isMatch("Konzert") } -> R.drawable.ic_concert_location
-        eventTypes.any { it.isMatch("Party") } -> R.drawable.ic_party_location
-        eventTypes.any { it.isMatch("Kunst & Kultur") } -> R.drawable.ic_art_and_culture_location
-        else -> R.drawable.ic_party_location
-    }
+fun Event.getMarkerResourceId(): Int = when {
+    matches("Konzert") -> R.drawable.ic_concert_location
+    matches("Party") -> R.drawable.ic_party_location
+    matches("Kunst & Kultur") -> R.drawable.ic_art_and_culture_location
+    else -> R.drawable.ic_party_location
 }
 
+// Strings
 fun String.cleanToAnnotatedString(): AnnotatedString {
+    val cleanText = this.extractCleanContent()
+    return cleanText.toAnnotatedString()
+}
+
+/**
+ * Handles the logic of stripping JS boilerplate and extracting inner content.
+ */
+fun String.extractCleanContent(): String {
+    if (this.isBlank()) return ""
+
+    // Decode HTML entities (like &amp;) first to make Regex more reliable
+    val decoded = HtmlCompat.fromHtml(this, FROM_HTML_MODE_LEGACY).toString()
+
+    // Extract content between backticks
+    val jsContentRegex = Regex("`([^`]+)`")
+    val extracted = jsContentRegex.find(decoded)?.groupValues?.get(1) ?: ""
+
+    // Strip out the document.getElementById boilerplate
+    val boilerplateRegex = Regex(
+        """document\.getElementById\(.*?\)\.innerHTML\s*=\s*[`'"].*?[`'"]\s*;""",
+        RegexOption.DOT_MATCHES_ALL
+    )
+    val noJS = decoded.replace(boilerplateRegex, "").trim()
+
+    return if (extracted.isNotBlank()) "$noJS\n\n$extracted" else noJS
+}
+
+/**
+ * Converts a string (potentially with HTML tags) into a Compose AnnotatedString.
+ */
+fun String.toAnnotatedString(): AnnotatedString {
     if (this.isBlank()) return AnnotatedString("")
 
-    // 1. Initial decode
-    val firstPass = HtmlCompat.fromHtml(this, FROM_HTML_MODE_LEGACY).toString()
+    // Final pass to handle remaining HTML tags like <b> or <i>
+    val spanned = HtmlCompat.fromHtml(this, FROM_HTML_MODE_LEGACY)
 
-    // 2. RESCUE JS content
-    val jsContentRegex = Regex("`([^`]+)`")
-    val extractedContent = jsContentRegex.find(firstPass)?.groupValues?.get(1) ?: ""
-
-    // 3. Remove JS boilerplate
-    val noJS = firstPass.replace(
-        Regex(
-            """document\.getElementById\(.*?\)\.innerHTML\s*=\s*[`'"].*?[`'"]\s*;""",
-            RegexOption.DOT_MATCHES_ALL
-        ),
-        ""
-    ).trim()
-
-    // 4. Combine ONLY if extractedContent is not empty
-    val combinedHtml = if (extractedContent.isNotBlank()) {
-        "$noJS<br><br>$extractedContent"
-    } else {
-        noJS
-    }
-
-    // 5. Convert to Spanned
-    val spanned: Spanned = HtmlCompat.fromHtml(
-        combinedHtml,
-        FROM_HTML_MODE_LEGACY
-    )
-
-    // 6. TRIM THE RESULT and convert to AnnotatedString
-    // We use .toString().trim() to remove those pesky trailing \n characters
     return buildAnnotatedString {
         append(spanned.toString().trim())
     }
