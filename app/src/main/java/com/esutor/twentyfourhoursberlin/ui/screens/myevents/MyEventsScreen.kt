@@ -45,7 +45,7 @@ fun MyEventsScreen(
 
     // --- Layout ---
     Column(Modifier.fillMaxSize()) {
-        if (bookmarks != null && bookmarks!!.isEmpty()) {
+        if (bookmarks.isNullOrEmpty()) {
             if (isNetworkAvailable) NoEventsState() else OfflineState()
         } else {
             LazyColumn(

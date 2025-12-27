@@ -45,7 +45,7 @@ fun EventsScreen(
 
     // --- Layout ---
     Column(Modifier.fillMaxSize()) {
-        if (events != null && events!!.isEmpty()) {
+        if (events.isNullOrEmpty()) {
             if (isNetworkAvailable) NoEventsState() else OfflineState()
         } else {
             LazyColumn(
