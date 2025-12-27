@@ -23,7 +23,7 @@ annotation class EndDateTime
 @Suppress("unused")
 class EventDateAdapter {
 
-    // 1. Logic for the 'start' field (String -> LocalDateTime)
+    // 1. Logic for the 'start' field
     @FromJson
     @StartDateTime
     fun startToDateTime(startStr: String): LocalDateTime {
@@ -34,11 +34,12 @@ class EventDateAdapter {
     }
 
     @ToJson
+    // Ensure the qualifier is directly on the parameter
     fun startToJson(@StartDateTime dateTime: LocalDateTime): String {
         return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond().toString()
     }
 
-    // 2. Logic for the 'end' field (Long? -> LocalDateTime?)
+    // 2. Logic for the 'end' field
     @FromJson
     @EndDateTime
     fun endToDateTime(endLong: Long?): LocalDateTime? {
@@ -50,6 +51,7 @@ class EventDateAdapter {
     }
 
     @ToJson
+    // Ensure the qualifier is directly on the parameter
     fun endToJson(@EndDateTime dateTime: LocalDateTime?): Long? {
         return dateTime?.atZone(ZoneId.systemDefault())?.toEpochSecond()
     }

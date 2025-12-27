@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.time.LocalDateTime
 
-@JsonClass(generateAdapter = true)
+@JsonClass(generateAdapter = false)
 data class Event(
     val id: String = "",
     val content: String,
@@ -15,12 +15,12 @@ data class Event(
 
     // We map the JSON key "start" directly to a LocalDateTime object
     @Json(name = "start")
-    @field:StartDateTime
+    @StartDateTime
     val start: LocalDateTime,
 
     // We map the JSON key "end" directly to a LocalDateTime? object
     @Json(name = "end")
-    @field:EndDateTime
+    @EndDateTime
     val end: LocalDateTime?,
 
     val details: String,

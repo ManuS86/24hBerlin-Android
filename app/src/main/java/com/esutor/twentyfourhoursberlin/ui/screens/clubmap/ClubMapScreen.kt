@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 private const val MAP_DEFAULT_ZOOM = 9.5f
 private const val ZOOM_ANIM_MS = 800
@@ -120,7 +120,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         positionedEvents?.forEach { (event, finalLatLng) ->
             key(event.id) {
                 Marker(
-                    state = rememberMarkerState(position = finalLatLng),
+                    state = rememberUpdatedMarkerState(position = finalLatLng),
                     icon = iconCache[event.getMarkerResourceId()],
                     title = event.name,
                     zIndex = if (selectedEvent?.id == event.id) 1f else 0f,

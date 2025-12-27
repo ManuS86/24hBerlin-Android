@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         google()
@@ -8,11 +10,10 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
         mavenCentral()
+        google()
     }
 }
 
 rootProject.name = "24hBerlin"
 include(":app")
- 

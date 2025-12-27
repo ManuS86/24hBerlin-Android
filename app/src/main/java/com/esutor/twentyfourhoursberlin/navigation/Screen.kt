@@ -1,10 +1,12 @@
 package com.esutor.twentyfourhoursberlin.navigation
 
+import androidx.annotation.Keep
 import androidx.annotation.StringRes
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.esutor.twentyfourhoursberlin.R
 
+@Keep
 sealed class Screen(
     val route: String,
     @get:StringRes val titleResId: Int? = null

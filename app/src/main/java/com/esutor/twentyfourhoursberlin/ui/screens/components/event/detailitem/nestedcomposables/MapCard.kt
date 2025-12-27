@@ -25,7 +25,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
-import com.google.maps.android.compose.rememberMarkerState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 private const val MAP_DEFAULT_ZOOM = 14f
 
@@ -40,7 +40,7 @@ fun MapCard(event: Event) {
 
     var customIcon by remember { mutableStateOf<BitmapDescriptor?>(null) }
 
-    val venueMarkerState = rememberMarkerState(position = venue)
+    val venueMarkerState = rememberUpdatedMarkerState(position = venue)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(venue, MAP_DEFAULT_ZOOM)
     }
