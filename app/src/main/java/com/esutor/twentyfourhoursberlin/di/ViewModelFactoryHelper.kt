@@ -7,7 +7,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.esutor.twentyfourhoursberlin.data.api.EventApi
 import com.esutor.twentyfourhoursberlin.data.repository.events.EventRepositoryImpl
 import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepositoryImpl
-import com.esutor.twentyfourhoursberlin.managers.internetcopnnectionobserver.AndroidConnectivityObserver
+import com.esutor.twentyfourhoursberlin.managers.internetconnectionobserver.AndroidConnectivityObserver
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
@@ -60,6 +60,7 @@ object ViewModelFactoryHelper {
                 userRepo = UserRepositoryImpl(FirebaseFirestore.getInstance()),
                 permissionManager = AndroidPermissionManager(application),
                 reminderScheduler = AndroidReminderScheduler(application),
+                connectivityObserver = AndroidConnectivityObserver(application)
             ) as T
         }
     }

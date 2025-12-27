@@ -12,6 +12,7 @@ import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.data.repository.events.EventRepository
 import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.managers.internetconnectionobserver.ConnectivityObserver
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.filteredEvents
@@ -23,6 +24,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -41,7 +45,8 @@ class EventViewModel(
     private val eventRepo: EventRepository,
     private val userRepo: UserRepository,
     permissionManager: AndroidPermissionManager,
-    private val reminderScheduler: AndroidReminderScheduler
+    private val reminderScheduler: AndroidReminderScheduler,
+    private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     companion object {
@@ -60,10 +65,20 @@ class EventViewModel(
     val currentAppUser = _currentAppUser.asStateFlow()
 
     private val _events = MutableStateFlow<List<Event>?>(null)
-    private val events: StateFlow<List<Event>?> = _events
-        .onStart { loadEvents() }
+    val events: StateFlow<List<Event>?> = _events
+        .onStart {
+            if (_events.value == null) {
+                _isLoading.value = true
+                observeConnectivity()
+
+                if (!connectivityObserver.isConnected.first()) {
+                    _isLoading.value = false
+                }
+            }
+        }
         .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
+    // Needs to start null to prevent LoadingScreen animation to play too early
     private val _isLoading: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val isLoading = _isLoading.asStateFlow()
 
@@ -152,6 +167,16 @@ class EventViewModel(
         userListener = userRepo.addUserListener { user -> _currentAppUser.value = user }
     }
 
+    private fun observeConnectivity() {
+        connectivityObserver.isConnected
+            .onEach { isConnected ->
+                if (isConnected && _events.value == null) {
+                    loadEvents()
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
     private fun loadEvents() {
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
@@ -160,7 +185,6 @@ class EventViewModel(
                 _events.value = result
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading events from repository.", e)
-                _events.value = null
             } finally {
                 _isLoading.value = false
             }
@@ -183,15 +207,14 @@ class EventViewModel(
     fun updateVenue(venue: String?) = toggleFilter(KEY_VENUE, selectedVenue.value, venue)
 
     fun clearAllFilters() {
-        savedStateHandle[KEY_EVENT_TYPE] = null
-        savedStateHandle[KEY_MONTH] = null
-        savedStateHandle[KEY_SOUND] = null
-        savedStateHandle[KEY_VENUE] = null
+        listOf(KEY_EVENT_TYPE, KEY_MONTH, KEY_SOUND, KEY_VENUE).forEach { key ->
+            savedStateHandle[key] = null
+        }
     }
 
     // --- Event & Bookmark actions ---
     fun addBookmarkId(bookmarkId: String) {
-        val event = events.value?.find { it.id == bookmarkId } ?: return
+        val event = _events.value?.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -207,7 +230,7 @@ class EventViewModel(
     }
 
     fun removeBookmarkId(bookmarkId: String) {
-        val event = events.value?.find { it.id == bookmarkId } ?: return
+        val event = _events.value?.find { it.id == bookmarkId } ?: return
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
@@ -223,21 +246,13 @@ class EventViewModel(
     }
 
     fun addBookmarkReminder(event: Event) {
-        reminderScheduler.scheduleEventReminder(
-            event,
+        listOf(
             EventReminderType.THREE_DAYS_BEFORE,
-            event.imageURL
-        )
-        reminderScheduler.scheduleEventReminder(
-            event,
             EventReminderType.TWELVE_HOURS_BEFORE,
-            event.imageURL
-        )
-        reminderScheduler.scheduleEventReminder(
-            event,
-            EventReminderType.THREE_HOURS_BEFORE,
-            event.imageURL
-        )
+            EventReminderType.THREE_HOURS_BEFORE
+        ).forEach { type ->
+            reminderScheduler.scheduleEventReminder(event, type, event.imageURL)
+        }
     }
 
     fun setupAbsenceReminder() = reminderScheduler.schedule14DayReminder()
