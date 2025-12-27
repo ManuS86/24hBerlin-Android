@@ -1,6 +1,5 @@
 package com.esutor.twentyfourhoursberlin.data.repository.events
 
-import android.util.Log
 import com.esutor.twentyfourhoursberlin.data.api.EventApi
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import kotlinx.coroutines.Dispatchers
@@ -9,21 +8,14 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-private const val TAG = "EventRepositoryImpl"
-
 class EventRepositoryImpl(private val apiService: EventApi) : EventRepository {
 
     /**
      * Entry point: Orchestrates fetching, flattening, and filtering.
      */
     override suspend fun getProcessedEvents(): List<Event> {
-        return try {
-            val rawData = loadEvents()
-            transformToDisplayList(rawData)
-        } catch (e: Exception) {
-            Log.e(TAG, "Error loading events: ${e.message}", e)
-            emptyList()
-        }
+        val rawData = loadEvents()
+        return transformToDisplayList(rawData)
     }
 
     /**

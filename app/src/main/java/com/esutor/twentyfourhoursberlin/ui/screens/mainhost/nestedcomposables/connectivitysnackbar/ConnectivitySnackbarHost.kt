@@ -24,7 +24,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.Offline
 import com.esutor.twentyfourhoursberlin.ui.theme.Online
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
+import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 
 @Composable
 fun ConnectivitySnackbarHost(
@@ -45,7 +45,7 @@ fun ConnectivitySnackbarHost(
             },
             containerColor = if (isOffline) Offline else Online,
             contentColor = White,
-            shape = slightRounding,
+            shape = mediumRounding,
         ) {
             Row(
                 verticalAlignment = CenterVertically,

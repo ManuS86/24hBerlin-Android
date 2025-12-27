@@ -1,11 +1,7 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.events
 
-import androidx.compose.foundation.layout.Arrangement.spacedBy
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -13,15 +9,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
+import com.esutor.twentyfourhoursberlin.ui.screens.components.event.EventList
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsState
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.OfflineState
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun EventsScreen(
@@ -37,41 +29,35 @@ fun EventsScreen(
     val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
-    LaunchedEffect(events, events?.size) {
+    LaunchedEffect(events) {
         if (!events.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
             listState.scrollToItem(0)
         }
     }
 
     // --- Layout ---
-    Column(Modifier.fillMaxSize()) {
-        if (events.isNullOrEmpty()) {
-            if (isNetworkAvailable) NoEventsState() else OfflineState()
-        } else {
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                state = listState,
-                contentPadding = PaddingValues(
-                    horizontal = regularPadding,
-                    vertical = halfPadding
-                ),
-                verticalArrangement = spacedBy(halfPadding)
-            ) {
-                itemsIndexed(
-                    items = events ?: emptyList(),
-                    key = { _, event -> event.id }
-                ) { index, event ->
-                    EventItem(
-                        event = event,
-                        eventVM = eventVM,
-                        onCollapse = {
-                            scope.launch {
-                                delay(50)
-                                listState.animateScrollToItem(index, -30)
-                            }
-                        }
-                    )
-                }
+    Box(Modifier.fillMaxSize()) {
+        when {
+            // 1. DATA PRESENT: Show list immediately
+            events != null -> {
+                EventList(
+                    events = events,
+                    listState = listState,
+                    scope = scope,
+                    eventVM = eventVM
+                )
+
+                if (events!!.isEmpty()) NoEventsState()
+            }
+
+            // 2. CONFIRMED OFFLINE: Only show if we are sure there's no net
+            !isNetworkAvailable -> {
+                OfflineState()
+            }
+
+            // 3. THE "SILENT" STATE: events is null BUT network is available (or unknown)
+            else -> {
+                // Do nothing. This shows the background/empty screen
             }
         }
     }

@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -87,7 +88,9 @@ class EventViewModel(
 
     // --- Computed Outputs (Derived Lists) ---
     val filteredEvents: StateFlow<List<Event>?> = combine(
-        events, searchTextFieldValue, filterCriteria
+        events,
+        searchTextFieldValue,
+        filterCriteria
     ) { eventsList, textValue, filters ->
         if (eventsList == null) return@combine null
 
@@ -101,7 +104,8 @@ class EventViewModel(
                 selectedVenue = filters.venue
             )
         }
-    }.stateIn(viewModelScope, WhileSubscribed(5000L), null)
+    }.distinctUntilChanged()
+     .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     val bookmarks: StateFlow<List<Event>?> = combine(currentAppUser, events) { user, eventsList ->
         if (user == null || eventsList == null) return@combine null
@@ -126,7 +130,8 @@ class EventViewModel(
                 selectedVenue = null
             )
         }
-    }.stateIn(viewModelScope, WhileSubscribed(5000L), null)
+    }.distinctUntilChanged()
+     .stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     val uniqueLocations = events.map { list ->
         withContext(Dispatchers.Default) {
@@ -151,10 +156,11 @@ class EventViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
-                val finalEvents = eventRepo.getProcessedEvents()
-                _events.value = finalEvents
+                val result = eventRepo.getProcessedEvents()
+                _events.value = result
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading events from repository.", e)
+                _events.value = null
             } finally {
                 _isLoading.value = false
             }
@@ -171,9 +177,7 @@ class EventViewModel(
         savedStateHandle[key] = if (currentValue == newValue) null else newValue
     }
 
-    fun updateEventType(type: EventType?) =
-        toggleFilter(KEY_EVENT_TYPE, selectedEventType.value, type)
-
+    fun updateEventType(type: EventType?) = toggleFilter(KEY_EVENT_TYPE, selectedEventType.value, type)
     fun updateMonth(month: Month?) = toggleFilter(KEY_MONTH, selectedMonth.value, month)
     fun updateSound(sound: String?) = toggleFilter(KEY_SOUND, selectedSound.value, sound)
     fun updateVenue(venue: String?) = toggleFilter(KEY_VENUE, selectedVenue.value, venue)
