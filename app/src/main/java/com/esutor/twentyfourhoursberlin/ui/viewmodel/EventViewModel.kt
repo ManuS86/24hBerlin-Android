@@ -58,6 +58,10 @@ class EventViewModel(
         private const val KEY_VENUE = "selected_venue"
     }
 
+    // --- Navigation & Scroll States ---
+    private val _scrollToEventId = MutableStateFlow<String?>(null)
+    val scrollToEventId = _scrollToEventId.asStateFlow()
+
     // --- UI & App States ---
     private var userListener: ListenerRegistration? = null
 
@@ -191,10 +195,21 @@ class EventViewModel(
         }
     }
 
+    // --- Navigation actions ---
+    fun setScrollTarget(eventId: String?) {
+        _scrollToEventId.value = eventId
+    }
+
+    fun clearScrollTarget() {
+        _scrollToEventId.value = null
+    }
+
     // --- Filter & Search actions ---
     fun updateSearchText(newValue: TextFieldValue) {
         _searchTextFieldValue.value = newValue
         savedStateHandle[KEY_SEARCH_TEXT] = newValue.text
+
+        if (newValue.text.isNotEmpty()) clearScrollTarget()
     }
 
     private fun <T> toggleFilter(key: String, currentValue: T?, newValue: T?) {

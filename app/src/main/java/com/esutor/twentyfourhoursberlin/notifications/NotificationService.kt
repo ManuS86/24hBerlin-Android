@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_IMMUTABLE
+import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
@@ -19,6 +20,7 @@ class NotificationService(private val context: Context) {
 
     companion object {
         const val REMINDER_CHANNEL_ID = "EVENT_REMINDER_CHANNEL_ID"
+        const val EXTRA_TARGET_EVENT_ID = "TARGET_EVENT_ID"
     }
 
     private val notificationManager = NotificationManagerCompat.from(context)
@@ -46,29 +48,36 @@ class NotificationService(private val context: Context) {
         title: String,
         body: String,
         image: Bitmap?,
-        notificationId: Int
+        notificationId: Int,
+        eventId: String? = null
     ) {
-        val activityIntent = Intent(context, MainActivity::class.java)
-        val activityPendingIntent = PendingIntent.getActivity(
+        val activityIntent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra(EXTRA_TARGET_EVENT_ID, eventId)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
             context,
             notificationId,
             activityIntent,
-            FLAG_IMMUTABLE
+            FLAG_IMMUTABLE or FLAG_UPDATE_CURRENT
         )
 
-        val notification =
-            NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context, REMINDER_CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_foreground)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setContentIntent(activityPendingIntent)
-                .setAutoCancel(true)
                 .setPriority(PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent)
 
         if (image != null) {
-            notification.setLargeIcon(image)
+            builder.setLargeIcon(image)
+            builder.setStyle(NotificationCompat.BigPictureStyle()
+                .bigPicture(image)
+                .bigLargeIcon(null as Bitmap?))
         }
 
-        notificationManager.notify(notificationId, notification.build())
+        notificationManager.notify(notificationId, builder.build())
     }
 }

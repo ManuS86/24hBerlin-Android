@@ -11,6 +11,11 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventReminderType
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_BODY
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_EVENT_ID
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_IMAGE_URL
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_NOTIFICATION_ID
+import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_TITLE
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -81,15 +86,24 @@ class AndroidReminderScheduler(
 
         val alarmId = type.createAlarmId(event.id)
 
-        val body = when (type) {
-            EventReminderType.THREE_DAYS_BEFORE -> context.getString(R.string.dont_forget_event_3days, event.name)
-            EventReminderType.TWELVE_HOURS_BEFORE -> context.getString(R.string.dont_forget_event_today, event.name)
-            EventReminderType.THREE_HOURS_BEFORE -> context.getString(R.string.dont_forget_event_3hours, event.name)
-        }
+        val body = context.getString(
+            when (type) {
+                EventReminderType.THREE_DAYS_BEFORE -> R.string.dont_forget_event_3days
+                EventReminderType.TWELVE_HOURS_BEFORE -> R.string.dont_forget_event_today
+                EventReminderType.THREE_HOURS_BEFORE -> R.string.dont_forget_event_3hours
+            },
+            event.name
+        )
 
-        val intent = createIntent(alarmId, context.getString(R.string.event_reminder), body, imageURL)
+        val intent = createIntent(
+            notificationId = alarmId,
+            title = context.getString(R.string.event_reminder),
+            body = body,
+            imageURL = imageURL,
+            eventId = event.id
+        )
+
         scheduleAlarm(alarmId, triggerMillis, intent)
-
         Log.d(TAG, "Scheduled: ${event.name} | Type: $type | ID: $alarmId at $triggerDateTime")
     }
 
@@ -159,13 +173,15 @@ class AndroidReminderScheduler(
         notificationId: Int,
         title: String,
         body: String,
-        imageURL: String? = null
+        imageURL: String? = null,
+        eventId: String? = null
     ): Intent {
         return Intent(context, ReminderReceiver::class.java).apply {
-            putExtra("notificationId", notificationId)
-            putExtra("title", title)
-            putExtra("body", body)
-            imageURL?.let { putExtra("imageURL", it) }
+            putExtra(EXTRA_NOTIFICATION_ID, notificationId)
+            putExtra(EXTRA_TITLE, title)
+            putExtra(EXTRA_BODY, body)
+            imageURL?.let { putExtra(EXTRA_IMAGE_URL, it) }
+            eventId?.let { putExtra(EXTRA_EVENT_ID, it) }
         }
     }
 }

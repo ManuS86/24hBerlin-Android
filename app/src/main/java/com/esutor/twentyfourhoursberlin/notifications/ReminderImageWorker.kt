@@ -25,6 +25,7 @@ class ImageNotificationWorker(context: Context, workerParams: WorkerParameters) 
         val body = inputData.getString("body")
         val notificationId = inputData.getInt("notificationId", 0)
         val imageURL = inputData.getString("imageURL")
+        val eventId = inputData.getString("eventId")
 
         if (title == null || body == null) {
             return@withContext Result.failure()
@@ -51,7 +52,14 @@ class ImageNotificationWorker(context: Context, workerParams: WorkerParameters) 
                 e.printStackTrace()
             }
         }
-        notificationService.showNotification(title, body, image, notificationId)
+        notificationService.showNotification(
+            title = title,
+            body = body,
+            image = image,
+            notificationId = notificationId,
+            eventId = eventId
+        )
+
         return@withContext Result.success()
     }
 }

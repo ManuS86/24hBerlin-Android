@@ -1,5 +1,6 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,6 +35,7 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.di.ViewModelFactoryHelper
 import com.esutor.twentyfourhoursberlin.navigation.NavGraph
 import com.esutor.twentyfourhoursberlin.navigation.Screen
+import com.esutor.twentyfourhoursberlin.notifications.NotificationService
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
@@ -52,6 +55,7 @@ fun MainHost() {
 // --- ViewModels & Controllers ---
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
 
     val connectivityVM: ConnectivityViewModel = viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
     val eventVM: EventViewModel = viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
@@ -98,6 +102,31 @@ fun MainHost() {
     ConnectivitySnackbarEffect(connectivityVM, snackbarHostState)
     ScheduleReminderEffect(eventVM)
     SetSystemBarColorsToLight(false)
+
+    LaunchedEffect(Unit) {
+        val activity = context as? Activity
+        val intent = activity?.intent
+        val targetId = intent?.getStringExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
+
+        if (targetId != null) {
+            // 1. Prepare ViewModel for scrolling
+            eventVM.setScrollTarget(targetId)
+
+            // 2. Reset filters/search so the target is actually visible
+            eventVM.clearAllFilters()
+            eventVM.updateSearchText(TextFieldValue(""))
+
+            // 3. Navigate to Bookmarks
+            navController.navigate(Screen.MyEvents.route) {
+                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+
+            // 4. Consume the extra so it doesn't trigger again on rotation
+            intent.removeExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
+        }
+    }
 
     LaunchedEffect(currentRoute) {
         scrollBehavior.state.heightOffset = 0f

@@ -14,6 +14,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.states.NoEventsSta
 import com.esutor.twentyfourhoursberlin.ui.screens.components.states.OfflineState
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun MyEventsScreen(
@@ -23,14 +24,29 @@ fun MyEventsScreen(
     // --- State Observation ---
     val bookmarks by eventVM.filteredBookmarks.collectAsStateWithLifecycle()
     val isNetworkAvailable by connectivityVM.isConnected.collectAsStateWithLifecycle()
+    val targetId by eventVM.scrollToEventId.collectAsStateWithLifecycle()
 
     // --- UI State ---
     val listState = rememberLazyListState()
     val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
+    LaunchedEffect(targetId, bookmarks) {
+        val currentTarget = targetId
+        val currentBookmarks = bookmarks
+
+        if (currentTarget != null && !currentBookmarks.isNullOrEmpty()) {
+            val index = currentBookmarks.indexOfFirst { it.id == currentTarget }
+            if (index != -1) {
+                delay(300)
+                listState.animateScrollToItem(index)
+                eventVM.clearScrollTarget()
+            }
+        }
+    }
+
     LaunchedEffect(bookmarks) {
-        if (!bookmarks.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
+        if (targetId == null && !bookmarks.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
             listState.scrollToItem(0)
         }
     }
