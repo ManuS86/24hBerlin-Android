@@ -19,6 +19,7 @@ class AndroidReminderScheduler(
 ) : ReminderScheduler {
 
     companion object {
+        private const val TAG = "AlarmScheduling"
         const val ABSENCE_REMINDER_ID = 9999
     }
 
@@ -30,36 +31,31 @@ class AndroidReminderScheduler(
         PendingIntent.FLAG_UPDATE_CURRENT
     }
 
+    /**
+     * Fix: Android 12+ requires specific permission for exact alarms.
+     * This check prevents the app from crashing or failing silently.
+     */
+    private fun canScheduleExactAlarms(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            alarmManager?.canScheduleExactAlarms() ?: false
+        } else true
+    }
+
     @SuppressLint("MissingPermission")
     override fun schedule14DayReminder() {
-        val triggerDateTime = LocalDateTime.now().plusDays(14)
-        val userTimeZone = ZoneId.systemDefault()
-        val zonedTriggerDateTime = triggerDateTime.atZone(userTimeZone)
-        val triggerMillis = zonedTriggerDateTime.toInstant().toEpochMilli()
-
-        val notificationId = ABSENCE_REMINDER_ID
+        val triggerMillis = LocalDateTime.now()
+            .plusDays(14)
+            .atZone(ZoneId.systemDefault())
+            .toInstant()
+            .toEpochMilli()
 
         val intent = createIntent(
-            notificationId,
+            ABSENCE_REMINDER_ID,
             context.getString(R.string.we_miss_you),
             context.getString(R.string.come_back_and_check_out_the_latest_events)
         )
 
-        val pendingIntent = createPendingIntent(
-            notificationId,
-            intent
-        )
-
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            triggerMillis,
-            pendingIntent
-        )
-
-        Log.d(
-            "AlarmScheduling",
-            "14-day reminder scheduled for $triggerDateTime"
-        )
+        scheduleAlarm(ABSENCE_REMINDER_ID, triggerMillis, intent)
     }
 
     @SuppressLint("MissingPermission")
@@ -76,93 +72,67 @@ class AndroidReminderScheduler(
             EventReminderType.THREE_HOURS_BEFORE -> event.start.minusHours(3)
         }
 
-        val userTimeZone = ZoneId.systemDefault()
-        val zonedDateTime = triggerDateTime.atZone(userTimeZone)
-        val triggerMillis = zonedDateTime.toInstant().toEpochMilli()
+        val triggerMillis = triggerDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+
+        if (triggerMillis <= currentTime) {
+            Log.w(TAG, "Skipping past reminder: ${event.name} for $type")
+            return
+        }
 
         val alarmId = type.createAlarmId(event.id)
 
         val body = when (type) {
-            EventReminderType.THREE_DAYS_BEFORE -> context.getString(
-                R.string.dont_forget_event_3days,
-                event.name
-            )
-            EventReminderType.TWELVE_HOURS_BEFORE -> context.getString(
-                R.string.dont_forget_event_today,
-                event.name
-            )
-            EventReminderType.THREE_HOURS_BEFORE -> context.getString(
-                R.string.dont_forget_event_3hours,
-                event.name
-            )
+            EventReminderType.THREE_DAYS_BEFORE -> context.getString(R.string.dont_forget_event_3days, event.name)
+            EventReminderType.TWELVE_HOURS_BEFORE -> context.getString(R.string.dont_forget_event_today, event.name)
+            EventReminderType.THREE_HOURS_BEFORE -> context.getString(R.string.dont_forget_event_3hours, event.name)
         }
 
-        if (triggerMillis > currentTime) {
-            val intent = createIntent(
-                alarmId,
-                context.getString(R.string.event_reminder),
-                body,
-                imageURL
-            )
+        val intent = createIntent(alarmId, context.getString(R.string.event_reminder), body, imageURL)
+        scheduleAlarm(alarmId, triggerMillis, intent)
 
-            val pendingIntent = createPendingIntent(
-                alarmId,
-                intent
-            )
+        Log.d(TAG, "Scheduled: ${event.name} | Type: $type | ID: $alarmId at $triggerDateTime")
+    }
 
+    /**
+     * Shared logic to handle exact vs inexact scheduling based on OS permissions.
+     */
+    @SuppressLint("MissingPermission")
+    private fun scheduleAlarm(alarmId: Int, triggerMillis: Long, intent: Intent) {
+        val pendingIntent = createPendingIntent(alarmId, intent)
+
+        if (canScheduleExactAlarms()) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerMillis,
                 pendingIntent
             )
-
-            Log.d(
-                "AlarmScheduling",
-                "Notification scheduled for ${event.name} at $triggerDateTime"
-            )
         } else {
-            Log.w(
-                "AlarmScheduling",
-                "Alarm time is in the past, skipping alarm for event: ${event.name}, alarmId: $alarmId"
+            // Fallback for Android 12+ if SCHEDULE_EXACT_ALARM is not granted
+            alarmManager.setAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                triggerMillis,
+                pendingIntent
             )
         }
     }
 
-
     override fun cancelAllPendingReminders(bookmarks: List<Event>) {
-        alarmManager.cancel(
-            createPendingIntent(
-                ABSENCE_REMINDER_ID,
-                Intent(context, ReminderReceiver::class.java)
-            )
-        )
-
-        bookmarks.forEach { bookmark ->
-            cancelEventReminders(bookmark)
-        }
-
-        Log.d(
-            "AlarmCancelling",
-            "All pending reminders removed"
-        )
+        cancelAlarm(ABSENCE_REMINDER_ID)
+        bookmarks.forEach { cancelEventReminders(it) }
+        Log.d(TAG, "All pending reminders removed")
     }
 
     override fun cancelEventReminders(event: Event) {
         EventReminderType.entries.forEach { type ->
-            val alarmId = type.createAlarmId(event.id)
-
-            alarmManager.cancel(
-                createPendingIntent(
-                    alarmId,
-                    Intent(context, ReminderReceiver::class.java)
-                )
-            )
+            cancelAlarm(type.createAlarmId(event.id))
         }
+        Log.d(TAG, "Reminders unscheduled for ${event.name}")
+    }
 
-        Log.d(
-            "AlarmCancelling",
-            "Reminders unscheduled for ${event.name}"
-        )
+    private fun cancelAlarm(alarmId: Int) {
+        val intent = Intent(context, ReminderReceiver::class.java)
+        val pendingIntent = createPendingIntent(alarmId, intent)
+        alarmManager.cancel(pendingIntent)
     }
 
     private fun createPendingIntent(
@@ -183,14 +153,11 @@ class AndroidReminderScheduler(
         body: String,
         imageURL: String? = null
     ): Intent {
-        val intent = Intent(context, ReminderReceiver::class.java).apply {
+        return Intent(context, ReminderReceiver::class.java).apply {
             putExtra("notificationId", notificationId)
             putExtra("title", title)
             putExtra("body", body)
-
+            imageURL?.let { putExtra("imageURL", it) }
         }
-
-        if (imageURL != null) { intent.putExtra("imageURL", imageURL) }
-        return intent
     }
 }
