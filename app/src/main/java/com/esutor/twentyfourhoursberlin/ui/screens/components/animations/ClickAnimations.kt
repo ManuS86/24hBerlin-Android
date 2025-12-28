@@ -20,7 +20,7 @@ import kotlinx.coroutines.delay
 @Composable
 fun Modifier.expressivePop(
     interactionSource: MutableInteractionSource,
-    pressedScale: Float = 0.95f
+    pressedScale: Float = 0.92f
 ): Modifier {
     var isPressed by remember { mutableStateOf(false) }
 
@@ -40,7 +40,7 @@ fun Modifier.expressivePop(
         targetValue = if (isPressed) pressedScale else 1f,
         animationSpec = spring(
             dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessLow
+            stiffness = Spring.StiffnessMediumLow
         ),
         label = "ExpressivePop"
     )

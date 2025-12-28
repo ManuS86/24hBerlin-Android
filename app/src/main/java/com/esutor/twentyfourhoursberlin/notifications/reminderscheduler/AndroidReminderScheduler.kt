@@ -131,8 +131,16 @@ class AndroidReminderScheduler(
 
     private fun cancelAlarm(alarmId: Int) {
         val intent = Intent(context, ReminderReceiver::class.java)
-        val pendingIntent = createPendingIntent(alarmId, intent)
-        alarmManager.cancel(pendingIntent)
+        val pendingIntent = PendingIntent.getBroadcast(
+            context,
+            alarmId,
+            intent,
+            pendingIntentFlags or PendingIntent.FLAG_NO_CREATE
+        )
+        if (pendingIntent != null) {
+            alarmManager.cancel(pendingIntent)
+            pendingIntent.cancel()
+        }
     }
 
     private fun createPendingIntent(

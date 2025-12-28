@@ -65,7 +65,7 @@ fun <T> FilterDropdown(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .expressivePop(interactionSource, pressedScale = 0.9f),
+                .expressivePop(interactionSource),
             border = BorderStroke(1.dp, White.copy(contentAlpha)),
             shape = slightRounding,
             colors = ButtonDefaults.outlinedButtonColors(

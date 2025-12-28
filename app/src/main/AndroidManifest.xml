@@ -29,7 +29,11 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".notifications.ReminderReceiver" />
+        <receiver
+            android:name=".notifications.ReminderReceiver"
+            android:enabled="true"
+            android:exported="false">
+        </receiver>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

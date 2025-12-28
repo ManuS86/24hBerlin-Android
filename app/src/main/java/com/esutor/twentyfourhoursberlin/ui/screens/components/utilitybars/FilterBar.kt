@@ -105,7 +105,7 @@ fun FilterBar(eventVM: EventViewModel) {
                     Box(
                         modifier = Modifier
                             .height(32.dp)
-                            .expressivePop(monthInteractionSource, pressedScale = 0.9f)
+                            .expressivePop(monthInteractionSource)
                             .background(
                                 color = DarkGray.copy(alpha = if (isSelected) 0.9f else 0.5f),
                                 shape = slightRounding
@@ -213,7 +213,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
-                            .expressivePop(clearFiltersInteractionSource, pressedScale = 0.9f)
+                            .expressivePop(clearFiltersInteractionSource)
                             .padding(start = halfPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
