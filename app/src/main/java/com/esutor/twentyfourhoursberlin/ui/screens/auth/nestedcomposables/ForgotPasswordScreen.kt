@@ -71,6 +71,7 @@ fun ForgotPasswordScreen(
     }
 
     DisposableEffect(Unit) {
+        authVM.clearErrorMessages()
         onDispose { authVM.clearErrorMessages() }
     }
 }

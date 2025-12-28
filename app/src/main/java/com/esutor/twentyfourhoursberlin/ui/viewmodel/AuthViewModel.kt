@@ -60,24 +60,34 @@ class AuthViewModel(
         permissionManager.updateNotificationPermission(isGranted)
     }
 
-    fun register(email: String, password: String, confirmPassword: String) {
+    fun register(
+        password: String,
+        confirmPassword: String,
+        onValidationSuccess: () -> Unit
+    ) {
+        // Reset previous errors
         savedStateHandle[KEY_FIREBASE_ERROR] = null
         savedStateHandle[KEY_PASSWORD_ERROR] = null
 
+        // Run your existing password check utility
         val errorResId = checkPassword(password, confirmPassword)
-
         savedStateHandle[KEY_PASSWORD_ERROR] = errorResId
 
+        // If local validation passes, tell the UI to proceed
         if (errorResId == null) {
-            viewModelScope.launch {
-                try {
-                    userRepo.register(email, password)
-                    auth.useAppLanguage()
-                    auth.currentUser?.sendEmailVerification()
-                } catch (ex: Exception) {
-                    savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
-                    Log.e(TAG, "Registration: ${ex.toString()}")
-                }
+            onValidationSuccess()
+        }
+    }
+
+    fun executeRegistration(email: String, pass: String) {
+        viewModelScope.launch {
+            try {
+                userRepo.register(email, pass)
+                auth.useAppLanguage()
+                auth.currentUser?.sendEmailVerification()
+            } catch (ex: Exception) {
+                savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                Log.e("AuthViewModel", "Registration: ${ex.toString()}")
             }
         }
     }

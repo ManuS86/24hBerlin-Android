@@ -55,7 +55,7 @@ fun RegisterScreen(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             authVM.updateNotificationPermission(isGranted)
-            authVM.register(email, password, confirmPassword)
+            authVM.executeRegistration(email, password)
         }
     )
 
@@ -104,10 +104,15 @@ fun RegisterScreen(
         )
 
         LargeDarkButton(stringResource(R.string.register)) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
-                permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            } else {
-                authVM.register(email, password, confirmPassword)
+            // 1. Start the registration flow
+            authVM.register(password, confirmPassword) {
+                // 2. This block ONLY runs if checkPassword returned null
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission) {
+                    permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    // 3. Either permission is granted or not needed; do the network work
+                    authVM.executeRegistration(email, password)
+                }
             }
         }
 

@@ -12,8 +12,7 @@ import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
 
 @Composable
 fun AuthWrapper(innerPadding: PaddingValues) {
-    val authVM: AuthViewModel =
-        viewModel(factory = ViewModelFactoryHelper.provideAuthViewModelFactory())
+    val authVM: AuthViewModel = viewModel(factory = ViewModelFactoryHelper.provideAuthViewModelFactory())
     val currentUser by authVM.currentUser.collectAsStateWithLifecycle()
 
     if (currentUser != null) {

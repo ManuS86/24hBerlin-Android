@@ -81,7 +81,7 @@ composeCompiler {
 }
 
 dependencies {
-    // --- AndroidX & UI Core ---
+    // --- AndroidX & UI ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
@@ -89,8 +89,16 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material.icons.extended)
+
+    // --- Material 3 Expressive & Adaptive ---
+    implementation(libs.androidx.material3)
+    implementation(libs.androidx.material3.windowsize)
+    implementation(libs.androidx.material3.adaptive)
+    implementation(libs.androidx.material3.adaptive.layout)
+    implementation(libs.androidx.material3.adaptive.navigation)
+    implementation(libs.androidx.material3.navigation.suite)
 
     // --- Lifecycle & Navigation ---
     implementation(libs.androidx.lifecycle.runtime.ktx)
