@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.BookmarkButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.EventDetailItem
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.Categories
@@ -69,32 +70,36 @@ fun EventItem(
 
     Column(
         Modifier
+            .expressivePop(interactionSource)
+            .animateContentSize()
             .clip(mediumRounding)
             .border(
                 BorderStroke(if (showDetail) 0.5.dp else 0.dp, TextOffBlack),
                 mediumRounding
             )
             .background(White)
-            .animateContentSize()
     ) {
         CompositionLocalProvider(LocalContentColor provides White) {
-            Box(Modifier.fillMaxWidth().background(eventColor)) {
-
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .background(eventColor)
+                    .run {
+                        if (isExpandable) {
+                            clickable(
+                                interactionSource = interactionSource,
+                                indication = null,
+                                onClick = {
+                                    if (showDetail) onCollapse()
+                                    showDetail = !showDetail
+                                }
+                            )
+                        } else this
+                    }
+            ) {
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .run {
-                            if (isExpandable) {
-                                clickable(
-                                    interactionSource = interactionSource,
-                                    indication = null,
-                                    onClick = {
-                                        if (showDetail) onCollapse()
-                                        showDetail = !showDetail
-                                    }
-                                )
-                            } else this
-                        }
                         .padding(top = regularPadding)
                         .padding(horizontal = regularPadding)
                 ) {

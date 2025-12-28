@@ -1,6 +1,7 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,6 +31,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
@@ -45,9 +47,11 @@ fun <T> FilterDropdown(
 ) {
     val haptic = LocalHapticFeedback.current
     var isExpanded by rememberSaveable { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
-    val arrowAlpha = if (selectedValue != null) 1f else 0.8f
-    val contentAlpha = if (selectedValue != null) 1f else 0.5f
+    val hasSelection = selectedValue != null
+    val contentAlpha = if (hasSelection) 1f else 0.5f
+    val arrowAlpha = if (hasSelection) 1f else 0.8f
 
     val allOptions = remember(options) { listOf<T?>(null) + options }
 
@@ -60,7 +64,8 @@ fun <T> FilterDropdown(
             onClick = { isExpanded = true },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(36.dp),
+                .height(36.dp)
+                .expressivePop(interactionSource, pressedScale = 0.9f),
             border = BorderStroke(1.dp, White.copy(contentAlpha)),
             shape = slightRounding,
             colors = ButtonDefaults.outlinedButtonColors(
@@ -70,7 +75,8 @@ fun <T> FilterDropdown(
             contentPadding = PaddingValues(
                 start = mediumPadding,
                 end = 6.dp
-            )
+            ),
+            interactionSource = interactionSource
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

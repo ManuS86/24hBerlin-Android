@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
 
@@ -76,10 +77,16 @@ fun SearchBar(
                     )
                 },
                 leadingIcon = {
-                    IconButton(onClick = {
+                    val closeSearchInteractionSource = remember { MutableInteractionSource() }
+
+                    IconButton(
+                        onClick = {
                         focusManager.clearFocus()
                         onSearchClosed()
-                    }) {
+                    },
+                        modifier = Modifier.expressivePop(closeSearchInteractionSource, pressedScale = 0.8f),
+                        interactionSource = closeSearchInteractionSource
+                    ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.search),
@@ -89,7 +96,13 @@ fun SearchBar(
                 },
                 trailingIcon = {
                     if (searchText.text.isNotEmpty()) {
-                        IconButton(onClick = { onSearchTextChanged(TextFieldValue("")) }) {
+                        val clearSearchInteractionSource = remember { MutableInteractionSource() }
+
+                        IconButton(
+                            onClick = { onSearchTextChanged(TextFieldValue("")) },
+                            modifier = Modifier.expressivePop(clearSearchInteractionSource, pressedScale = 0.8f),
+                            interactionSource = clearSearchInteractionSource
+                        ) {
                             Icon(
                                 imageVector = Icons.Filled.Close,
                                 contentDescription = stringResource(R.string.clear_search),

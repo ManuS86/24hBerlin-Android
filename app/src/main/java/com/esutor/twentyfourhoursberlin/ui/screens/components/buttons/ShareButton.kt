@@ -15,16 +15,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 
 @Composable
-fun ShareButton(context: Context, permalink: String) {
+fun ShareButton(
+    context: Context,
+    permalink: String
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     Icon(
         imageVector = Default.Share,
         contentDescription = stringResource(R.string.share),
         modifier = Modifier
+            .expressivePop(interactionSource, pressedScale = 0.8f)
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
+                interactionSource = interactionSource,
                 indication = roundRipple,
                 role = Role.Button,
                 onClick = {
@@ -35,7 +42,7 @@ fun ShareButton(context: Context, permalink: String) {
                     context.startActivity(
                         Intent.createChooser(
                             intent,
-                            R.string.share_link.toString()
+                            context.getString(R.string.share_link)
                         )
                     )
                 }

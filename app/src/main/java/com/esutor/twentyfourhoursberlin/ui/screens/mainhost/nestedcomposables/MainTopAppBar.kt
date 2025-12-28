@@ -1,9 +1,19 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -19,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -31,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.navigation.Screen
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.SearchBar
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
@@ -66,44 +78,84 @@ fun MainTopAppBar(
 
     TopAppBar(
         title = {
-            if (showSearchBar && showSearchComponent) {
-                SearchBar(
-                    searchText = searchTextValue,
-                    onSearchTextChanged = { eventVM.updateSearchText(it) },
-                    onSearchClosed = onSearchClosed
-                )
-            } else {
-                Row(
-                    verticalAlignment = CenterVertically,
-                    horizontalArrangement = spacedBy(halfPadding)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(32.dp)
-                            .background(color = White, shape = slightRounding),
-                        contentAlignment = Center
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.app_logo),
-                            contentDescription = null,
-                            modifier = Modifier.size(30.dp),
-                            tint = null
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = CenterStart
+            ) {
+                AnimatedVisibility(
+                    visible = showSearchBar && showSearchComponent,
+                    enter = fadeIn(animationSpec = tween(200)) + scaleIn(
+                        initialScale = 0.8f,
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioMediumBouncy,
+                            stiffness = Spring.StiffnessLow
                         )
+                    ),
+                    exit = fadeOut(animationSpec = tween(150)) + slideOutHorizontally(
+                        targetOffsetX = { -it },
+                        animationSpec = spring(
+                            dampingRatio = Spring.DampingRatioNoBouncy,
+                            stiffness = Spring.StiffnessMedium
+                        )
+                    )
+                ) {
+                    SearchBar(
+                        searchText = searchTextValue,
+                        onSearchTextChanged = { eventVM.updateSearchText(it) },
+                        onSearchClosed = onSearchClosed
+                    )
+                }
+
+                // Title Row
+                AnimatedVisibility(
+                    visible = !showSearchBar || !showSearchComponent,
+                    enter = fadeIn(tween(200)),
+                    exit = fadeOut(tween(100))
+                ) {
+                    Row(
+                        verticalAlignment = CenterVertically,
+                        horizontalArrangement = spacedBy(halfPadding)
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(32.dp)
+                                .background(color = White, shape = slightRounding),
+                            contentAlignment = Center
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.app_logo),
+                                contentDescription = null,
+                                modifier = Modifier.size(30.dp),
+                                tint = null
+                            )
+                        }
+                        Text(text = title, fontWeight = SemiBold)
                     }
-                    Text(text = title, fontWeight = SemiBold)
                 }
             }
         },
         navigationIcon = {
             if (showBackButton) {
-                IconButton(onClick = { navController.navigateUp() }) {
+                val backInteractionSource = remember { MutableInteractionSource() }
+
+                IconButton(
+                    onClick = { navController.navigateUp() },
+                    modifier = Modifier.expressivePop(backInteractionSource, pressedScale = 0.8f),
+                    interactionSource = backInteractionSource
+                ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
                 }
             }
         },
         actions = {
             if (showSearchComponent && !showSearchBar) {
-                IconButton(onClick = onSearchIconClick) {
+                val searchInteractionSource = remember { MutableInteractionSource() }
+
+                IconButton(
+                    onClick = onSearchIconClick,
+                    modifier = Modifier.expressivePop(searchInteractionSource, pressedScale = 0.8f),
+                    interactionSource = searchInteractionSource
+                ) {
                     Icon(Icons.Filled.Search, stringResource(R.string.search))
                 }
             }

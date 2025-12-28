@@ -1,5 +1,6 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.buttons
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
@@ -7,6 +8,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -15,6 +17,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 
@@ -25,10 +28,13 @@ fun SettingsButton(
     textAlign: TextAlign,
     onClick: () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     Button(
-        onClick = { onClick() },
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
+            .expressivePop(interactionSource)
             .shadow(
                 elevation = 2.dp,
                 shape = slightRounding,
@@ -40,7 +46,8 @@ fun SettingsButton(
             containerColor = White,
             contentColor = Black
         ),
-        contentPadding = PaddingValues(regularPadding)
+        contentPadding = PaddingValues(regularPadding),
+        interactionSource = interactionSource
     ) {
         Text(
             text = label,

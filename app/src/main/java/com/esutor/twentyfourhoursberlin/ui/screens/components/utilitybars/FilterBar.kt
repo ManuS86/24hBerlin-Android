@@ -1,6 +1,8 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -46,6 +48,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
@@ -97,20 +100,22 @@ fun FilterBar(eventVM: EventViewModel) {
             ) {
                 monthOptions.forEach { month ->
                     val isSelected = selectedMonth == month
+                    val monthInteractionSource = remember { MutableInteractionSource() }
 
                     Box(
                         modifier = Modifier
                             .height(32.dp)
+                            .expressivePop(monthInteractionSource, pressedScale = 0.9f)
                             .background(
                                 color = DarkGray.copy(alpha = if (isSelected) 0.9f else 0.5f),
                                 shape = slightRounding
                             )
+                            .padding(horizontal = 12.dp)
                             .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
+                                interactionSource = monthInteractionSource,
                                 indication = ripple(),
                                 onClick = { eventVM.updateMonth(if (isSelected) null else month) }
-                            )
-                            .padding(horizontal = 12.dp),
+                            ),
                         contentAlignment = Center
                     ) {
                         Text(
@@ -124,13 +129,16 @@ fun FilterBar(eventVM: EventViewModel) {
             }
 
             // Show Dropdown Filters Button
+            val showFiltersInteractionSource = remember { MutableInteractionSource() }
+
             Icon(
                 imageVector = Icons.Rounded.Tune,
                 contentDescription = stringResource(R.string.show_filters),
                 modifier = Modifier
+                    .expressivePop(showFiltersInteractionSource, pressedScale = 0.8f)
                     .padding(start = halfPadding)
                     .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
+                        interactionSource = showFiltersInteractionSource,
                         indication = roundRipple,
                         role = Role.Button,
                         onClick = { showFilters = !showFilters }
@@ -142,8 +150,15 @@ fun FilterBar(eventVM: EventViewModel) {
         // --- Row 2: Secondary Filters (Dropdowns) ---
         AnimatedVisibility(
             visible = showFilters,
-            enter = expandVertically() + fadeIn(),
-            exit = shrinkVertically() + fadeOut()
+            enter = expandVertically(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioLowBouncy,
+                    stiffness = Spring.StiffnessMediumLow
+                )
+            ) + fadeIn(),
+            exit = shrinkVertically(
+                animationSpec = spring(stiffness = Spring.StiffnessMedium)
+            ) + fadeOut()
         ) {
             Row(
                 modifier = Modifier
@@ -192,14 +207,16 @@ fun FilterBar(eventVM: EventViewModel) {
                 ).any { it != null }
 
                 if (hasActiveFilters) {
+                    val clearFiltersInteractionSource = remember { MutableInteractionSource() }
+
                     Icon(
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
+                            .expressivePop(clearFiltersInteractionSource, pressedScale = 0.9f)
                             .padding(start = halfPadding)
                             .clickable(
                                 interactionSource = remember { MutableInteractionSource() },
-                                indication = roundRipple,
                                 role = Role.Button,
                                 onClick = {
                                     eventVM.clearAllFilters()

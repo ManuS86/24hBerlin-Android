@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
@@ -63,7 +64,10 @@ private fun PasswordReAuthForm(
     password: String,
     onPasswordChange: (String) -> Unit
 ) {
-    Column(Modifier.padding(horizontal = regularPadding)) {
+    Column(
+        modifier = Modifier.padding(horizontal = regularPadding),
+        horizontalAlignment = CenterHorizontally
+    ) {
         Spacer(Modifier.weight(0.7f))
 
         Text(

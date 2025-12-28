@@ -24,6 +24,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.core.net.toUri
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
@@ -33,27 +34,26 @@ import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 @Composable
 fun LearnMoreLinkCard(link: String?) {
     val context = LocalContext.current
+    val interactionSource = remember { MutableInteractionSource() }
+
 
     link?.let {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(
-                    interactionSource = remember { MutableInteractionSource() },
-                    indication = ripple(),
-                    role = Role.Button,
-                    onClick = {
-                        context.startActivity(Intent(ACTION_VIEW, link.toUri()))
-                    }
-                ),
+                .expressivePop(interactionSource),
             shape = mediumRounding,
-            colors = cardColors(
-                containerColor = Details
-            )
+            colors = cardColors(Details)
         ) {
             Row(
                 Modifier
                     .fillMaxWidth()
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = ripple(),
+                        role = Role.Button,
+                        onClick = { context.startActivity(Intent(ACTION_VIEW, link.toUri())) }
+                    )
                     .padding(regularPadding)
             ) {
                 Icon(

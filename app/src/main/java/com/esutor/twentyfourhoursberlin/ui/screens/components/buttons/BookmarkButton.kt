@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 
@@ -26,29 +27,27 @@ fun BookmarkButton(
     eventVM: EventViewModel
 ) {
     val currentAppUser by eventVM.currentAppUser.collectAsStateWithLifecycle()
-
     val interactionSource = remember { MutableInteractionSource() }
 
-    val isBookmarked = remember(currentAppUser, event.id) {
-        currentAppUser?.bookmarkIDs?.contains(event.id) ?: false
-    }
+    val isBookmarked = currentAppUser?.bookmarkIDs?.contains(event.id) == true
+    val icon = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd
+    val label = stringResource(if (isBookmarked) R.string.remove else R.string.bookmark)
 
     Icon(
-        imageVector = if (isBookmarked) Icons.Filled.Bookmark else Icons.Outlined.BookmarkAdd,
-        contentDescription = if (isBookmarked) stringResource(R.string.remove) else stringResource(R.string.bookmark),
+        imageVector = icon,
+        contentDescription = label,
         modifier = Modifier
             .size(28.dp)
+            .expressivePop(interactionSource, pressedScale = 0.8f)
             .clickable(
                 interactionSource = interactionSource,
                 indication = roundRipple,
                 role = Role.Button,
                 onClick = {
-                    if (!isBookmarked) {
-                        eventVM.addBookmarkId(bookmarkId = event.id)
-                    } else {
-                        eventVM.removeBookmarkId(bookmarkId = event.id)
-                    }
+                    if (isBookmarked) eventVM.removeBookmarkId(event.id)
+                    else eventVM.addBookmarkId(event.id)
                 }
             )
+            .expressivePop(interactionSource)
     )
 }
