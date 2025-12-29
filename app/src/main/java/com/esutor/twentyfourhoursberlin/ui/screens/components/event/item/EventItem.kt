@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement.End
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +30,7 @@ import androidx.compose.ui.Alignment.Companion.BottomCenter
 import androidx.compose.ui.Alignment.Companion.Start
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.data.model.Event
@@ -47,6 +50,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
+import kotlinx.coroutines.delay
 
 /**
  * Single composable component to represent an Event item, supporting both collapsed/expandable
@@ -63,11 +67,23 @@ fun EventItem(
     eventVM: EventViewModel,
     isExpandable: Boolean = true,
     isInitiallyExpanded: Boolean = false,
+    targetId: String? = null,
     onCollapse: () -> Unit = {}
 ) {
     var showDetail by remember { mutableStateOf(isInitiallyExpanded) }
     val eventColor = event.getEventColor()
     val interactionSource = remember { MutableInteractionSource() }
+
+    // --- Programmatic "Press & Expand" Logic ---
+    LaunchedEffect(targetId) {
+        if (targetId == event.id && !showDetail) {
+            val press = PressInteraction.Press(Offset.Zero)
+            interactionSource.emit(press)
+            delay(100)
+            interactionSource.emit(PressInteraction.Release(press))
+            showDetail = true
+        }
+    }
 
     Column(
         Modifier

@@ -39,7 +39,8 @@ fun MyEventsScreen(
             val index = currentBookmarks.indexOfFirst { it.id == currentTarget }
             if (index != -1) {
                 delay(300)
-                listState.animateScrollToItem(index)
+                listState.animateScrollToItem(index, -30)
+                delay(500)
                 eventVM.clearScrollTarget()
             }
         }
@@ -60,7 +61,8 @@ fun MyEventsScreen(
                     events = bookmarks,
                     listState = listState,
                     scope = scope,
-                    eventVM = eventVM
+                    eventVM = eventVM,
+                    targetId = targetId
                 )
 
                 if (bookmarks!!.isEmpty()) NoEventsState()

@@ -22,7 +22,8 @@ fun EventList(
     events: List<Event>?,
     listState: LazyListState,
     scope: CoroutineScope,
-    eventVM: EventViewModel
+    eventVM: EventViewModel,
+    targetId: String? = null
 ) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
@@ -40,6 +41,7 @@ fun EventList(
             EventItem(
                 event = event,
                 eventVM = eventVM,
+                targetId = targetId,
                 onCollapse = {
                     scope.launch {
                         delay(50)
