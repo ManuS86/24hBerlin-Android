@@ -38,7 +38,7 @@ fun LargeDarkButton(
         modifier = Modifier
             .padding(top = largePadding)
             .fillMaxWidth()
-            .expressivePop(interactionSource)
+            .expressivePop(interactionSource, useTapBuffer = false)
     ) {
         Text(
             text = label,

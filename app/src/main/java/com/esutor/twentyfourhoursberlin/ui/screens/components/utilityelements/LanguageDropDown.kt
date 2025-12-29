@@ -11,7 +11,6 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,9 +43,8 @@ fun LanguageDropdown(
     Column(
         modifier = Modifier
             .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = ripple(),
                 role = Role.Button,
+                interactionSource = remember { MutableInteractionSource() },
                 onClick = { isExpanded = !isExpanded }
             )
     ) {

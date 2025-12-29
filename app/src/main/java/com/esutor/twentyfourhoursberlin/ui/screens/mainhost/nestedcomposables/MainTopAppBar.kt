@@ -42,6 +42,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.navigation.Screen
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.SearchBar
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
@@ -140,7 +141,7 @@ fun MainTopAppBar(
 
                 IconButton(
                     onClick = { navController.navigateUp() },
-                    modifier = Modifier.expressivePop(backInteractionSource, pressedScale = 0.8f),
+                    modifier = Modifier.expressivePop(backInteractionSource, PopSpeed.Fast),
                     interactionSource = backInteractionSource
                 ) {
                     Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
@@ -153,7 +154,7 @@ fun MainTopAppBar(
 
                 IconButton(
                     onClick = onSearchIconClick,
-                    modifier = Modifier.expressivePop(searchInteractionSource, pressedScale = 0.8f),
+                    modifier = Modifier.expressivePop(searchInteractionSource, PopSpeed.Fast),
                     interactionSource = searchInteractionSource
                 ) {
                     Icon(Icons.Filled.Search, stringResource(R.string.search))

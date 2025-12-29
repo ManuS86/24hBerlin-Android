@@ -31,6 +31,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandl
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
@@ -65,7 +66,7 @@ fun <T> FilterDropdown(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(36.dp)
-                .expressivePop(interactionSource),
+                .expressivePop(interactionSource, PopSpeed.Fast),
             border = BorderStroke(1.dp, White.copy(contentAlpha)),
             shape = slightRounding,
             colors = ButtonDefaults.outlinedButtonColors(

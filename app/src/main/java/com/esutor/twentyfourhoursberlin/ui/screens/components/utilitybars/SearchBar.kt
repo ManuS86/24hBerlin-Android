@@ -35,6 +35,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation.Companion.None
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
@@ -84,7 +85,7 @@ fun SearchBar(
                         focusManager.clearFocus()
                         onSearchClosed()
                     },
-                        modifier = Modifier.expressivePop(closeSearchInteractionSource, pressedScale = 0.8f),
+                        modifier = Modifier.expressivePop(closeSearchInteractionSource, PopSpeed.Fast),
                         interactionSource = closeSearchInteractionSource
                     ) {
                         Icon(
@@ -100,7 +101,7 @@ fun SearchBar(
 
                         IconButton(
                             onClick = { onSearchTextChanged(TextFieldValue("")) },
-                            modifier = Modifier.expressivePop(clearSearchInteractionSource, pressedScale = 0.8f),
+                            modifier = Modifier.expressivePop(clearSearchInteractionSource, PopSpeed.Fast),
                             interactionSource = clearSearchInteractionSource
                         ) {
                             Icon(

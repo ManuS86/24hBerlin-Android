@@ -1,11 +1,10 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.animations
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.MaterialTheme.motionScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,11 +15,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import kotlinx.coroutines.delay
 
+enum class PopSpeed {
+    Fast, Default, Slow
+}
+
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun Modifier.expressivePop(
     interactionSource: MutableInteractionSource,
-    pressedScale: Float = 0.92f
+    speed: PopSpeed = PopSpeed.Default,
+    useTapBuffer: Boolean = true
 ): Modifier {
     var isPressed by remember { mutableStateOf(false) }
 
@@ -29,20 +33,25 @@ fun Modifier.expressivePop(
             when (interaction) {
                 is PressInteraction.Press -> isPressed = true
                 is PressInteraction.Release, is PressInteraction.Cancel -> {
-                    delay(100)
+                    if (useTapBuffer) {
+                        delay(100)
+                    }
                     isPressed = false
                 }
             }
         }
     }
 
+    val (targetScale, animationSpec) = when (speed) {
+        PopSpeed.Fast -> 0.87f to motionScheme.fastSpatialSpec<Float>()
+        PopSpeed.Default -> 0.92f to motionScheme.defaultSpatialSpec()
+        PopSpeed.Slow -> 0.97f to motionScheme.slowSpatialSpec()
+    }
+
     val scale by animateFloatAsState(
-        targetValue = if (isPressed) pressedScale else 1f,
-        animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessMediumLow
-        ),
-        label = "ExpressivePop"
+        targetValue = if (isPressed) targetScale else 1f,
+        animationSpec = animationSpec,
+        label = "ExpressivePopScale"
     )
 
     return this.graphicsLayer {

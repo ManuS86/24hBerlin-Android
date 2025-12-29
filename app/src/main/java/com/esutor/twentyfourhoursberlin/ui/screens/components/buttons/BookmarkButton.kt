@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
@@ -38,7 +39,7 @@ fun BookmarkButton(
         contentDescription = label,
         modifier = Modifier
             .size(28.dp)
-            .expressivePop(interactionSource, pressedScale = 0.8f)
+            .expressivePop(interactionSource, PopSpeed.Fast)
             .clickable(
                 interactionSource = interactionSource,
                 indication = roundRipple,
@@ -48,6 +49,5 @@ fun BookmarkButton(
                     else eventVM.addBookmarkId(event.id)
                 }
             )
-            .expressivePop(interactionSource)
     )
 }

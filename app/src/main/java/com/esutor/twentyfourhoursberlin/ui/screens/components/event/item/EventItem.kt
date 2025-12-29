@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.BookmarkButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.EventDetailItem
@@ -70,7 +71,7 @@ fun EventItem(
 
     Column(
         Modifier
-            .expressivePop(interactionSource)
+            .expressivePop(interactionSource, PopSpeed.Slow)
             .animateContentSize()
             .clip(mediumRounding)
             .border(

@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.DetailCard
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.DirectionsCard
@@ -75,11 +76,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .expressivePop(collapseInteractionSource)
-                    .clickable(
-                        onClick = showDetailToggle,
-                        interactionSource = collapseInteractionSource
-                    ),
+                    .expressivePop(collapseInteractionSource),
                 shape = mediumRounding,
                 colors = cardColors(
                     containerColor = Details
@@ -91,6 +88,11 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
                     tint = Gray,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .clickable(
+                            role = Role.Button,
+                            interactionSource = collapseInteractionSource,
+                            onClick = showDetailToggle
+                        )
                         .padding(halfPadding)
                 )
             }

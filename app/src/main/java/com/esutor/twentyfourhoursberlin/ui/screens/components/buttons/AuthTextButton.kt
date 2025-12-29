@@ -9,6 +9,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 
 @Composable
@@ -20,7 +21,7 @@ fun AuthTextButton(
 
     TextButton(
         onClick = onClick,
-        modifier = Modifier.expressivePop(interactionSource, pressedScale = 0.8f),
+        modifier = Modifier.expressivePop(interactionSource, PopSpeed.Fast),
         interactionSource = interactionSource
     ) {
         Text(

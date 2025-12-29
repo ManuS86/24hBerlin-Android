@@ -25,7 +25,6 @@ import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
-import androidx.compose.material3.ripple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,12 +47,12 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import kotlinx.coroutines.launch
 import java.time.LocalDate.now
@@ -105,7 +104,7 @@ fun FilterBar(eventVM: EventViewModel) {
                     Box(
                         modifier = Modifier
                             .height(32.dp)
-                            .expressivePop(monthInteractionSource)
+                            .expressivePop(monthInteractionSource, PopSpeed.Fast)
                             .background(
                                 color = DarkGray.copy(alpha = if (isSelected) 0.9f else 0.5f),
                                 shape = slightRounding
@@ -113,7 +112,6 @@ fun FilterBar(eventVM: EventViewModel) {
                             .padding(horizontal = 12.dp)
                             .clickable(
                                 interactionSource = monthInteractionSource,
-                                indication = ripple(),
                                 onClick = { eventVM.updateMonth(if (isSelected) null else month) }
                             ),
                         contentAlignment = Center
@@ -135,12 +133,11 @@ fun FilterBar(eventVM: EventViewModel) {
                 imageVector = Icons.Rounded.Tune,
                 contentDescription = stringResource(R.string.show_filters),
                 modifier = Modifier
-                    .expressivePop(showFiltersInteractionSource, pressedScale = 0.8f)
+                    .expressivePop(showFiltersInteractionSource, PopSpeed.Fast, false)
                     .padding(start = halfPadding)
                     .clickable(
-                        interactionSource = showFiltersInteractionSource,
-                        indication = roundRipple,
                         role = Role.Button,
+                        interactionSource = showFiltersInteractionSource,
                         onClick = { showFilters = !showFilters }
                     ),
                 tint = White
@@ -213,10 +210,10 @@ fun FilterBar(eventVM: EventViewModel) {
                         imageVector = Icons.Rounded.Clear,
                         contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
-                            .expressivePop(clearFiltersInteractionSource)
+                            .expressivePop(clearFiltersInteractionSource, PopSpeed.Fast)
                             .padding(start = halfPadding)
                             .clickable(
-                                interactionSource = remember { MutableInteractionSource() },
+                                interactionSource = clearFiltersInteractionSource,
                                 role = Role.Button,
                                 onClick = {
                                     eventVM.clearAllFilters()

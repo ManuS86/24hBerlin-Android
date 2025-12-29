@@ -1,12 +1,12 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,11 +50,8 @@ fun LoadingScreen(
 
     AnimatedVisibility(
         visible = isVisible ?: true,
-        enter = EnterTransition.None,
-        exit = fadeOut(tween(300)) + scaleOut(
-            targetScale = 1.5f,
-            animationSpec = tween(300, easing = LinearOutSlowInEasing)
-        )
+        enter = fadeIn(),
+        exit = fadeOut(tween(durationMillis = 150, easing = LinearEasing))
     ) {
         Box(
             modifier = Modifier

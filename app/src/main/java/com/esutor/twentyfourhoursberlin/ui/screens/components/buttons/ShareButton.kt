@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 
@@ -29,7 +30,7 @@ fun ShareButton(
         imageVector = Default.Share,
         contentDescription = stringResource(R.string.share),
         modifier = Modifier
-            .expressivePop(interactionSource, pressedScale = 0.8f)
+            .expressivePop(interactionSource, PopSpeed.Fast)
             .clickable(
                 interactionSource = interactionSource,
                 indication = roundRipple,
