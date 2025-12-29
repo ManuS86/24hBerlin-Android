@@ -36,8 +36,12 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.esutor.twentyfourhoursberlin.R
@@ -52,7 +56,8 @@ import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTopAppBar(
-    title: String,
+    titleResId: Int,
+    isMainTab: Boolean,
     scrollBehavior: TopAppBarScrollBehavior,
     currentRoute: String?,
     showSearchBar: Boolean,
@@ -63,17 +68,8 @@ fun MainTopAppBar(
 ) {
     val searchTextValue by eventVM.searchTextFieldValue.collectAsStateWithLifecycle()
 
-    val backButtonRoutes = remember {
-        setOf(Screen.ReAuthWrapper.route)
-    }
-
-    val hideSearchRoutes = remember {
-        setOf(
-            Screen.Settings.route,
-            Screen.ReAuthWrapper.route
-        )
-    }
-
+    val backButtonRoutes = remember { setOf(Screen.ReAuthWrapper.route) }
+    val hideSearchRoutes = remember { setOf(Screen.Settings.route, Screen.ReAuthWrapper.route) }
     val showBackButton = currentRoute in backButtonRoutes
     val showSearchComponent = currentRoute !in hideSearchRoutes && !showBackButton
 
@@ -113,25 +109,7 @@ fun MainTopAppBar(
                     enter = fadeIn(tween(200)),
                     exit = fadeOut(tween(100))
                 ) {
-                    Row(
-                        verticalAlignment = CenterVertically,
-                        horizontalArrangement = spacedBy(halfPadding)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .background(color = White, shape = slightRounding),
-                            contentAlignment = Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.app_logo),
-                                contentDescription = null,
-                                modifier = Modifier.size(30.dp),
-                                tint = null
-                            )
-                        }
-                        Text(text = title, fontWeight = SemiBold)
-                    }
+                    AppLogo(titleResId, isMainTab)
                 }
             }
         },
@@ -170,4 +148,44 @@ fun MainTopAppBar(
         ),
         scrollBehavior = scrollBehavior
     )
+}
+
+@Composable
+fun AppLogo(titleResId: Int, isMainTab: Boolean) {
+    val titleContent = if (isMainTab) {
+        buildAnnotatedString {
+            withStyle(SpanStyle(fontWeight = FontWeight.ExtraBold, letterSpacing = (-1).sp)) {
+                append("24")
+            }
+            withStyle(SpanStyle(fontWeight = FontWeight.ExtraBold, letterSpacing = 1.sp)) {
+                append("h")
+            }
+            withStyle(SpanStyle(fontWeight = FontWeight.Light, letterSpacing = 1.sp)) {
+                append("BERLIN")
+            }
+        }
+    } else {
+        buildAnnotatedString { append(stringResource(titleResId)) }
+    }
+
+    Row(
+        verticalAlignment = CenterVertically,
+        horizontalArrangement = spacedBy(halfPadding)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .background(color = White, shape = slightRounding),
+            contentAlignment = Center
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.app_logo),
+                contentDescription = null,
+                modifier = Modifier.size(30.dp),
+                tint = null
+            )
+        }
+
+        Text(text = titleContent, color = White)
+    }
 }

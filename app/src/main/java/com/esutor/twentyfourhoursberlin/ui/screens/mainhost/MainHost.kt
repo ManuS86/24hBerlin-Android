@@ -25,10 +25,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.esutor.twentyfourhoursberlin.R
@@ -55,7 +56,6 @@ fun MainHost() {
 // --- ViewModels & Controllers ---
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
-    val context = LocalContext.current
 
     val connectivityVM: ConnectivityViewModel = viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
     val eventVM: EventViewModel = viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
@@ -76,57 +76,18 @@ fun MainHost() {
     val isLoading by eventVM.isLoading.collectAsStateWithLifecycle()
 
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
-    val showSearchBar by showSearchBarState
+    val appBarTitleResId = rememberTopBarTitle(currentRoute, navBackStackEntry, isMainTab)
 
     val closeSearch = {
         showSearchBarState.value = false
         eventVM.updateSearchText(TextFieldValue(""))
     }
 
-    // --- Title Logic ---
-    val appBarTitleResId = remember(currentRoute, navBackStackEntry, isMainTab) {
-        when {
-            isMainTab -> R.string.app_name
-            currentRoute?.startsWith(Screen.ReAuthWrapper.route.substringBefore("/")) == true -> {
-                when (navBackStackEntry?.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM)) {
-                    "email" -> R.string.change_email
-                    "password" -> R.string.change_password
-                    else -> R.string.re_authenticate
-                }
-            }
-            else -> Screen.fromRoute(currentRoute)?.titleResId ?: R.string.events
-        }
-    }
-
     // --- Side Effects ---
     ConnectivitySnackbarEffect(connectivityVM, snackbarHostState)
     ScheduleReminderEffect(eventVM)
+    HandleNotificationEffect(navController, eventVM)
     SetSystemBarColorsToLight(false)
-
-    LaunchedEffect(Unit) {
-        val activity = context as? Activity
-        val intent = activity?.intent
-        val targetId = intent?.getStringExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
-
-        if (targetId != null) {
-            // 1. Prepare ViewModel for scrolling
-            eventVM.setScrollTarget(targetId)
-
-            // 2. Reset filters/search so the target is actually visible
-            eventVM.clearAllFilters()
-            eventVM.updateSearchText(TextFieldValue(""))
-
-            // 3. Navigate to Bookmarks
-            navController.navigate(Screen.MyEvents.route) {
-                popUpTo(navController.graph.startDestinationId) { saveState = true }
-                launchSingleTop = true
-                restoreState = true
-            }
-
-            // 4. Consume the extra so it doesn't trigger again on rotation
-            intent.removeExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
-        }
-    }
 
     LaunchedEffect(currentRoute) {
         scrollBehavior.state.heightOffset = 0f
@@ -141,10 +102,11 @@ fun MainHost() {
             topBar = {
                 Column(Modifier.windowInsetsPadding(WindowInsets.navigationBars.only(Horizontal))) {
                     MainTopAppBar(
-                        title = stringResource(appBarTitleResId),
+                        titleResId = appBarTitleResId,
+                        isMainTab = isMainTab,
                         scrollBehavior = scrollBehavior,
                         currentRoute = currentRoute,
-                        showSearchBar = showSearchBar,
+                        showSearchBar = showSearchBarState.value,
                         onSearchIconClick = { showSearchBarState.value = !showSearchBarState.value },
                         onSearchClosed = closeSearch,
                         navController = navController,
@@ -186,5 +148,54 @@ fun MainHost() {
         }
 
         LoadingScreen(isLoading)
+    }
+}
+
+// --- Helper: Title Resolver ---
+@Composable
+private fun rememberTopBarTitle(route: String?, entry: NavBackStackEntry?, isMainTab: Boolean): Int {
+    return remember(route, entry, isMainTab) {
+        when {
+            isMainTab -> R.string.app_name
+            route?.startsWith(Screen.ReAuthWrapper.route.substringBefore("/")) == true -> {
+                when (entry?.arguments?.getString(Screen.ReAuthWrapper.ARG_FROM)) {
+                    "email" -> R.string.change_email
+                    "password" -> R.string.change_password
+                    else -> R.string.re_authenticate
+                }
+            }
+            else -> Screen.fromRoute(route)?.titleResId ?: R.string.events
+        }
+    }
+}
+
+// --- Helper: Notification Intent Handler ---
+@Composable
+private fun HandleNotificationEffect(navController: NavController, eventVM: EventViewModel) {
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        val activity = context as? Activity
+        val intent = activity?.intent
+        val targetId = intent?.getStringExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
+
+        if (targetId != null) {
+            // 1. Prepare ViewModel for scrolling
+            eventVM.setScrollTarget(targetId)
+
+            // 2. Reset filters/search so the target is actually visible
+            eventVM.clearAllFilters()
+            eventVM.updateSearchText(TextFieldValue(""))
+
+            // 3. Navigate to Bookmarks
+            navController.navigate(Screen.MyEvents.route) {
+                popUpTo(navController.graph.startDestinationId) { saveState = true }
+                launchSingleTop = true
+                restoreState = true
+            }
+
+            // 4. Consume the extra so it doesn't trigger again on rotation
+            intent.removeExtra(NotificationService.EXTRA_TARGET_EVENT_ID)
+        }
     }
 }

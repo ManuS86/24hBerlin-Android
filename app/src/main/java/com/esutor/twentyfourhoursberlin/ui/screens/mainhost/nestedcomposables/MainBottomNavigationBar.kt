@@ -1,6 +1,7 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables
 
 import android.content.res.Configuration.ORIENTATION_PORTRAIT
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.height
@@ -15,6 +16,7 @@ import androidx.compose.material3.NavigationBarItemDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
@@ -27,6 +29,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.esutor.twentyfourhoursberlin.navigation.navItemsData
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 
 @Composable
 fun MainBottomNavigationBar(
@@ -48,6 +52,7 @@ fun MainBottomNavigationBar(
         items.forEach { item ->
             val selected = currentRoute == item.route
             val label = stringResource(id = item.labelResId)
+            val interactionSource = remember { MutableInteractionSource() }
 
             NavigationBarItem(
                 selected = selected,
@@ -68,7 +73,8 @@ fun MainBottomNavigationBar(
                     ) {
                         Icon(
                             imageVector = if (selected) item.selectedIcon else item.unselectedIcon,
-                            contentDescription = label
+                            contentDescription = label,
+                            modifier = Modifier.expressivePop(interactionSource, PopSpeed.Fast)
                         )
                         Text(
                             text = label,
@@ -88,7 +94,8 @@ fun MainBottomNavigationBar(
                     unselectedIconColor = Gray,
                     unselectedTextColor = Gray,
                     indicatorColor = Transparent
-                )
+                ),
+                interactionSource = interactionSource
             )
         }
     }
