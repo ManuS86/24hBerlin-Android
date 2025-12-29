@@ -95,7 +95,7 @@
     <string name="registration_failed_please_try_again">Registrierung fehlgeschlagen. Bitte versuche es erneut.</string>
     <string name="remove">Entfernen</string>
     <string name="report_a_problem">Ein Problem melden</string>
-    <string name="reset_your_password">Passwort zurücksetzen</string>
+    <string name="reset_password">Passwort zurücksetzen</string>
     <string name="search">Suche</string>
     <string name="search_event_names">Eventnamen durchsuchen</string>
     <string name="send_bug_report">Fehlermeldung senden</string>

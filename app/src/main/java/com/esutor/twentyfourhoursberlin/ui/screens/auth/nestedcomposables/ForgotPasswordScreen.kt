@@ -64,7 +64,7 @@ fun ForgotPasswordScreen(
             firebaseError = firebaseError
         )
 
-        LargeDarkButton(stringResource(R.string.reset_your_password)) { authVM.resetPassword(email) }
+        LargeDarkButton(stringResource(R.string.reset_password)) { authVM.resetPassword(email) }
         Spacer(Modifier.height(doublePadding))
         AuthTextButton(stringResource(R.string.try_logging_in_again), onClick)
         Spacer(Modifier.weight(1f))
