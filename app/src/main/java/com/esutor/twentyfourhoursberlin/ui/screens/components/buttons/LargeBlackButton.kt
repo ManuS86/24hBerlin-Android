@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.circle
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -42,7 +42,7 @@ fun LargeDarkButton(
     ) {
         Text(
             text = label,
-            modifier = Modifier.padding(halfPadding),
+            modifier = Modifier.padding(smallPadding),
             fontWeight = SemiBold,
             style = typography.bodyLarge
         )

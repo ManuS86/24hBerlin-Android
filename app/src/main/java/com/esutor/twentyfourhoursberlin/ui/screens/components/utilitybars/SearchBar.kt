@@ -37,8 +37,8 @@ import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,8 +55,8 @@ fun SearchBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(44.dp)
-            .padding(end = regularPadding)
-            .padding(bottom = microPadding),
+            .padding(end = standardPadding)
+            .padding(bottom = extraSmallPadding),
         textStyle = typography.bodyLarge.copy(color = White),
         cursorBrush = SolidColor(White),
         singleLine = true,

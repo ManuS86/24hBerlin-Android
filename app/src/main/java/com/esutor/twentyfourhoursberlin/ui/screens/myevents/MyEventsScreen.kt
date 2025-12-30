@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.EventList
@@ -28,7 +27,6 @@ fun MyEventsScreen(
 
     // --- UI State ---
     val listState = rememberLazyListState()
-    val scope = rememberCoroutineScope()
 
     // --- Side Effects ---
     LaunchedEffect(targetId, bookmarks) {
@@ -39,44 +37,32 @@ fun MyEventsScreen(
             val index = currentBookmarks.indexOfFirst { it.id == currentTarget }
             if (index != -1) {
                 delay(300)
-                listState.animateScrollToItem(index, -30)
+
+                val offset = if (listState.canScrollForward) -30 else 0
+                listState.animateScrollToItem(index, offset)
+
                 delay(500)
                 eventVM.clearScrollTarget()
             }
         }
     }
 
-    LaunchedEffect(bookmarks) {
-        if (targetId == null && !bookmarks.isNullOrEmpty() && listState.firstVisibleItemIndex > 0) {
-            listState.scrollToItem(0)
-        }
-    }
-
     // --- Layout ---
     Box(Modifier.fillMaxSize()) {
         when {
-            // 1. DATA PRESENT: Show list immediately
-            bookmarks != null -> {
-                EventList(
-                    events = bookmarks,
-                    listState = listState,
-                    scope = scope,
-                    eventVM = eventVM,
-                    targetId = targetId
-                )
-
-                if (bookmarks!!.isEmpty()) NoEventsState()
+            !bookmarks.isNullOrEmpty() -> {
+                EventList(bookmarks, listState, eventVM, targetId)
             }
 
-            // 2. CONFIRMED OFFLINE: Only show if we are sure there's no net
+            bookmarks?.isEmpty() == true -> {
+                NoEventsState()
+            }
+
             !isNetworkAvailable -> {
                 OfflineState()
             }
 
-            // 3. THE "SILENT" STATE: events is null BUT network is available (or unknown)
-            else -> {
-                // Do nothing. This shows the background/empty screen
-            }
+            else -> { /* Silent Loading State */ }
         }
     }
 }

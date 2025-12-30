@@ -17,21 +17,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.AuthTextButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthPrompt
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.TitleHeader
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
-import com.esutor.twentyfourhoursberlin.ui.theme.errorPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.doublePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Suppress("AssignedValueIsNeverRead")
 @Composable
@@ -53,11 +51,11 @@ fun LoginScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState)
-                .padding(horizontal = regularPadding)
-                .padding(top = halfPadding),
+                .padding(horizontal = standardPadding)
+                .padding(top = smallPadding),
             horizontalAlignment = CenterHorizontally
         ) {
-            TitleHeader(Modifier.height(regularPadding))
+            TitleHeader(Modifier.height(standardPadding))
 
             AuthTextField(
                 label = stringResource(R.string.email),
@@ -67,7 +65,7 @@ fun LoginScreen(
                 isPasswordField = false
             )
 
-            Spacer(Modifier.height(halfPadding))
+            Spacer(Modifier.height(smallPadding))
 
             AuthTextField(
                 label = stringResource(R.string.password),
@@ -85,8 +83,8 @@ fun LoginScreen(
             Spacer(Modifier.height(doublePadding))
             AuthTextButton(stringResource(R.string.forgot_password)) { showForgotPassword = true }
             Spacer(Modifier.weight(1f))
-            SignupPrompt(onClick)
-            Spacer(Modifier.height(halfPadding))
+            AuthPrompt(R.string.dont_have_an_account, R.string.create_account, onClick)
+            Spacer(Modifier.height(smallPadding))
         }
     }
 
@@ -99,19 +97,8 @@ fun LoginScreen(
 private fun ErrorMessage(errorMessageResId: Int) {
     Text(
         text = stringResource(errorMessageResId),
-        modifier = Modifier.padding(top = errorPadding),
+        modifier = Modifier.padding(top = smallPadding),
         color = Red,
         style = typography.bodyMedium
     )
-}
-
-@Composable
-private fun SignupPrompt(onClick: () -> Unit) {
-    Text(
-        text = stringResource(R.string.dont_have_an_account),
-        color = Gray,
-        textAlign = Center
-    )
-
-    AuthTextButton(stringResource(R.string.create_account),onClick)
 }

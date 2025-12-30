@@ -23,8 +23,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.utils.bitmapDescriptorFromVector
 import com.esutor.twentyfourhoursberlin.utils.getMarkerResourceId
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -98,7 +98,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
     }
 
     @Suppress("AssignedValueIsNeverRead")
-    LaunchedEffect(events, events?.size) {
+    LaunchedEffect(events) {
         if (isInitialLoad) {
             isInitialLoad = false
         } else {
@@ -145,7 +145,7 @@ fun ClubMapScreen(eventVM: EventViewModel) {
         ) {
             Column(
                 Modifier
-                    .padding(horizontal = regularPadding, vertical = halfPadding)
+                    .padding(horizontal = standardPadding, vertical = smallPadding)
                     .verticalScroll(rememberScrollState())
             ) {
                 EventItem(

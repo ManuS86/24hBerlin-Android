@@ -28,7 +28,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.esutor.twentyfourhoursberlin.data.enums.Language
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun LanguageDropdown(
@@ -76,7 +76,7 @@ fun LanguageDropdown(
                     Text(
                         text = label,
                         overflow = Ellipsis,
-                        modifier = Modifier.padding(end = halfPadding)
+                        modifier = Modifier.padding(end = smallPadding)
                     )
                 },
                 onClick = {
@@ -93,7 +93,7 @@ fun LanguageDropdown(
                             text = stringResource(option.resource),
                             overflow = Ellipsis,
                             modifier = Modifier
-                                .padding(end = halfPadding)
+                                .padding(end = smallPadding)
                         )
                     },
                     onClick = {

@@ -20,9 +20,9 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale.getDefault
@@ -41,12 +41,12 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
         Row(
             Modifier
                 .fillMaxWidth()
-                .padding(regularPadding)
+                .padding(standardPadding)
         ) {
             Icon(
                 imageVector = Default.WatchLater,
                 contentDescription = null,
-                modifier = Modifier.padding(end = halfPadding),
+                modifier = Modifier.padding(end = smallPadding),
                 tint = Party
             )
 
@@ -54,7 +54,7 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
                 Column {
                     Text(
                         text = stringResource(R.string.time),
-                        modifier = Modifier.padding(bottom = halfPadding),
+                        modifier = Modifier.padding(bottom = smallPadding),
                         style = typography.titleMedium,
                         fontWeight = Bold
                     )

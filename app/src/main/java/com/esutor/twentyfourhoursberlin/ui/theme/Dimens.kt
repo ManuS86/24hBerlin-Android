@@ -8,11 +8,10 @@ import androidx.compose.ui.unit.dp
 val extraLargePadding = 64.dp
 val doublePadding = 32.dp
 val largePadding = 24.dp
-val regularPadding = 16.dp
+val standardPadding = 16.dp
 val mediumPadding = 12.dp
-val halfPadding = 8.dp
-val microPadding = 4.dp
-val errorPadding = 8.dp
+val smallPadding = 8.dp
+val extraSmallPadding = 4.dp
 
 // --- Component Sizes ---
 val reportProblemTextFieldSize = 200.dp

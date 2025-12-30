@@ -51,8 +51,8 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpee
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import kotlinx.coroutines.launch
 import java.time.LocalDate.now
@@ -86,16 +86,16 @@ fun FilterBar(eventVM: EventViewModel) {
         // --- Row 1: Months & Filter Button ---
         Row(
             modifier = Modifier
-                .padding(bottom = halfPadding)
-                .padding(end = regularPadding),
+                .padding(bottom = smallPadding)
+                .padding(end = standardPadding),
             verticalAlignment = CenterVertically
         ) {
             Row(
                 modifier = Modifier
                     .horizontalScroll(horizontalScrollState)
-                    .padding(start = regularPadding)
+                    .padding(start = standardPadding)
                     .weight(1f),
-                horizontalArrangement = spacedBy(halfPadding)
+                horizontalArrangement = spacedBy(smallPadding)
             ) {
                 monthOptions.forEach { month ->
                     val isSelected = selectedMonth == month
@@ -134,7 +134,7 @@ fun FilterBar(eventVM: EventViewModel) {
                 contentDescription = stringResource(R.string.show_filters),
                 modifier = Modifier
                     .expressivePop(showFiltersInteractionSource, PopSpeed.Fast, false)
-                    .padding(start = halfPadding)
+                    .padding(start = smallPadding)
                     .clickable(
                         role = Role.Button,
                         interactionSource = showFiltersInteractionSource,
@@ -160,15 +160,15 @@ fun FilterBar(eventVM: EventViewModel) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = regularPadding),
+                    .padding(end = standardPadding),
                 verticalAlignment = CenterVertically
             ) {
                 Row(
                     modifier = Modifier
                         .horizontalScroll(horizontalScrollState2)
-                        .padding(start = regularPadding)
+                        .padding(start = standardPadding)
                         .weight(1f),
-                    horizontalArrangement = spacedBy(halfPadding),
+                    horizontalArrangement = spacedBy(smallPadding),
                 ) {
                     FilterDropdown(
                         label = stringResource(R.string.type),
@@ -211,7 +211,7 @@ fun FilterBar(eventVM: EventViewModel) {
                         contentDescription = stringResource(R.string.clear_filters),
                         modifier = Modifier
                             .expressivePop(clearFiltersInteractionSource, PopSpeed.Fast)
-                            .padding(start = halfPadding)
+                            .padding(start = smallPadding)
                             .clickable(
                                 interactionSource = clearFiltersInteractionSource,
                                 role = Role.Button,

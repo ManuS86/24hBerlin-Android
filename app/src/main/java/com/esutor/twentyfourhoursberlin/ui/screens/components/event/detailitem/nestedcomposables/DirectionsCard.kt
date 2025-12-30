@@ -40,9 +40,9 @@ import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.circle
 import com.esutor.twentyfourhoursberlin.utils.getEventColor
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
 
 @Composable
@@ -66,13 +66,13 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(regularPadding),
+                .padding(standardPadding),
             verticalAlignment = CenterVertically
         ) {
             Icon(
                 imageVector = Default.Directions,
                 contentDescription = null,
-                modifier = Modifier.padding(end = halfPadding),
+                modifier = Modifier.padding(end = smallPadding),
                 tint = TextOffBlack
             )
 

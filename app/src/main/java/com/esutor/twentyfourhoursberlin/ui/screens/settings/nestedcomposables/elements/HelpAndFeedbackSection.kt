@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign.Companion.Start
 import androidx.core.net.toUri
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.SettingsButton
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 
 @Composable
@@ -29,7 +29,7 @@ fun HelpAndFeedbackSection(
         onClick = { settingsVM.openBugReport() }
     )
 
-    Spacer(Modifier.padding(microPadding))
+    Spacer(Modifier.padding(extraSmallPadding))
 
     // Privacy Policy
     SettingsButton(
@@ -42,7 +42,7 @@ fun HelpAndFeedbackSection(
         }
     )
 
-    Spacer(Modifier.padding(microPadding))
+    Spacer(Modifier.padding(extraSmallPadding))
 
     // Terms of Service
     SettingsButton(

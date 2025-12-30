@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun OfflineState() {
@@ -37,7 +37,7 @@ fun OfflineState() {
             tint = tintColor
         )
 
-        Spacer(Modifier.height(regularPadding))
+        Spacer(Modifier.height(standardPadding))
 
         Text(
             text = stringResource(R.string.no_internet_connection),

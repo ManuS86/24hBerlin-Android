@@ -25,9 +25,9 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkB
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
-import com.esutor.twentyfourhoursberlin.ui.theme.errorPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun ReAuthWrapper(
@@ -65,7 +65,7 @@ private fun PasswordReAuthForm(
     onPasswordChange: (String) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(horizontal = regularPadding),
+        modifier = Modifier.padding(horizontal = standardPadding),
         horizontalAlignment = CenterHorizontally
     ) {
         Spacer(Modifier.weight(0.7f))
@@ -89,7 +89,7 @@ private fun PasswordReAuthForm(
         if (firebaseError != null) {
             Text(
                 text = firebaseError,
-                modifier = Modifier.padding(top = errorPadding),
+                modifier = Modifier.padding(top = smallPadding),
                 color = Red,
                 style = typography.bodyMedium
             )

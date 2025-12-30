@@ -7,13 +7,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -21,18 +22,29 @@ import kotlinx.coroutines.launch
 fun EventList(
     events: List<Event>?,
     listState: LazyListState,
-    scope: CoroutineScope,
     eventVM: EventViewModel,
     targetId: String? = null
 ) {
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(events) {
+        if (targetId == null &&
+            !events.isNullOrEmpty() &&
+            listState.firstVisibleItemIndex > 0 &&
+            listState.canScrollForward
+        ) {
+            listState.scrollToItem(0)
+        }
+    }
+
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         state = listState,
         contentPadding = PaddingValues(
-            horizontal = regularPadding,
-            vertical = halfPadding
+            horizontal = standardPadding,
+            vertical = smallPadding
         ),
-        verticalArrangement = spacedBy(halfPadding)
+        verticalArrangement = spacedBy(smallPadding)
     ) {
         itemsIndexed(
             items = events ?: emptyList(),

@@ -23,9 +23,9 @@ import com.esutor.twentyfourhoursberlin.data.model.EntranceFee
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.utils.cleanToAnnotatedString
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun EntranceFeeCard(entranceFee: EntranceFee?) {
@@ -44,19 +44,19 @@ fun EntranceFeeCard(entranceFee: EntranceFee?) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding)
+                    .padding(standardPadding)
             ) {
                 Icon(
                     Icons.Filled.Payments,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = halfPadding),
+                    modifier = Modifier.padding(end = smallPadding),
                     tint = Party
                 )
 
                 Column {
                     Text(
                         text = stringResource(R.string.entrance_fee),
-                        modifier = Modifier.padding(bottom = halfPadding),
+                        modifier = Modifier.padding(bottom = smallPadding),
                         style = typography.titleMedium,
                         fontWeight = Bold
                     )

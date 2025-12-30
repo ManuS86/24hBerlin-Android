@@ -29,7 +29,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.n
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.managers.ExternalMapNavigator
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 
 /**
@@ -47,8 +47,8 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(halfPadding),
-        verticalArrangement = spacedBy(halfPadding)
+            .padding(smallPadding),
+        verticalArrangement = spacedBy(smallPadding)
     ) {
         ImageCard(event.imageURL)
         DetailCard(event.details)
@@ -93,7 +93,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
                             interactionSource = collapseInteractionSource,
                             onClick = showDetailToggle
                         )
-                        .padding(halfPadding)
+                        .padding(smallPadding)
                 )
             }
         }

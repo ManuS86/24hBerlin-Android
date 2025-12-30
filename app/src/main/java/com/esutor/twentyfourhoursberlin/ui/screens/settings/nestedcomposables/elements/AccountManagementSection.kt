@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.SettingsButton
 import com.esutor.twentyfourhoursberlin.ui.theme.logoSizeSmall
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun AccountManagementSection(
@@ -53,7 +53,7 @@ private fun AppFooter() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(40.dp),
-        verticalArrangement = spacedBy(halfPadding),
+        verticalArrangement = spacedBy(smallPadding),
         horizontalAlignment = CenterHorizontally,
     ) {
         Image(

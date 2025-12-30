@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.navigation.Screen
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 
 @Composable
@@ -58,7 +58,7 @@ fun AccountDetailsSection(
             onClick = { navController.navigate(Screen.ReAuthWrapper.createRoute("email")) }
         )
 
-        HorizontalDivider(modifier = Modifier.padding(horizontal = regularPadding), color = LightGray)
+        HorizontalDivider(modifier = Modifier.padding(horizontal = standardPadding), color = LightGray)
 
         // Change Password
         SettingsCardItem(
@@ -82,7 +82,7 @@ private fun SettingsCardItem(
                 role = Role.Button,
                 onClick = { onClick() }
             )
-            .padding(regularPadding),
+            .padding(standardPadding),
         verticalAlignment = CenterVertically
     ) {
         Text(title)

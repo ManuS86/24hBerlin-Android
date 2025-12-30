@@ -1,6 +1,8 @@
 package com.esutor.twentyfourhoursberlin.ui.viewmodel
 
+import android.content.Context
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,14 +12,11 @@ import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.data.model.Settings
 import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.managers.LanguageChangeHelper
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.esutor.twentyfourhoursberlin.utils.toLanguageOrNull
 import com.google.firebase.firestore.ListenerRegistration
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -50,11 +49,11 @@ class SettingsViewModel(
     var notificationsEnabledState = savedStateHandle.getStateFlow(KEY_NOTIFICATIONS_ENABLED, true)
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
-    val language = savedStateHandle.getStateFlow<Language?>(KEY_LANGUAGE, null)
 
-    val currentLanguageCode: StateFlow<String> = language
-        .map { it?.languageCode ?: "" }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000L), "")
+    val language = savedStateHandle.getStateFlow(
+        KEY_LANGUAGE,
+        AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
+    )
 
     // --- Listeners and Cache ---
     private var firebaseListener: ListenerRegistration? = null
@@ -75,12 +74,17 @@ class SettingsViewModel(
     }
 
     // --- User Settings actions ---
-    fun changeLanguage(newLanguage: Language?) {
+    fun changeLanguage(context: Context, newLanguage: Language?) {
         savedStateHandle[KEY_LANGUAGE] = newLanguage
+
+        // FIX 2: Always trigger the helper, even if newLanguage is null.
+        // If null, we pass an empty string to trigger the "System Default" logic in your helper.
+        val targetCode = newLanguage?.languageCode ?: ""
+        LanguageChangeHelper().setLanguage(context, targetCode)
 
         val settings = Settings(
             notificationsEnabled = notificationsEnabledState.value,
-            language = newLanguage?.label
+            language = newLanguage?.label // Persists null to Firebase for system default
         )
 
         viewModelScope.launch {

@@ -33,10 +33,10 @@ import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 
 @Composable
 fun <T> FilterDropdown(
@@ -58,8 +58,8 @@ fun <T> FilterDropdown(
 
     Column(
         modifier = Modifier
-            .padding(top = microPadding)
-            .padding(bottom = halfPadding)
+            .padding(top = extraSmallPadding)
+            .padding(bottom = smallPadding)
     ) {
         OutlinedButton(
             onClick = { isExpanded = true },
@@ -110,7 +110,7 @@ fun <T> FilterDropdown(
                         Text(
                             text = option?.let { itemToLabel(it) } ?: label,
                             overflow = Ellipsis,
-                            modifier = Modifier.padding(end = halfPadding)
+                            modifier = Modifier.padding(end = smallPadding)
                         )
                     },
                     onClick = {

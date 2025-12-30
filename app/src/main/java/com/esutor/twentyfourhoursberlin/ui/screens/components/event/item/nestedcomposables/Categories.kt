@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontStyle.Companion.Italic
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.utils.cleanToAnnotatedString
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun Categories(
@@ -24,7 +24,7 @@ fun Categories(
 ) {
     val textColor = White.copy(0.8f)
 
-    Column(verticalArrangement = spacedBy(halfPadding)) {
+    Column(verticalArrangement = spacedBy(smallPadding)) {
     eventType?.let { type ->
         val typeItems = remember(type) {
             type.values.map { rawValue ->
@@ -36,7 +36,7 @@ fun Categories(
             Row {
                 Text(
                     text = stringResource(R.string.type),
-                    modifier = Modifier.padding(end = halfPadding),
+                    modifier = Modifier.padding(end = smallPadding),
                     fontStyle = Italic,
                     color = textColor,
                     style = typography.bodyMedium
@@ -57,7 +57,7 @@ fun Categories(
             Row {
                 Text(
                     text = stringResource(R.string.music),
-                    modifier = Modifier.padding(end = halfPadding),
+                    modifier = Modifier.padding(end = smallPadding),
                     fontStyle = Italic,
                     color = textColor,
                     style = typography.bodyMedium

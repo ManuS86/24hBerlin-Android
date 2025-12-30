@@ -27,7 +27,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Au
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun ChangePasswordScreen(
@@ -44,7 +44,7 @@ fun ChangePasswordScreen(
         Background()
 
         Column(
-            modifier = Modifier.padding(horizontal = regularPadding),
+            modifier = Modifier.padding(horizontal = standardPadding),
             horizontalAlignment = CenterHorizontally
         ) {
             Spacer(Modifier.weight(0.7f))
@@ -65,7 +65,7 @@ fun ChangePasswordScreen(
                 isPasswordField = true
             )
 
-            Spacer(Modifier.height(regularPadding))
+            Spacer(Modifier.height(standardPadding))
 
             AuthTextField(
                 label = stringResource(R.string.confirm_new_password),

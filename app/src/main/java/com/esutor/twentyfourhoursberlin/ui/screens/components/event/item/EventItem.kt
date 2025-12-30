@@ -45,10 +45,10 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedc
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.Time
 import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.utils.getEventColor
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import kotlinx.coroutines.delay
 
@@ -117,14 +117,14 @@ fun EventItem(
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .padding(top = regularPadding)
-                        .padding(horizontal = regularPadding)
+                        .padding(top = standardPadding)
+                        .padding(horizontal = standardPadding)
                 ) {
                     ImageAndDate(event.imageURL, event.start, event.end)
 
                     Column(
                         horizontalAlignment = Start,
-                        verticalArrangement = spacedBy(halfPadding),
+                        verticalArrangement = spacedBy(smallPadding),
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Header(event.name, event.permalink, event.subtitle)
@@ -135,7 +135,7 @@ fun EventItem(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = regularPadding),
+                                .padding(bottom = standardPadding),
                             horizontalArrangement = End
                         ) {
                             BookmarkButton(event, eventVM)
@@ -149,7 +149,7 @@ fun EventItem(
                         contentDescription = null,
                         modifier = Modifier
                             .align(BottomCenter)
-                            .padding(bottom = microPadding)
+                            .padding(bottom = extraSmallPadding)
                     )
                 }
             }

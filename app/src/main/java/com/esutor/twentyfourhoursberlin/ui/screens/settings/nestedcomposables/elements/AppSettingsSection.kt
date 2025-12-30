@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,9 +26,9 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.Language
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.LanguageDropdown
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import kotlin.collections.forEach
@@ -40,6 +41,7 @@ fun AppSettingsSection(
     settingsVM: SettingsViewModel,
     eventVM: EventViewModel
 ) {
+    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
 
     Card(
@@ -61,12 +63,12 @@ fun AppSettingsSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = regularPadding),
+                .padding(horizontal = standardPadding),
             verticalAlignment = CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.language_settings),
-                modifier = Modifier.padding(vertical = regularPadding)
+                modifier = Modifier.padding(vertical = standardPadding)
             )
 
             Spacer(Modifier.weight(1f))
@@ -74,13 +76,13 @@ fun AppSettingsSection(
             LanguageDropdown(
                 label = stringResource(R.string.system_default),
                 selectedValue = language,
-                onValueSelected = { settingsVM.changeLanguage(it) },
+                onValueSelected = { settingsVM.changeLanguage(context, it) },
                 options = Language.entries.toList()
             )
         }
     }
 
-    Spacer(Modifier.padding(microPadding))
+    Spacer(Modifier.padding(extraSmallPadding))
 
     // Notifications
     Card(
@@ -101,12 +103,12 @@ fun AppSettingsSection(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = regularPadding),
+                .padding(horizontal = standardPadding),
             verticalAlignment = CenterVertically
         ) {
             Text(
                 text = stringResource(R.string.notifications),
-                modifier = Modifier.padding(vertical = regularPadding)
+                modifier = Modifier.padding(vertical = standardPadding)
             )
 
             Spacer(Modifier.weight(1f))

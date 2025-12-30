@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
@@ -21,8 +21,8 @@ fun ConnectivitySnackbarEffect(
     val noInternetMsg = stringResource(R.string.no_internet_connection)
     val backOnlineMsg = stringResource(R.string.back_online)
 
-    val wasPreviouslyOffline = remember { mutableStateOf(false) }
-    val isInitialComposition = remember { mutableStateOf(true) }
+    val wasPreviouslyOffline = rememberSaveable { mutableStateOf(false) }
+    val isInitialComposition = rememberSaveable { mutableStateOf(true) }
 
     LaunchedEffect(isOnline) {
         if (isOnline) {
@@ -36,11 +36,15 @@ fun ConnectivitySnackbarEffect(
             }
         } else {
             wasPreviouslyOffline.value = true
-            hostState.showSnackbar(
-                message = noInternetMsg,
-                duration = SnackbarDuration.Indefinite,
-                withDismissAction = true
-            )
+            val alreadyShowing = hostState.currentSnackbarData?.visuals?.message == noInternetMsg
+
+            if (!alreadyShowing) {
+                hostState.showSnackbar(
+                    message = noInternetMsg,
+                    duration = SnackbarDuration.Indefinite,
+                    withDismissAction = true
+                )
+            }
         }
 
         isInitialComposition.value = false

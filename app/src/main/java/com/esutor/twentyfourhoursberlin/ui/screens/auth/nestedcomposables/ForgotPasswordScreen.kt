@@ -25,8 +25,8 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Au
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.TitleHeader
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.doublePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun ForgotPasswordScreen(
@@ -44,8 +44,8 @@ fun ForgotPasswordScreen(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .padding(horizontal = regularPadding)
-            .padding(top = halfPadding),
+            .padding(horizontal = standardPadding)
+            .padding(top = smallPadding),
         horizontalAlignment = CenterHorizontally
     ) {
         TitleHeader(Modifier.weight(0.2f))

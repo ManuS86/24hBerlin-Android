@@ -26,7 +26,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Au
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun ChangeEmailScreen(
@@ -41,7 +41,7 @@ fun ChangeEmailScreen(
         Background()
 
         Column(
-            modifier = Modifier.padding(horizontal = regularPadding),
+            modifier = Modifier.padding(horizontal = standardPadding),
             horizontalAlignment = CenterHorizontally
         ) {
             Spacer(Modifier.weight(0.7f))

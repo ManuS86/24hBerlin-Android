@@ -49,7 +49,7 @@ import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.SearchBar
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 
@@ -170,7 +170,7 @@ fun AppLogo(titleResId: Int, isMainTab: Boolean) {
 
     Row(
         verticalAlignment = CenterVertically,
-        horizontalArrangement = spacedBy(halfPadding)
+        horizontalArrangement = spacedBy(smallPadding)
     ) {
         Box(
             modifier = Modifier

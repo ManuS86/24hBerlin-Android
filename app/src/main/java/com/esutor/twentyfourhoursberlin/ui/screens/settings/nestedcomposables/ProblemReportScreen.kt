@@ -22,8 +22,8 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
 import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.reportProblemTextFieldSize
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import kotlin.Int.Companion.MAX_VALUE
@@ -34,10 +34,10 @@ fun ReportProblemScreen(
 ) {
     var bugReport by rememberSaveable { mutableStateOf("") }
 
-    Column(Modifier.padding(horizontal = regularPadding)) {
+    Column(Modifier.padding(horizontal = standardPadding)) {
         Text(
             text = stringResource(R.string.report_a_problem),
-            modifier = Modifier.padding(bottom = halfPadding),
+            modifier = Modifier.padding(bottom = smallPadding),
             style = typography.titleMedium,
             color = TextOffBlack
         )

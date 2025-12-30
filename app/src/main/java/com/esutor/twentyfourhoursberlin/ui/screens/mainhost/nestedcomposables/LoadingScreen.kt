@@ -30,7 +30,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.theme.extraLargePadding
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun LoadingScreen(
@@ -77,7 +77,7 @@ fun LoadingScreen(
                 // Progress Container
                 Box(
                     modifier = Modifier
-                        .padding(start = halfPadding)
+                        .padding(start = smallPadding)
                         .weight(1f)
                         .height(5.dp)
                         .background(Black.copy(alpha = 0.2f))

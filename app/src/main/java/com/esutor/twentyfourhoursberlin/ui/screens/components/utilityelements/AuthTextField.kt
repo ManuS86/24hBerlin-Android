@@ -30,7 +30,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.microPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 
 @Composable
 fun AuthTextField(
@@ -49,7 +49,7 @@ fun AuthTextField(
         Text(
             text = label,
             fontWeight = SemiBold,
-            modifier = Modifier.padding(bottom = microPadding),
+            modifier = Modifier.padding(bottom = extraSmallPadding),
             color = Black
         )
 

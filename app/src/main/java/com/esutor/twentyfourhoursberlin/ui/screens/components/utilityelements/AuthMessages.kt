@@ -9,7 +9,7 @@ import androidx.compose.ui.graphics.Color.Companion.Green
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.res.stringResource
-import com.esutor.twentyfourhoursberlin.ui.theme.errorPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun AuthMessages(
@@ -27,7 +27,7 @@ fun AuthMessages(
     message?.let {
         Text(
             text = it,
-            modifier = Modifier.padding(top = errorPadding),
+            modifier = Modifier.padding(top = smallPadding),
             color = color,
             style = typography.bodyMedium
         )

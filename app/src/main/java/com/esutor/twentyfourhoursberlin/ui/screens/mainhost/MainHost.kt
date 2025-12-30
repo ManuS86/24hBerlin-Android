@@ -53,31 +53,36 @@ import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainHost() {
-// --- ViewModels & Controllers ---
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
+    // --- ViewModels ---
     val connectivityVM: ConnectivityViewModel = viewModel(factory = ViewModelFactoryHelper.provideConnectivityViewModelFactory())
     val eventVM: EventViewModel = viewModel(factory = ViewModelFactoryHelper.provideEventViewModelFactory())
     val settingsVM: SettingsViewModel = viewModel(factory = ViewModelFactoryHelper.provideSettingsViewModelFactory())
 
-    // --- Navigation & UI State ---
+    // --- UI State ---
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
+    val isLoading by eventVM.isLoading.collectAsStateWithLifecycle()
+    val showSearchBarState = rememberSaveable { mutableStateOf(false) }
+
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
 
     val isMainTab by remember(currentRoute) {
         derivedStateOf {
             Screen.allScreens.any { it.route == currentRoute && it.titleResId == R.string.app_name }
         }
     }
-    val showFilterBar = currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+    val showFilterBar by remember(currentRoute) {
+        derivedStateOf {
+            currentRoute == Screen.Events.route || currentRoute == Screen.ClubMap.route
+        }
+    }
 
-    val isLoading by eventVM.isLoading.collectAsStateWithLifecycle()
-
-    val showSearchBarState = rememberSaveable { mutableStateOf(false) }
     val appBarTitleResId = rememberTopBarTitle(currentRoute, navBackStackEntry, isMainTab)
 
+    // --- Handlers ---
     val closeSearch = {
         showSearchBarState.value = false
         eventVM.updateSearchText(TextFieldValue(""))

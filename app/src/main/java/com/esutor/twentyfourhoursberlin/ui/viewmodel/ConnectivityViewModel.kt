@@ -11,5 +11,5 @@ class ConnectivityViewModel(
 ) : ViewModel() {
     val isConnected = connectivityObserver
         .isConnected
-        .stateIn(viewModelScope, WhileSubscribed(5000L), false)
+        .stateIn(viewModelScope, WhileSubscribed(5000L), true)
 }

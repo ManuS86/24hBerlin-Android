@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.theme.Offline
 import com.esutor.twentyfourhoursberlin.ui.theme.Online
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 
@@ -49,7 +49,7 @@ fun ConnectivitySnackbarHost(
         ) {
             Row(
                 verticalAlignment = CenterVertically,
-                horizontalArrangement = spacedBy(halfPadding)
+                horizontalArrangement = spacedBy(smallPadding)
             ) {
                 Icon(
                     imageVector = if (isOffline) Icons.Rounded.WifiOff else Icons.Rounded.Wifi,

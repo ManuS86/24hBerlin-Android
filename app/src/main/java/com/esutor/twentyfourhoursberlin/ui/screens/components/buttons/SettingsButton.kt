@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 
 @Composable
@@ -46,7 +46,7 @@ fun SettingsButton(
             containerColor = White,
             contentColor = Black
         ),
-        contentPadding = PaddingValues(regularPadding),
+        contentPadding = PaddingValues(standardPadding),
         interactionSource = interactionSource
     ) {
         Text(

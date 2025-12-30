@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Medium
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.ShareButton
 import com.esutor.twentyfourhoursberlin.utils.cleanToAnnotatedString
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun Header(
@@ -29,7 +29,7 @@ fun Header(
         name.cleanToAnnotatedString().text.uppercase()
     }
 
-    Column(verticalArrangement = spacedBy(halfPadding)) {
+    Column(verticalArrangement = spacedBy(smallPadding)) {
         Row(
             Modifier.fillMaxWidth()
         ) {

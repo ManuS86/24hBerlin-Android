@@ -26,9 +26,9 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun LearnMoreLinkCard(link: String?) {
@@ -52,12 +52,12 @@ fun LearnMoreLinkCard(link: String?) {
                         interactionSource = interactionSource,
                         onClick = { context.startActivity(Intent(ACTION_VIEW, link.toUri())) }
                     )
-                    .padding(regularPadding)
+                    .padding(standardPadding)
             ) {
                 Icon(
                     imageVector = Default.Link,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = halfPadding),
+                    modifier = Modifier.padding(end = smallPadding),
                     tint = Party
                 )
 

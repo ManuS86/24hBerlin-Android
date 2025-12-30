@@ -21,9 +21,9 @@ import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.theme.Details
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
-import com.esutor.twentyfourhoursberlin.ui.theme.halfPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun LocationCard(
@@ -41,19 +41,19 @@ fun LocationCard(
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(regularPadding)
+                    .padding(standardPadding)
             ) {
                 Icon(
                     imageVector = Icons.Filled.LocationOn,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = halfPadding),
+                    modifier = Modifier.padding(end = smallPadding),
                     tint = Party
                 )
 
                 Column {
                     Text(
                         text = stringResource(R.string.location),
-                        modifier = Modifier.padding(bottom = halfPadding),
+                        modifier = Modifier.padding(bottom = smallPadding),
                         style = typography.titleMedium,
                         fontWeight = Bold
                     )

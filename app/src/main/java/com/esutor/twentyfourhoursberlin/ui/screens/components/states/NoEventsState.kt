@@ -14,14 +14,14 @@ import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
-import com.esutor.twentyfourhoursberlin.ui.theme.regularPadding
+import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
 fun NoEventsState() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(regularPadding),
+            .padding(standardPadding),
         contentAlignment = Alignment.Center
     ) {
         Background()
