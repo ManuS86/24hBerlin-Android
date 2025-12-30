@@ -62,6 +62,7 @@
     <string name="january">Jan</string>
     <string name="july">Jul</string>
     <string name="june">Jun</string>
+    <string name="kulturprogramm">Kulturprogramm</string>
     <string name="language_settings">Spracheinstellungen</string>
     <string name="location">Ort</string>
     <string name="login">Einloggen</string>
@@ -111,7 +112,7 @@
     <string name="thank_you_for_your_report">Danke für deine Meldung!</string>
     <string name="time">Zeit</string>
     <string name="try_logging_in_again">Versuche erneut einzuloggen.</string>
-    <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Kulturprogramm</string>
+    <string name="twenty_four_hours">Twenty Four Hours</string>
     <string name="type">Art</string>
     <string name="venue">Ort</string>
     <string name="verify_password">Password bestätigen</string>

@@ -62,6 +62,7 @@
     <string name="january">Jan</string>
     <string name="july">Jul</string>
     <string name="june">Jun</string>
+    <string name="kulturprogramm">Event Calendar</string>
     <string name="language_settings">Language Settings</string>
     <string name="location">Location</string>
     <string name="login">Login</string>
@@ -111,7 +112,7 @@
     <string name="thank_you_for_your_report">Thank you for your report!</string>
     <string name="time">Time</string>
     <string name="try_logging_in_again">Try logging in again.</string>
-    <string name="twenty_four_hours_kulturprogramm">Twenty Four Hours Event Calendar</string>
+    <string name="twenty_four_hours">Twenty Four Hours</string>
     <string name="type">Type</string>
     <string name="venue">Venue</string>
     <string name="verify_password">Verify Password</string>

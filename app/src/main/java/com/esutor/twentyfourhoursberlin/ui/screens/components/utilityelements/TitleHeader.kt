@@ -21,8 +21,16 @@ import com.esutor.twentyfourhoursberlin.ui.theme.logoSize
 @Composable
 fun TitleHeader(modifier: Modifier) {
     Text(
-        text = stringResource(R.string.twenty_four_hours_kulturprogramm),
-        maxLines = 2,
+        text = stringResource(R.string.twenty_four_hours),
+        maxLines = 1,
+        fontWeight = Black,
+        textAlign = Center,
+        style = typography.headlineLarge
+    )
+
+    Text(
+        text = stringResource(R.string.kulturprogramm),
+        maxLines = 1,
         fontWeight = Black,
         textAlign = Center,
         style = typography.headlineLarge
