@@ -14,7 +14,7 @@ val smallPadding = 8.dp
 val extraSmallPadding = 4.dp
 
 // --- Component Sizes ---
-val reportProblemTextFieldSize = 200.dp
+val reportProblemTextFieldHeight = 200.dp
 val detailImageSize = 180.dp
 val mapPreviewHeight = 160.dp
 val logoSize = 120.dp

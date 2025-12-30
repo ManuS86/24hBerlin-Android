@@ -24,7 +24,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.reportProblemTextFieldSize
+import com.esutor.twentyfourhoursberlin.ui.theme.reportProblemTextFieldHeight
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import kotlin.Int.Companion.MAX_VALUE
 
@@ -47,7 +47,7 @@ fun ReportProblemScreen(
             onValueChange = { bugReport = it },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(reportProblemTextFieldSize),
+                .height(reportProblemTextFieldHeight),
             maxLines = MAX_VALUE,
             shape = slightRounding,
             colors = colors(

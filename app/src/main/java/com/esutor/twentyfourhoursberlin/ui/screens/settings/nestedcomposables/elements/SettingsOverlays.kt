@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import com.esutor.twentyfourhoursberlin.MainActivity
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.YesNoAlert
 import com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.ReportProblemScreen
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 

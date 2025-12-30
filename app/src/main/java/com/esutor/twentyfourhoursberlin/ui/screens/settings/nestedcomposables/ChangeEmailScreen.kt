@@ -37,6 +37,8 @@ fun ChangeEmailScreen(
 
     var email by rememberSaveable { mutableStateOf("") }
 
+    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
+
     Box(Modifier.fillMaxSize()) {
         Background()
 
@@ -71,6 +73,4 @@ fun ChangeEmailScreen(
             Spacer(Modifier.weight(1f))
         }
     }
-
-    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
 }

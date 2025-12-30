@@ -40,6 +40,8 @@ fun ChangePasswordScreen(
     var confirmPassword by rememberSaveable { mutableStateOf("") }
     var password by rememberSaveable { mutableStateOf("") }
 
+    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
+
     Box(Modifier.fillMaxSize()) {
         Background()
 
@@ -88,6 +90,4 @@ fun ChangePasswordScreen(
             Spacer(Modifier.weight(1f))
         }
     }
-
-    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
 }

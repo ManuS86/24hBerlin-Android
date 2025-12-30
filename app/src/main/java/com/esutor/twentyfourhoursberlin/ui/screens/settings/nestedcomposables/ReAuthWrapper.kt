@@ -39,6 +39,8 @@ fun ReAuthWrapper(
 
     var password by rememberSaveable { mutableStateOf("") }
 
+    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
+
     Box(Modifier.fillMaxSize()) {
         Background()
 
@@ -53,8 +55,6 @@ fun ReAuthWrapper(
             )
         }
     }
-
-    DisposableEffect(Unit) { onDispose { settingsVM.clearErrorMessages() } }
 }
 
 @Composable

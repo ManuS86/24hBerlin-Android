@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.elements
+package com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements
 
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
