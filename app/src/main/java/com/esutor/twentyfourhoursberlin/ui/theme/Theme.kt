@@ -22,7 +22,9 @@ private val LightColorScheme = lightColorScheme(
     onSurfaceVariant = TextOffBlack,
     onPrimary = White,
     onSecondary = TextOffBlack,
-    onTertiary = White
+    onTertiary = White,
+    outline = Black,
+    surfaceContainerHighest = White
 )
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)

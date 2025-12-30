@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults.cardColors
 import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -15,7 +14,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
-import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType.Companion.TextHandleMove
 import androidx.compose.ui.platform.LocalContext
@@ -126,8 +124,7 @@ fun AppSettingsSection(
                     } else {
                         settingsVM.cancelAllReminders(bookmarks)
                     }
-                },
-                colors = SwitchDefaults.colors(uncheckedTrackColor = LightGray.copy(0.5f))
+                }
             )
         }
     }
