@@ -37,13 +37,19 @@ class AndroidReminderScheduler(
     }
 
     /**
-     * Fix: Android 12+ requires specific permission for exact alarms.
      * This check prevents the app from crashing or failing silently.
      */
     private fun canScheduleExactAlarms(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13 (API 33) and above: Force inexact to avoid permission hurdles
+            false
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 (API 31/32): Check if permission was granted (it usually is by default here)
             alarmManager?.canScheduleExactAlarms() ?: false
-        } else true
+        } else {
+            // Below Android 12: No special permission required for exact alarms
+            true
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -114,14 +120,24 @@ class AndroidReminderScheduler(
     private fun scheduleAlarm(alarmId: Int, triggerMillis: Long, intent: Intent) {
         val pendingIntent = createPendingIntent(alarmId, intent)
 
-        if (canScheduleExactAlarms()) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                triggerMillis,
-                pendingIntent
-            )
-        } else {
-            // Fallback for Android 12+ if SCHEDULE_EXACT_ALARM is not granted
+        try {
+            if (canScheduleExactAlarms()) {
+                // Precise timing for older devices
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerMillis,
+                    pendingIntent
+                )
+            } else {
+                // Inexact timing (Power efficient) for Android 13+ or restricted devices
+                alarmManager.setAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    triggerMillis,
+                    pendingIntent
+                )
+            }
+        } catch (e: SecurityException) {
+            Log.e(TAG, "SecurityException: Exact alarm permission missing. Falling back to inexact.", e)
             alarmManager.setAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
                 triggerMillis,
