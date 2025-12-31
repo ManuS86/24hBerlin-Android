@@ -262,9 +262,9 @@ class EventViewModel(
 
     fun addBookmarkReminder(event: Event) {
         listOf(
-            EventReminderType.THREE_DAYS_BEFORE,
-            EventReminderType.TWELVE_HOURS_BEFORE,
-            EventReminderType.THREE_HOURS_BEFORE
+            EventReminderType.ONE_WEEK_BEFORE,
+            EventReminderType.ONE_DAY_BEFORE,
+            EventReminderType.ONE_HOUR_BEFORE
         ).forEach { type ->
             reminderScheduler.scheduleEventReminder(event, type, event.imageURL)
         }

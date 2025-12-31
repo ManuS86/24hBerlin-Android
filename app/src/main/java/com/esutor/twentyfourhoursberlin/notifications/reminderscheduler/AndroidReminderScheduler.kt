@@ -78,9 +78,9 @@ class AndroidReminderScheduler(
         val currentTime = System.currentTimeMillis()
 
         val triggerDateTime = when (type) {
-            EventReminderType.THREE_DAYS_BEFORE -> event.start.minusDays(3)
-            EventReminderType.TWELVE_HOURS_BEFORE -> event.start.minusHours(12)
-            EventReminderType.THREE_HOURS_BEFORE -> event.start.minusHours(3)
+            EventReminderType.ONE_WEEK_BEFORE -> event.start.minusDays(7)
+            EventReminderType.ONE_DAY_BEFORE -> event.start.minusHours(24)
+            EventReminderType.ONE_HOUR_BEFORE -> event.start.minusHours(1)
         }
 
         val triggerMillis = triggerDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
@@ -94,9 +94,9 @@ class AndroidReminderScheduler(
 
         val body = context.getString(
             when (type) {
-                EventReminderType.THREE_DAYS_BEFORE -> R.string.dont_forget_event_3days
-                EventReminderType.TWELVE_HOURS_BEFORE -> R.string.dont_forget_event_today
-                EventReminderType.THREE_HOURS_BEFORE -> R.string.dont_forget_event_3hours
+                EventReminderType.ONE_WEEK_BEFORE -> R.string.dont_forget_event_1week
+                EventReminderType.ONE_DAY_BEFORE -> R.string.dont_forget_event_1hour
+                EventReminderType.ONE_HOUR_BEFORE -> R.string.dont_forget_event_1day
             },
             event.name
         )

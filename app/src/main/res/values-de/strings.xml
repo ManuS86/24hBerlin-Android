@@ -33,9 +33,9 @@
     <string name="december">Dez</string>
     <string name="delete_account">Account Löschen</string>
     <string name="directions">Routenplaner</string>
-    <string name="dont_forget_event_3days">Nicht vergessen: %1$s findet in 3 Tagen statt!</string>
-    <string name="dont_forget_event_3hours">Nicht vergessen: %1$s findet in 3 Stunden statt!</string>
-    <string name="dont_forget_event_today">Nicht vergessen: %1$s findet Heute statt!</string>
+    <string name="dont_forget_event_1week">Nicht vergessen: %1$s findet in einer Woche statt!</string>
+    <string name="dont_forget_event_1day">Nicht vergessen: %1$s findet morgen statt!</string>
+    <string name="dont_forget_event_1hour">Nicht vergessen: %1$s findet in einer Stunde statt!</string>
     <string name="dont_have_an_account">Hast du noch keinen Account?</string>
     <string name="email">E-Mail</string>
     <string name="email_changed_successfully">E-Mail wurde erfolgreich geändert.</string>
