@@ -8,6 +8,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import com.esutor.twentyfourhoursberlin.data.model.Event
@@ -27,11 +30,17 @@ fun EventList(
 ) {
     val scope = rememberCoroutineScope()
 
+    val isAtBottom by remember {
+        derivedStateOf {
+            val lastItem = listState.layoutInfo.visibleItemsInfo.lastOrNull()
+            lastItem?.index == listState.layoutInfo.totalItemsCount - 1
+        }
+    }
+
     LaunchedEffect(events) {
         if (targetId == null &&
             !events.isNullOrEmpty() &&
-            listState.firstVisibleItemIndex > 0 &&
-            listState.canScrollForward
+            listState.firstVisibleItemIndex > 0
         ) {
             listState.scrollToItem(0)
         }
@@ -55,9 +64,12 @@ fun EventList(
                 eventVM = eventVM,
                 targetId = targetId,
                 onCollapse = {
-                    scope.launch {
-                        delay(50)
-                        listState.animateScrollToItem(index, -30)
+                    if (!isAtBottom) {
+                        scope.launch {
+                            delay(50)
+
+                            listState.animateScrollToItem(index, -30)
+                        }
                     }
                 }
             )
