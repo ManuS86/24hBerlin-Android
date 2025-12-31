@@ -13,7 +13,6 @@
     <string name="back">Zurück</string>
     <string name="back_online">Wieder online</string>
     <string name="bookmark">Speichern</string>
-    <string name="bug_report">Fehlerbericht</string>
     <string name="change_email">Email ändern</string>
     <string name="change_password">Passwort ändern</string>
     <string name="change_your_email">Ändere deine E-Mail Adresse</string>
@@ -76,6 +75,7 @@
     <string name="no">NEIN</string>
     <string name="no_events_available">Keine Events vorhanden</string>
     <string name="no_internet_connection">Keine Internetverbindung</string>
+    <string name="notifications">Benachrichtigungen</string>
     <string name="november">Nov</string>
     <string name="october">Okt</string>
     <string name="party">Party</string>
@@ -86,10 +86,10 @@
     <string name="password_must_contain_at_least_one_special_character">Passwort muss min. ein Sonderzeichen enthalten.</string>
     <string name="password_must_contain_at_least_one_uppercase_letter">Passwort muss min. einen Großbuchstaben beinhalten.</string>
     <string name="passwords_do_not_match">Passwörter stimmen nicht überein.</string>
-    <string name="please_describe_the_bug">Bitte beschreibe den Fehler.</string>
+    <string name="please_describe_the_problem">Bitte beschreibe den Fehler.</string>
     <string name="please_re_enter_your_password">Bitte gib dein Passwort erneut ein</string>
     <string name="privacy_policy">Datenschutz</string>
-    <string name="notifications">Benachrichtigungen</string>
+    <string name="problem_report">Problembericht</string>
     <string name="re_authenticate">Re-authentifizieren</string>
     <string name="re_enter_your_password">Passwort erneut eingeben</string>
     <string name="register">Registrieren</string>
@@ -99,7 +99,7 @@
     <string name="reset_password">Passwort zurücksetzen</string>
     <string name="search">Suche</string>
     <string name="search_event_names">Eventnamen durchsuchen</string>
-    <string name="send_bug_report">Fehlermeldung senden</string>
+    <string name="send_problem_report">Fehlermeldung senden</string>
     <string name="september">Sep</string>
     <string name="settings">Einstellungen</string>
     <string name="share">Teilen</string>

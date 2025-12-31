@@ -58,7 +58,7 @@ fun ReportProblemScreen(
             )
         )
 
-        LargeDarkButton(stringResource(R.string.send_bug_report)) {
+        LargeDarkButton(stringResource(R.string.send_problem_report)) {
             onSend(bugReport)
             if (bugReport.isNotBlank()) {
                 bugReport = ""

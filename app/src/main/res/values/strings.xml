@@ -13,7 +13,6 @@
     <string name="back">Back</string>
     <string name="back_online">Back online</string>
     <string name="bookmark">Bookmark</string>
-    <string name="bug_report">Bug Report</string>
     <string name="change_email">Change Email</string>
     <string name="change_password">Change Password</string>
     <string name="change_your_email">Change your email</string>
@@ -76,6 +75,7 @@
     <string name="no">NO</string>
     <string name="no_events_available">No Events available</string>
     <string name="no_internet_connection">No Internet connection</string>
+    <string name="notifications">Notifications</string>
     <string name="november">Nov</string>
     <string name="october">Oct</string>
     <string name="party">Party</string>
@@ -86,10 +86,10 @@
     <string name="password_must_contain_at_least_one_special_character">Password must contain at least one special character.</string>
     <string name="password_must_contain_at_least_one_uppercase_letter">Password must contain at least one uppercase letter.</string>
     <string name="passwords_do_not_match">Passwords do not match.</string>
-    <string name="please_describe_the_bug">Please describe the bug.</string>
+    <string name="please_describe_the_problem">Please describe the problem.</string>
     <string name="please_re_enter_your_password">Please re-enter your password</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="notifications">Notifications</string>
+    <string name="problem_report">Problem Report</string>
     <string name="re_authenticate">Re-Authenticate</string>
     <string name="re_enter_your_password">Re-enter your password</string>
     <string name="register">Register</string>
@@ -99,7 +99,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="search">Search</string>
     <string name="search_event_names">Search Event Names</string>
-    <string name="send_bug_report">Send Bug Report</string>
+    <string name="send_problem_report">Send Problem Report</string>
     <string name="september">Sep</string>
     <string name="settings">Settings</string>
     <string name="share">Share</string>

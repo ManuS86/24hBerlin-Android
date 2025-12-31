@@ -31,10 +31,10 @@ fun SettingsOverlays(
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
-    val pleaseDescribeBug = stringResource(R.string.please_describe_the_bug)
+    val pleaseDescribeBug = stringResource(R.string.please_describe_the_problem)
     val reportThankYou = stringResource(R.string.thank_you_for_your_report)
 
-    // 1. Bug Report Sheet
+    // 1. Problem Report Sheet
     if (isBugReportSheetOpen) {
         ModalBottomSheet(
             onDismissRequest = { settingsVM.closeBugReport() },
@@ -47,7 +47,7 @@ fun SettingsOverlays(
         }
     }
 
-    // 2. Bug Report Status Alert
+    // 2. Problem Report Status Alert
     bugReportAlertMessage?.let { message ->
         AlertDialog(
             onDismissRequest = { settingsVM.setProblemReportAlert(null) },
@@ -57,7 +57,7 @@ fun SettingsOverlays(
                     if (message == reportThankYou) settingsVM.closeBugReport()
                 }) { Text("OK") }
             },
-            title = { Text(stringResource(R.string.bug_report)) },
+            title = { Text(stringResource(R.string.problem_report)) },
             text = { Text(message) },
             containerColor = White
         )
