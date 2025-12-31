@@ -13,7 +13,7 @@ It provides all the features of the website plus the added functionality to book
 
 Features:
 - API based list of events with basic and expandable detail information
-- External directions for navigation in Apple Maps
+- External directions for navigation in Google Maps
 - Function to share and bookmark events
 - Various filters for events, club map and bookmarks
 - Club Map with all events visualized and clickable map markers to open event info
