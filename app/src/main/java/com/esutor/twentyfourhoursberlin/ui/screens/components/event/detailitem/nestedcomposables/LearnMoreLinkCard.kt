@@ -2,7 +2,6 @@ package com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.
 
 import android.content.Intent
 import android.content.Intent.ACTION_VIEW
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,7 +18,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.core.net.toUri
 import com.esutor.twentyfourhoursberlin.R
@@ -29,6 +27,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
+import com.esutor.twentyfourhoursberlin.utils.singleClick
 
 @Composable
 fun LearnMoreLinkCard(link: String?) {
@@ -47,8 +46,7 @@ fun LearnMoreLinkCard(link: String?) {
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .clickable(
-                        role = Role.Button,
+                    .singleClick(
                         interactionSource = interactionSource,
                         onClick = { context.startActivity(Intent(ACTION_VIEW, link.toUri())) }
                     )

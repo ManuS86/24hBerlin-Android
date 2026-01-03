@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements
+package com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.filterbar
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource

@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthMessages
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
@@ -69,7 +69,7 @@ fun ChangeEmailScreen(
                 firebaseError = firebaseError
             )
 
-            LargeDarkButton(stringResource(R.string.change_email)) { settingsVM.changeEmail(email) }
+            LargeBlackButton(stringResource(R.string.change_email)) { settingsVM.changeEmail(email) }
             Spacer(Modifier.weight(1f))
         }
     }

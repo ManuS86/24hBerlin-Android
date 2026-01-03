@@ -20,6 +20,7 @@ val mapPreviewHeight = 160.dp
 val logoSize = 120.dp
 val eventImageSize = 75.dp
 val logoSizeSmall = 50.dp
+val filterButtonHeight = 32.dp
 
 // --- Shapes ---
 val circle = RoundedCornerShape(100)

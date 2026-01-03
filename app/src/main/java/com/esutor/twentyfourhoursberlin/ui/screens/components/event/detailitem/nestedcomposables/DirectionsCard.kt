@@ -3,7 +3,6 @@ package com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -28,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -44,6 +42,7 @@ import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
+import com.esutor.twentyfourhoursberlin.utils.singleClick
 
 @Composable
 fun DirectionsCard(event: Event, onClick: () -> Unit) {
@@ -92,10 +91,9 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
                     .expressivePop(interactionSource, PopSpeed.Fast)
                     .clip(circle)
                     .background(color = eventColor)
-                    .clickable(
+                    .singleClick(
                         interactionSource = interactionSource,
                         indication = roundRipple,
-                        role = Role.Button,
                         onClick = onClick
                     ),
                 contentAlignment = Center

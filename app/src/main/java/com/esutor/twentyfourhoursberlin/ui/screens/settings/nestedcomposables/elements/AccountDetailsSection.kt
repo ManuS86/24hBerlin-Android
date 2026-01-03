@@ -1,7 +1,5 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.elements
 
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -19,19 +17,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.LightGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.navigation.Screen
+import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
+import com.esutor.twentyfourhoursberlin.utils.singleClick
 
 @Composable
 fun AccountDetailsSection(
@@ -73,15 +73,14 @@ private fun SettingsCardItem(
     title: String,
     onClick: () -> Unit
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = LocalIndication.current,
-                role = Role.Button,
-                onClick = { onClick() }
-            )
+            .expressivePop(interactionSource)
+            .clip(slightRounding)
+            .singleClick(interactionSource, onClick)
             .padding(standardPadding),
         verticalAlignment = CenterVertically
     ) {

@@ -25,7 +25,7 @@ import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthPrompt
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.TitleHeader
@@ -100,7 +100,7 @@ fun RegisterScreen(
             firebaseError = firebaseError
         )
 
-        LargeDarkButton(stringResource(R.string.register)) {
+        LargeBlackButton(stringResource(R.string.register)) {
             // 1. Start the registration flow
             authVM.register(password, confirmPassword) {
                 // 2. This block ONLY runs if checkPassword returned null

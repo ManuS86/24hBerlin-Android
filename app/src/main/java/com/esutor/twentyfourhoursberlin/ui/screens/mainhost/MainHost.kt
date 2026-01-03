@@ -37,7 +37,7 @@ import com.esutor.twentyfourhoursberlin.di.ViewModelFactoryHelper
 import com.esutor.twentyfourhoursberlin.navigation.NavGraph
 import com.esutor.twentyfourhoursberlin.navigation.Screen
 import com.esutor.twentyfourhoursberlin.notifications.NotificationService
-import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.FilterBar
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.filterbar.FilterBar
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.ScheduleReminderEffect
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.LoadingScreen

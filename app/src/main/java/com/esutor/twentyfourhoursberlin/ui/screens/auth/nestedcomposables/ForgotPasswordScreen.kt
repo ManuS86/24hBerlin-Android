@@ -20,7 +20,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthMessages
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.AuthTextButton
-import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.TitleHeader
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
@@ -64,7 +64,7 @@ fun ForgotPasswordScreen(
             firebaseError = firebaseError
         )
 
-        LargeDarkButton(stringResource(R.string.reset_password)) { authVM.resetPassword(email) }
+        LargeBlackButton(stringResource(R.string.reset_password)) { authVM.resetPassword(email) }
         Spacer(Modifier.height(doublePadding))
         AuthTextButton(stringResource(R.string.try_logging_in_again), onClick)
         Spacer(Modifier.weight(1f))

@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeDarkButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
@@ -58,7 +58,7 @@ fun ReportProblemScreen(
             )
         )
 
-        LargeDarkButton(stringResource(R.string.send_problem_report)) {
+        LargeBlackButton(stringResource(R.string.send_problem_report)) {
             onSend(bugReport)
             if (bugReport.isNotBlank()) {
                 bugReport = ""

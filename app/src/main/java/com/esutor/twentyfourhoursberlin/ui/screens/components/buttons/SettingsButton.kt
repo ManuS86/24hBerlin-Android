@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
+import com.esutor.twentyfourhoursberlin.utils.rememberSingleClick
 
 @Composable
 fun SettingsButton(
@@ -29,9 +30,10 @@ fun SettingsButton(
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val singleClickAction = rememberSingleClick { onClick() }
 
     Button(
-        onClick = onClick,
+        onClick = singleClickAction,
         modifier = Modifier
             .fillMaxWidth()
             .expressivePop(interactionSource)

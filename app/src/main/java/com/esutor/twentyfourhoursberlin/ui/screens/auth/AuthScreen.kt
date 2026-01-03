@@ -1,5 +1,12 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.auth
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,10 +33,26 @@ fun AuthScreen(
             .fillMaxSize()
             .padding(innerPadding)
     ) {
-        if (showRegister) {
-            RegisterScreen(authVM) { showRegister = !showRegister }
-        } else {
-            LoginScreen(authVM) { showRegister = !showRegister }
+        AnimatedContent(
+            targetState = showRegister,
+            transitionSpec = {
+                if (targetState) {
+                    (slideInHorizontally { width -> width } + fadeIn())
+                        .togetherWith(slideOutHorizontally { width -> -width } + fadeOut())
+                } else {
+                    (slideInHorizontally { width -> -width } + fadeIn())
+                        .togetherWith(slideOutHorizontally { width -> width } + fadeOut())
+                }.using(
+                    SizeTransform(clip = false)
+                )
+            },
+            label = "AuthScreenTransition"
+        ) { targetShowRegister ->
+            if (targetShowRegister) {
+                RegisterScreen(authVM) { showRegister = false }
+            } else {
+                LoginScreen(authVM) { showRegister = true }
+            }
         }
     }
 }

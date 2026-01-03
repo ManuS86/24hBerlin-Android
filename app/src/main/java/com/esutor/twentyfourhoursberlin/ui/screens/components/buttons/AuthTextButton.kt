@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
+import com.esutor.twentyfourhoursberlin.utils.rememberSingleClick
 
 @Composable
 fun AuthTextButton(
@@ -18,10 +19,12 @@ fun AuthTextButton(
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val singleClickAction = rememberSingleClick { onClick() }
 
     TextButton(
-        onClick = onClick,
-        modifier = Modifier.expressivePop(interactionSource, PopSpeed.Fast),
+        onClick = singleClickAction,
+        modifier = Modifier
+            .expressivePop(interactionSource, PopSpeed.Fast),
         interactionSource = interactionSource
     ) {
         Text(

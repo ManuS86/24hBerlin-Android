@@ -18,27 +18,29 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.express
 import com.esutor.twentyfourhoursberlin.ui.theme.circle
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
+import com.esutor.twentyfourhoursberlin.utils.rememberSingleClick
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun LargeDarkButton(
+fun LargeBlackButton(
     label: String,
     onClick: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
+    val singleClickAction = rememberSingleClick { onClick() }
 
     Button(
-        onClick = onClick,
-        interactionSource = interactionSource,
+        onClick = singleClickAction,
+        modifier = Modifier
+            .padding(top = largePadding)
+            .fillMaxWidth()
+            .expressivePop(interactionSource, useTapBuffer = false),
+        shape = circle,
         colors = ButtonDefaults.buttonColors(
             containerColor = Black,
             contentColor = White
         ),
-        shape = circle,
-        modifier = Modifier
-            .padding(top = largePadding)
-            .fillMaxWidth()
-            .expressivePop(interactionSource, useTapBuffer = false)
+        interactionSource = interactionSource
     ) {
         Text(
             text = label,

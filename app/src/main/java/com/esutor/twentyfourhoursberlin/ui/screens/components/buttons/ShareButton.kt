@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.Intent.ACTION_SEND
 import android.content.Intent.EXTRA_TEXT
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Share
@@ -13,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.roundRipple
+import com.esutor.twentyfourhoursberlin.utils.singleClick
 
 @Composable
 fun ShareButton(
@@ -31,10 +30,8 @@ fun ShareButton(
         contentDescription = stringResource(R.string.share),
         modifier = Modifier
             .expressivePop(interactionSource, PopSpeed.Fast)
-            .clickable(
+            .singleClick(
                 interactionSource = interactionSource,
-                indication = roundRipple,
-                role = Role.Button,
                 onClick = {
                     val intent = Intent(ACTION_SEND).apply {
                         type = "text/plain"
@@ -46,7 +43,8 @@ fun ShareButton(
                             context.getString(R.string.share_link)
                         )
                     )
-                }
+                },
+                indication = roundRipple
             )
     )
 }

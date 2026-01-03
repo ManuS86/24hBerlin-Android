@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars
+package com.esutor.twentyfourhoursberlin.ui.screens.components.utilitybars.filterbar
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
@@ -12,19 +12,15 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Tune
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme.typography
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,28 +28,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.FilterDropdown
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
-import com.esutor.twentyfourhoursberlin.ui.theme.slightRounding
 import kotlinx.coroutines.launch
 import java.time.LocalDate.now
 
@@ -98,31 +88,7 @@ fun FilterBar(eventVM: EventViewModel) {
                 horizontalArrangement = spacedBy(smallPadding)
             ) {
                 monthOptions.forEach { month ->
-                    val isSelected = selectedMonth == month
-                    val monthInteractionSource = remember { MutableInteractionSource() }
-
-                    Box(
-                        modifier = Modifier
-                            .height(32.dp)
-                            .expressivePop(monthInteractionSource, PopSpeed.Fast)
-                            .background(
-                                color = DarkGray.copy(alpha = if (isSelected) 0.9f else 0.5f),
-                                shape = slightRounding
-                            )
-                            .padding(horizontal = 12.dp)
-                            .clickable(
-                                interactionSource = monthInteractionSource,
-                                onClick = { eventVM.updateMonth(if (isSelected) null else month) }
-                            ),
-                        contentAlignment = Center
-                    ) {
-                        Text(
-                            text = month?.getStringResource(context) ?: stringResource(R.string.all),
-                            fontWeight = SemiBold,
-                            color = White.copy(alpha = if (isSelected) 1f else 0.6f),
-                            style = typography.bodyMedium
-                        )
-                    }
+                    FilterButton(selectedMonth, month, eventVM)
                 }
             }
 
