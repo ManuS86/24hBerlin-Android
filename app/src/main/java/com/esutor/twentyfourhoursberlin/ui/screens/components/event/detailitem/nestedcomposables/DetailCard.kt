@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.utils.cleanToAnnotatedString
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
@@ -37,7 +37,7 @@ fun DetailCard(details: String) {
             modifier = Modifier.fillMaxWidth(),
             shape = mediumRounding,
             colors = cardColors(
-                containerColor = Details
+                containerColor = OffWhite
             )
         ) {
             Row(

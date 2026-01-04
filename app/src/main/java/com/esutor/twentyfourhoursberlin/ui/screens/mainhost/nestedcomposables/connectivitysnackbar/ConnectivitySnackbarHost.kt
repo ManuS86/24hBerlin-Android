@@ -20,8 +20,8 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.theme.Offline
-import com.esutor.twentyfourhoursberlin.ui.theme.Online
+import com.esutor.twentyfourhoursberlin.ui.theme.OfflineGray
+import com.esutor.twentyfourhoursberlin.ui.theme.OnlineGreen
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
@@ -43,7 +43,7 @@ fun ConnectivitySnackbarHost(
                     }
                 }
             },
-            containerColor = if (isOffline) Offline else Online,
+            containerColor = if (isOffline) OfflineGray else OnlineGreen,
             contentColor = White,
             shape = mediumRounding,
         ) {

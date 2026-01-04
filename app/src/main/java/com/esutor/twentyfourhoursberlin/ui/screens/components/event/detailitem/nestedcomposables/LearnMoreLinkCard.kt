@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.core.net.toUri
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
@@ -41,7 +41,7 @@ fun LearnMoreLinkCard(link: String?) {
                 .fillMaxWidth()
                 .expressivePop(interactionSource),
             shape = mediumRounding,
-            colors = cardColors(Details)
+            colors = cardColors(OffWhite)
         ) {
             Row(
                 Modifier

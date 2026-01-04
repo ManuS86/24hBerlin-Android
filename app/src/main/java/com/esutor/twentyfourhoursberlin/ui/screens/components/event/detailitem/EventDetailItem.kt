@@ -26,7 +26,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.n
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.LocationCard
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.MapCard
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.TimeCard
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.managers.ExternalMapNavigator
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
@@ -79,7 +79,7 @@ fun EventDetailItem(event: Event, isExpandable: Boolean, showDetailToggle: () ->
                     .expressivePop(collapseInteractionSource),
                 shape = mediumRounding,
                 colors = cardColors(
-                    containerColor = Details
+                    containerColor = OffWhite
                 )
             ) {
                 Icon(

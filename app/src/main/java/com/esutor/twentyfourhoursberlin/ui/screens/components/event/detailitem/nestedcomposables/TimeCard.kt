@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
@@ -35,7 +35,7 @@ fun TimeCard(start: LocalDateTime, end: LocalDateTime?) {
         modifier = Modifier.fillMaxWidth(),
         shape = mediumRounding,
         colors = cardColors(
-            containerColor = Details
+            containerColor = OffWhite
         )
     ) {
         Row(

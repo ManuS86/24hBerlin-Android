@@ -19,7 +19,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
@@ -35,7 +35,7 @@ fun LocationCard(
             modifier = Modifier.fillMaxWidth(),
             shape = mediumRounding,
             colors = cardColors(
-                containerColor = Details
+                containerColor = OffWhite
             )
         ) {
             Row(

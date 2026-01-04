@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
-import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
+import com.esutor.twentyfourhoursberlin.ui.theme.OffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
@@ -39,7 +39,7 @@ fun ReportProblemScreen(
             text = stringResource(R.string.report_a_problem),
             modifier = Modifier.padding(bottom = smallPadding),
             style = typography.titleMedium,
-            color = TextOffBlack
+            color = OffBlack
         )
 
         OutlinedTextField(

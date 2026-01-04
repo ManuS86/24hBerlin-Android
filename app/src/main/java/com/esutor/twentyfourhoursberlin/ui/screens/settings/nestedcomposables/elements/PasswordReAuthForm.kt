@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
@@ -54,6 +55,7 @@ fun PasswordReAuthForm(
                 text = firebaseError,
                 modifier = Modifier.padding(top = smallPadding),
                 color = Red,
+                textAlign = Center,
                 style = typography.bodyMedium
             )
         }

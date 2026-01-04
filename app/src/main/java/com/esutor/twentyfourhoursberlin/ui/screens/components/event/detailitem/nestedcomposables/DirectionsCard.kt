@@ -34,8 +34,8 @@ import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.model.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.PopSpeed
 import com.esutor.twentyfourhoursberlin.ui.screens.components.animations.expressivePop
-import com.esutor.twentyfourhoursberlin.ui.theme.Details
-import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
+import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
+import com.esutor.twentyfourhoursberlin.ui.theme.OffBlack
 import com.esutor.twentyfourhoursberlin.ui.theme.circle
 import com.esutor.twentyfourhoursberlin.utils.getEventColor
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
@@ -54,7 +54,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .border(
-                BorderStroke(1.dp, Details),
+                BorderStroke(1.dp, OffWhite),
                 mediumRounding
             ),
         shape = mediumRounding,
@@ -72,7 +72,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
                 imageVector = Default.Directions,
                 contentDescription = null,
                 modifier = Modifier.padding(end = smallPadding),
-                tint = TextOffBlack
+                tint = OffBlack
             )
 
             Text(
@@ -80,7 +80,7 @@ fun DirectionsCard(event: Event, onClick: () -> Unit) {
                 style = typography.titleMedium,
                 fontSize = 20.sp,
                 fontWeight = ExtraBold,
-                color = TextOffBlack
+                color = OffBlack
             )
 
             Spacer(Modifier.weight(1f))

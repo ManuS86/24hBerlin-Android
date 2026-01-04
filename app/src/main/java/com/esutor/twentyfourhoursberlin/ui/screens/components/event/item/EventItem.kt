@@ -41,7 +41,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedc
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.ImageAndDate
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.Location
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.Time
-import com.esutor.twentyfourhoursberlin.ui.theme.TextOffBlack
+import com.esutor.twentyfourhoursberlin.ui.theme.OffBlack
 import com.esutor.twentyfourhoursberlin.utils.getEventColor
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
@@ -88,7 +88,7 @@ fun EventItem(
             .animateContentSize()
             .clip(mediumRounding)
             .border(
-                BorderStroke(if (showDetail) 0.5.dp else 0.dp, TextOffBlack),
+                BorderStroke(if (showDetail) 0.5.dp else 0.dp, OffBlack),
                 mediumRounding
             )
             .background(White)
