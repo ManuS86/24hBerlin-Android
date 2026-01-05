@@ -16,7 +16,6 @@ import com.esutor.twentyfourhoursberlin.managers.internetconnectionobserver.Conn
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.filteredEvents
-import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
@@ -63,10 +62,12 @@ class EventViewModel(
     val scrollToEventId = _scrollToEventId.asStateFlow()
 
     // --- UI & App States ---
-    private var userListener: ListenerRegistration? = null
-
-    private val _currentAppUser = MutableStateFlow<AppUser?>(null)
-    val currentAppUser = _currentAppUser.asStateFlow()
+    val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = null
+        )
 
     private val _events = MutableStateFlow<List<Event>?>(null)
     val events: StateFlow<List<Event>?> = _events
@@ -129,8 +130,15 @@ class EventViewModel(
     val bookmarks: StateFlow<List<Event>?> = combine(currentAppUser, events) { user, eventsList ->
         if (user == null || eventsList == null) return@combine null
 
-        val bookmarkIds = user.bookmarkIDs.toSet()
-        eventsList.filter { it.id in bookmarkIds }
+        val allActiveEventIds = eventsList.map { it.id }.toSet()
+        val userBookmarkIds = user.bookmarkIDs.toSet()
+
+        val expiredIds = userBookmarkIds.filter { it !in allActiveEventIds }
+        if (expiredIds.isNotEmpty()) {
+            purgeExpiredBookmarks(expiredIds)
+        }
+
+        eventsList.filter { it.id in userBookmarkIds }
     }.stateIn(viewModelScope, WhileSubscribed(5000L), null)
 
     val filteredBookmarks = combine(
@@ -167,10 +175,6 @@ class EventViewModel(
     }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
 
     // --- Lifecycle & Data Loading ---
-    init {
-        userListener = userRepo.addUserListener { user -> _currentAppUser.value = user }
-    }
-
     private fun observeConnectivity() {
         connectivityObserver.isConnected
             .onEach { isConnected ->
@@ -185,12 +189,22 @@ class EventViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
             try {
-                val result = eventRepo.getProcessedEvents()
-                _events.value = result
+                _events.value = eventRepo.getProcessedEvents()
             } catch (e: Exception) {
                 Log.e(TAG, "Error loading events from repository.", e)
             } finally {
                 _isLoading.value = false
+            }
+        }
+    }
+
+    private fun purgeExpiredBookmarks(expiredIds: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                userRepo.removeBookmarkIds(expiredIds)
+                Log.d(TAG, "Successfully purged ${expiredIds.size} bookmarks in one batch.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to purge bookmarks batch", e)
             }
         }
     }
@@ -249,7 +263,7 @@ class EventViewModel(
 
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                userRepo.removeBookmarkId(bookmarkId)
+                userRepo.removeBookmarkIds(listOf(bookmarkId))
 
                 if (currentAppUser.value?.settings?.notificationsEnabled == true) {
                     reminderScheduler.cancelEventReminders(event)
@@ -271,9 +285,4 @@ class EventViewModel(
     }
 
     fun setupAbsenceReminder() = reminderScheduler.schedule14DayReminder()
-
-    override fun onCleared() {
-        super.onCleared()
-        userListener?.remove()
-    }
 }

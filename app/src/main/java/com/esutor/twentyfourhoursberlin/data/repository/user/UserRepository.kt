@@ -2,7 +2,7 @@ package com.esutor.twentyfourhoursberlin.data.repository.user
 
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Settings
-import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun login(email: String, password: String)
@@ -13,8 +13,8 @@ interface UserRepository {
     suspend fun changeEmail(email: String)
     suspend fun changePassword(password: String)
     suspend fun resetPassword(email: String)
-    fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration?
+    fun getUserFlow(): Flow<AppUser?>
     suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?)
-    suspend fun removeBookmarkId(bookmarkId: String)
+    suspend fun removeBookmarkIds(bookmarkIds: List<String>)
     suspend fun sendBugReport(message: String)
 }

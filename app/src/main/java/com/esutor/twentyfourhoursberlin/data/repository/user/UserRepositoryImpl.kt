@@ -1,7 +1,6 @@
 package com.esutor.twentyfourhoursberlin.data.repository.user
 
 import android.os.Build
-import android.util.Log
 import com.esutor.twentyfourhoursberlin.BuildConfig
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Settings
@@ -12,13 +11,13 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-
-private const val TAG = "UserRepositoryImpl"
 
 class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
 
@@ -107,19 +106,16 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override fun addUserListener(onChange: (AppUser?) -> Unit): ListenerRegistration? {
-        val userRef = auth.getUserDocumentRef()
-        return userRef?.let { ref ->
-            ref.addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Log.e(TAG, "Error listening for user updates: ${error.message}", error)
-                    onChange(null)
-                    return@addSnapshotListener
-                }
-                val user = snapshot?.toObject<AppUser>()
-                onChange(user)
-            }
+    override fun getUserFlow(): Flow<AppUser?> = callbackFlow {
+        val userRef = auth.getUserDocumentRef() ?: run {
+            trySend(null); close(); return@callbackFlow
         }
+
+        val registration = userRef.addSnapshotListener { snapshot, error ->
+            if (error == null) trySend(snapshot?.toObject<AppUser>())
+        }
+
+        awaitClose { registration.remove() }
     }
 
     override suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?) {
@@ -142,10 +138,11 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
-    override suspend fun removeBookmarkId(bookmarkId: String) {
+    override suspend fun removeBookmarkIds(bookmarkIds: List<String>) {
+        if (bookmarkIds.isEmpty()) return
         withContext(Dispatchers.IO) {
-            auth.getUserDocumentRef()
-                ?.update("bookmarkIDs", FieldValue.arrayRemove(bookmarkId))
+            val userRef = auth.getUserDocumentRef()
+            userRef?.update("bookmarkIDs", FieldValue.arrayRemove(*bookmarkIds.toTypedArray()))
                 ?.await()
         }
     }

@@ -16,7 +16,10 @@ import com.esutor.twentyfourhoursberlin.managers.LanguageChangeHelper
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.esutor.twentyfourhoursberlin.utils.toLanguageOrNull
-import com.google.firebase.firestore.ListenerRegistration
+import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
@@ -39,6 +42,13 @@ class SettingsViewModel(
         private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
     }
 
+    val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
+        .onEach { user ->
+            savedStateHandle[KEY_NOTIFICATIONS_ENABLED] = user?.settings?.notificationsEnabled ?: false
+            savedStateHandle[KEY_LANGUAGE] = user?.settings?.language?.toLanguageOrNull()
+        }
+        .stateIn(viewModelScope, WhileSubscribed(5000), null)
+
     // --- UI state ---
     val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
     val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
@@ -55,20 +65,20 @@ class SettingsViewModel(
         AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
     )
 
-    // --- Listeners and Cache ---
-    private var firebaseListener: ListenerRegistration? = null
-    private var currentAppUser: AppUser? = null
+    // --- Private Atomic Helper ---
+    /**
+     * "Ensures that" settings updates are atomic by copying the current state
+     * and only modifying the requested fields.
+     */
+    private fun updateSettings(update: (Settings) -> Settings) {
+        val currentSettings = currentAppUser.value?.settings ?: Settings()
+        val newSettings = update(currentSettings)
 
-    init {
-        startUserListener()
-    }
-
-    private fun startUserListener() {
-        if (firebaseListener == null) {
-            firebaseListener = userRepo.addUserListener { user ->
-                currentAppUser = user
-                savedStateHandle[KEY_NOTIFICATIONS_ENABLED] = user?.settings?.notificationsEnabled ?: false
-                savedStateHandle[KEY_LANGUAGE] = user?.settings?.language?.toLanguageOrNull()
+        viewModelScope.launch {
+            try {
+                userRepo.updateUserInformation(null, newSettings)
+            } catch (ex: Exception) {
+                Log.e(TAG, "Error updating settings in Firestore.", ex)
             }
         }
     }
@@ -77,38 +87,14 @@ class SettingsViewModel(
     fun changeLanguage(context: Context, newLanguage: Language?) {
         savedStateHandle[KEY_LANGUAGE] = newLanguage
 
-        // FIX 2: Always trigger the helper, even if newLanguage is null.
-        // If null, we pass an empty string to trigger the "System Default" logic in your helper.
         val targetCode = newLanguage?.languageCode ?: ""
         LanguageChangeHelper().setLanguage(context, targetCode)
 
-        val settings = Settings(
-            notificationsEnabled = notificationsEnabledState.value,
-            language = newLanguage?.label // Persists null to Firebase for system default
-        )
-
-        viewModelScope.launch {
-            try {
-                userRepo.updateUserInformation(null, settings)
-            } catch (ex: Exception) {
-                Log.e(TAG, "Error changing language.", ex)
-            }
-        }
+        updateSettings { it.copy(language = newLanguage?.label) }
     }
 
     fun changeNotificationPermission(enabled: Boolean) {
-        val settings = Settings(
-            notificationsEnabled = enabled,
-            language = language.value?.label
-        )
-
-        viewModelScope.launch {
-            try {
-                userRepo.updateUserInformation(null, settings)
-            } catch (ex: Exception) {
-                Log.e(TAG, "Error changing notification setting.", ex)
-            }
-        }
+        updateSettings { it.copy(notificationsEnabled = enabled) }
     }
 
     // --- Account and Auth actions ---
@@ -235,11 +221,5 @@ class SettingsViewModel(
         savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
         savedStateHandle[KEY_FIREBASE_ERROR] = null
         savedStateHandle[KEY_PASSWORD_ERROR] = null
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        firebaseListener?.remove()
-        firebaseListener = null
     }
 }
