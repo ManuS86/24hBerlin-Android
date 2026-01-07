@@ -1,20 +1,17 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import com.esutor.twentyfourhoursberlin.ui.theme.SuccessGreen
-import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 
 @Composable
 fun AuthMessages(
-    confirmationMessageResId: Int?,
+    confirmationMessageResId: Int? = null,
     errorMessageResId: Int? = null,
     firebaseError: String?
 ) {
@@ -28,7 +25,6 @@ fun AuthMessages(
     message?.let {
         Text(
             text = it,
-            modifier = Modifier.padding(top = smallPadding),
             color = color,
             textAlign = Center,
             style = typography.bodyMedium

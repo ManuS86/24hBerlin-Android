@@ -2,6 +2,7 @@ package com.esutor.twentyfourhoursberlin.ui.screens.settings.nestedcomposables.e
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -9,12 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
-import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.text.style.TextAlign.Companion.Center
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
+import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthMessages
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
@@ -50,16 +50,8 @@ fun PasswordReAuthForm(
             isPasswordField = true
         )
 
-        if (firebaseError != null) {
-            Text(
-                text = firebaseError,
-                modifier = Modifier.padding(top = smallPadding),
-                color = Red,
-                textAlign = Center,
-                style = typography.bodyMedium
-            )
-        }
-
+        Spacer(Modifier.height(smallPadding))
+        AuthMessages(firebaseError = firebaseError)
         LargeBlackButton(stringResource(R.string.verify_password)) { settingsVM.reAuthenticate(password) }
         Spacer(Modifier.weight(1f))
     }

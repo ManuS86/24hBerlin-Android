@@ -31,6 +31,7 @@
     <string name="create_account">Create Account</string>
     <string name="create_a_password">Create a password</string>
     <string name="december">Dec</string>
+    <string name="default_web_client_id">1095749043096-bvksmmagq7grs003doh6isak88qfrnjm.apps.googleusercontent.com</string>
     <string name="delete_account">Delete Account</string>
     <string name="directions">Directions</string>
     <string name="dont_forget_event_1week">Don\'t forget: %1$s is happening next week!</string>
@@ -107,6 +108,7 @@
     <string name="share_link">Share Link</string>
     <string name="show_filters">Show Filters</string>
     <string name="show_password">Show Password</string>
+    <string name="sign_in_with_google">Sign in with Google</string>
     <string name="system_default">System Default</string>
     <string name="terms_of_service">Terms of Service</string>
     <string name="thank_you_for_your_report">Thank you for your report!</string>

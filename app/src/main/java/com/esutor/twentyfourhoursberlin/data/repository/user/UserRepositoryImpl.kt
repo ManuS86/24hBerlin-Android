@@ -1,12 +1,22 @@
 package com.esutor.twentyfourhoursberlin.data.repository.user
 
+import android.content.Context
 import android.os.Build
+import android.util.Log
+import androidx.credentials.CredentialManager
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.exceptions.NoCredentialException
 import com.esutor.twentyfourhoursberlin.BuildConfig
+import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Settings
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
+import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
@@ -19,37 +29,79 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
+private const val TAG = "UserRepository"
+
 class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
 
     private val auth = Firebase.auth
     private val collRef = db.collection("users")
+
+    private suspend fun ensureUserDocumentExists(user: FirebaseUser) {
+        val userRef = collRef.document(user.uid)
+        val snapshot = userRef.get().await()
+        if (!snapshot.exists()) {
+            userRef.set(AppUser()).await()
+            Log.d(TAG, "New user document initialized for UID: ${user.uid}")
+        }
+    }
 
     private fun FirebaseAuth.getUserDocumentRef(): DocumentReference? {
         val uid = this.currentUser?.uid ?: return null
         return collRef.document(uid)
     }
 
+    // --- Auth Entry ---
     override suspend fun login(email: String, password: String) {
         withContext(Dispatchers.IO) {
-            auth
-                .signInWithEmailAndPassword(email, password)
-                .await()
+            val result = auth.signInWithEmailAndPassword(email, password).await()
+            result.user?.let { ensureUserDocumentExists(it) }
         }
     }
 
     override suspend fun register(email: String, password: String) {
         withContext(Dispatchers.IO) {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
-
-            result.user?.let { user ->
-                collRef
-                    .document(user.uid)
-                    .set(AppUser())
-                    .await()
-            }
+            result.user?.let { ensureUserDocumentExists(it) }
         }
     }
 
+    override suspend fun signInWithGoogle(context: Context): Result<FirebaseUser> =
+        withContext(Dispatchers.IO) {
+            val credentialManager = CredentialManager.create(context)
+
+            fun buildReq(filter: Boolean) = GetCredentialRequest.Builder()
+                .addCredentialOption(GetGoogleIdOption.Builder()
+                    .setServerClientId(context.getString(R.string.default_web_client_id))
+                    .setAutoSelectEnabled(true)
+                    .setFilterByAuthorizedAccounts(filter)
+                    .build())
+                .build()
+
+            try {
+                val result = try {
+                    credentialManager.getCredential(context, buildReq(true))
+                } catch (_: NoCredentialException) {
+                    credentialManager.getCredential(context, buildReq(false))
+                }
+
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(result.credential.data)
+                val firebaseCredential = GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+                val authResult = auth.signInWithCredential(firebaseCredential).await()
+
+                val user = authResult.user
+                if (user != null) {
+                    ensureUserDocumentExists(user)
+                    Result.success(user)
+                } else {
+                    Result.failure(Exception("Firebase user is null"))
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Final Google Sign-In Failure", e)
+                Result.failure(e)
+            }
+        }
+
+    // --- Session Management ---
     override fun logout() {
         auth.signOut()
     }
@@ -70,6 +122,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
+    // --- Account Maintenance ---
     override suspend fun deleteUserDataAndAuth() {
         withContext(Dispatchers.IO) {
             auth.getUserDocumentRef()
@@ -106,18 +159,30 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
+    // --- Reactive Data ---
     override fun getUserFlow(): Flow<AppUser?> = callbackFlow {
-        val userRef = auth.getUserDocumentRef() ?: run {
+        val uid = auth.currentUser?.uid ?: run {
             trySend(null); close(); return@callbackFlow
         }
 
+        val userRef = collRef.document(uid)
         val registration = userRef.addSnapshotListener { snapshot, error ->
-            if (error == null) trySend(snapshot?.toObject<AppUser>())
+            if (error != null) {
+                Log.e(TAG, "Snapshot Listener error", error)
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                trySend(snapshot.toObject<AppUser>())
+            } else {
+                trySend(AppUser())
+            }
         }
 
         awaitClose { registration.remove() }
     }
 
+    // --- User Data/Settings ---
     override suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?) {
         withContext(Dispatchers.IO) {
             val values = mutableMapOf<String, Any>().apply {
@@ -147,6 +212,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         }
     }
 
+    // --- Support ---
     override suspend fun sendBugReport(message: String) {
         withContext(Dispatchers.IO) {
             val bugReportData = mapOf(

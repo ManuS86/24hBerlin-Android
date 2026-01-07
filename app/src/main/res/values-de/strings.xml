@@ -31,6 +31,7 @@
     <string name="create_account">Account Erstellen</string>
     <string name="create_a_password">Erstelle ein Passwort ein</string>
     <string name="december">Dez</string>
+    <string name="default_web_client_id">1095749043096-bvksmmagq7grs003doh6isak88qfrnjm.apps.googleusercontent.com</string>
     <string name="delete_account">Account Löschen</string>
     <string name="directions">Routenplaner</string>
     <string name="dont_forget_event_1week">Nicht vergessen: %1$s findet nächste Woche statt!</string>
@@ -107,6 +108,7 @@
     <string name="share_link">Link teilen</string>
     <string name="show_filters">Filter anzeigen</string>
     <string name="show_password">Passwort verstecken</string>
+    <string name="sign_in_with_google">Über Google anmelden</string>
     <string name="system_default">Wie System</string>
     <string name="terms_of_service">Nutzungsbedingungen</string>
     <string name="thank_you_for_your_report">Danke für deine Meldung!</string>

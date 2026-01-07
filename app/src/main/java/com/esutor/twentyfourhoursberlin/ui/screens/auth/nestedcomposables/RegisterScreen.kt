@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -22,9 +21,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
+import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.GoogleSignInButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthPrompt
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
@@ -38,10 +39,13 @@ fun RegisterScreen(
     authVM: AuthViewModel,
     onClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     val errorMessageResId by authVM.errorMessageResId.collectAsStateWithLifecycle()
     val firebaseError by authVM.firebaseError.collectAsStateWithLifecycle()
-    val passwordErrorResId by authVM.passwordErrorResId.collectAsStateWithLifecycle()
     val hasNotificationPermission by authVM.hasNotificationPermission.collectAsStateWithLifecycle()
+    val isLoading by authVM.isLoading.collectAsStateWithLifecycle()
+    val passwordErrorResId by authVM.passwordErrorResId.collectAsStateWithLifecycle()
 
     val scrollState = rememberScrollState()
     var email by rememberSaveable { mutableStateOf("") }
@@ -64,7 +68,7 @@ fun RegisterScreen(
             .padding(top = smallPadding),
         horizontalAlignment = CenterHorizontally
     ) {
-        TitleHeader(Modifier.height(standardPadding))
+        TitleHeader(Modifier.height(smallPadding))
 
         AuthTextField(
             label = stringResource(R.string.email),
@@ -94,6 +98,8 @@ fun RegisterScreen(
             isPasswordField = true
         )
 
+        Spacer(Modifier.height(smallPadding))
+
         RegisterErrorMessages(
             errorMessageResId = errorMessageResId,
             passwordMessageResId = passwordErrorResId,
@@ -113,13 +119,10 @@ fun RegisterScreen(
             }
         }
 
+        GoogleSignInButton(isLoading) { authVM.signInWithGoogle(context) }
         Spacer(Modifier.weight(1f))
         AuthPrompt(R.string.already_have_an_account, R.string.login, onClick)
         Spacer(Modifier.height(smallPadding))
-    }
-
-    DisposableEffect(Unit) {
-        onDispose { authVM.clearErrorMessages() }
     }
 }
 
@@ -139,7 +142,6 @@ private fun RegisterErrorMessages(
     message?.let {
         Text(
             text = it,
-            modifier = Modifier.padding(top = smallPadding),
             color = Red,
             style = typography.bodyMedium
         )

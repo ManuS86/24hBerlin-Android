@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Au
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
@@ -63,6 +65,8 @@ fun ChangeEmailScreen(
                 onValueChange = { email = it },
                 isPasswordField = false
             )
+
+            Spacer(Modifier.height(smallPadding))
 
             AuthMessages(
                 confirmationMessageResId = confirmationMessageResId,

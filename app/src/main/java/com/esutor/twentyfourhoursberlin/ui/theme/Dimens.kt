@@ -17,10 +17,11 @@ val extraSmallPadding = 4.dp
 val reportProblemTextFieldHeight = 200.dp
 val detailImageSize = 180.dp
 val mapPreviewHeight = 160.dp
-val logoSize = 120.dp
+val logoSize = 100.dp
 val eventImageSize = 75.dp
 val logoSizeSmall = 50.dp
 val filterButtonHeight = 32.dp
+val googleIconSize = 24.dp
 
 // --- Shapes ---
 val circle = RoundedCornerShape(100)

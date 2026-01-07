@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment.Companion.CenterStart
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
+import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -182,7 +183,7 @@ fun AppLogo(titleResId: Int, isMainTab: Boolean) {
                 painter = painterResource(id = R.drawable.app_logo),
                 contentDescription = null,
                 modifier = Modifier.size(30.dp),
-                tint = null
+                tint = Unspecified
             )
         }
 

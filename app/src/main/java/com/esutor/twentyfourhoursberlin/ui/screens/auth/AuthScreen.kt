@@ -26,7 +26,7 @@ fun AuthScreen(
     authVM: AuthViewModel,
     innerPadding: PaddingValues
 ) {
-    var showRegister by rememberSaveable { mutableStateOf(false) }
+    var showLogin by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -34,7 +34,7 @@ fun AuthScreen(
             .padding(innerPadding)
     ) {
         AnimatedContent(
-            targetState = showRegister,
+            targetState = showLogin,
             transitionSpec = {
                 if (targetState) {
                     (slideInHorizontally { width -> width } + fadeIn())
@@ -49,9 +49,15 @@ fun AuthScreen(
             label = "AuthScreenTransition"
         ) { targetShowRegister ->
             if (targetShowRegister) {
-                RegisterScreen(authVM) { showRegister = false }
+                LoginScreen(authVM) {
+                    authVM.clearErrorMessages()
+                    showLogin = false
+                }
             } else {
-                LoginScreen(authVM) { showRegister = true }
+                RegisterScreen(authVM) {
+                    authVM.clearErrorMessages()
+                    showLogin = true
+                }
             }
         }
     }

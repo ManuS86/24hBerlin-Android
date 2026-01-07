@@ -1,12 +1,15 @@
 package com.esutor.twentyfourhoursberlin.data.repository.user
 
+import android.content.Context
 import com.esutor.twentyfourhoursberlin.data.model.AppUser
 import com.esutor.twentyfourhoursberlin.data.model.Settings
+import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     suspend fun login(email: String, password: String)
     suspend fun register(email: String, password: String)
+    suspend fun signInWithGoogle(context: Context): Result<FirebaseUser>
     fun logout()
     suspend fun reAuthenticate(password: String)
     suspend fun deleteUserDataAndAuth()

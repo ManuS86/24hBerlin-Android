@@ -27,6 +27,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Au
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.Background
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
 import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
+import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
 @Composable
@@ -76,6 +77,8 @@ fun ChangePasswordScreen(
                 onValueChange = { confirmPassword = it },
                 isPasswordField = true
             )
+
+            Spacer(Modifier.height(smallPadding))
 
             AuthMessages(
                 confirmationMessageResId = confirmationMessageResId,

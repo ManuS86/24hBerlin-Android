@@ -24,7 +24,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlack
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.AuthTextField
 import com.esutor.twentyfourhoursberlin.ui.screens.components.utilityelements.TitleHeader
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.AuthViewModel
-import com.esutor.twentyfourhoursberlin.ui.theme.doublePadding
+import com.esutor.twentyfourhoursberlin.ui.theme.largePadding
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding
 
@@ -58,6 +58,8 @@ fun ForgotPasswordScreen(
             isPasswordField = false
         )
 
+        Spacer(Modifier.height(smallPadding))
+
         AuthMessages(
             confirmationMessageResId = confirmationMessageResId,
             errorMessageResId = errorMessageResId,
@@ -65,7 +67,7 @@ fun ForgotPasswordScreen(
         )
 
         LargeBlackButton(stringResource(R.string.reset_password)) { authVM.resetPassword(email) }
-        Spacer(Modifier.height(doublePadding))
+        Spacer(Modifier.height(largePadding))
         AuthTextButton(stringResource(R.string.try_logging_in_again), onClick)
         Spacer(Modifier.weight(1f))
     }

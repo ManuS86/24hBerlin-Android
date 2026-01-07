@@ -1,5 +1,6 @@
 package com.esutor.twentyfourhoursberlin.ui.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -31,6 +32,7 @@ class AuthViewModel(
         private const val KEY_CONFIRMATION_MESSAGE = "confirmationMessage"
         private const val KEY_ERROR_MESSAGE = "errorMessage"
         private const val KEY_FIREBASE_ERROR = "firebaseError"
+        private const val KEY_IS_LOADING = "isLoading"
         private const val KEY_PASSWORD_ERROR = "passwordError"
     }
 
@@ -48,6 +50,7 @@ class AuthViewModel(
     val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
     val errorMessageResId = savedStateHandle.getStateFlow(KEY_ERROR_MESSAGE, null as Int?)
     val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
+    val isLoading = savedStateHandle.getStateFlow(KEY_IS_LOADING, false)
     val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
 
     init {
@@ -65,7 +68,6 @@ class AuthViewModel(
         confirmPassword: String,
         onValidationSuccess: () -> Unit
     ) {
-        // Reset previous errors
         savedStateHandle[KEY_FIREBASE_ERROR] = null
         savedStateHandle[KEY_PASSWORD_ERROR] = null
 
@@ -79,15 +81,47 @@ class AuthViewModel(
         }
     }
 
+    fun signInWithGoogle(context: Context) {
+        savedStateHandle[KEY_ERROR_MESSAGE] = null
+        savedStateHandle[KEY_FIREBASE_ERROR] = null
+        savedStateHandle[KEY_IS_LOADING] = true
+
+        viewModelScope.launch {
+            userRepo.signInWithGoogle(context)
+                .onSuccess {
+                    analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
+                        param(FirebaseAnalytics.Param.METHOD, "Google")
+                    }
+                }
+                .onFailure { ex ->
+                    if (ex is androidx.credentials.exceptions.GetCredentialCancellationException) {
+                        Log.d(TAG, "Google Sign-In was cancelled by user")
+                    } else {
+                        savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
+                        Log.e(TAG, "GoogleSignIn Error: ${ex.message}")
+                    }
+                }
+            savedStateHandle[KEY_IS_LOADING] = false
+        }
+    }
+
     fun executeRegistration(email: String, pass: String) {
+        savedStateHandle[KEY_IS_LOADING] = true
+
         viewModelScope.launch {
             try {
                 userRepo.register(email, pass)
                 auth.useAppLanguage()
                 auth.currentUser?.sendEmailVerification()
+
+                analytics.logEvent(FirebaseAnalytics.Event.SIGN_UP) {
+                    param(FirebaseAnalytics.Param.METHOD, "Email")
+                }
             } catch (ex: Exception) {
                 savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
-                Log.e("AuthViewModel", "Registration: ${ex.toString()}")
+                Log.e(TAG, "Registration Error: ${ex.toString()}")
+            } finally {
+                savedStateHandle[KEY_IS_LOADING] = false
             }
         }
     }
@@ -99,12 +133,11 @@ class AuthViewModel(
             try {
                 userRepo.login(email, password)
                 analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
-                    param(FirebaseAnalytics.Param.ITEM_ID, currentUser.value?.email!!)
                     param(FirebaseAnalytics.Param.ITEM_NAME, "Email")
                 }
             } catch (ex: Exception) {
                 savedStateHandle[KEY_ERROR_MESSAGE] = R.string.invalid_email_or_password
-                Log.e(TAG, "Login ${ex.toString()}")
+                Log.e(TAG, "Login Error: ${ex.toString()}")
             }
         }
     }
@@ -118,7 +151,7 @@ class AuthViewModel(
             } catch (ex: Exception) {
                 savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
                 savedStateHandle[KEY_FIREBASE_ERROR] = ex.localizedMessage
-                Log.e(TAG, "Password reset requested: ${ex.toString()}")
+                Log.e(TAG, "Password reset requested Error: ${ex.toString()}")
             }
         }
     }
