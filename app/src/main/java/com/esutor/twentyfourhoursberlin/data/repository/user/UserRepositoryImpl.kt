@@ -55,6 +55,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         withContext(Dispatchers.IO) {
             val result = auth.signInWithEmailAndPassword(email, password).await()
             result.user?.let { ensureUserDocumentExists(it) }
+            Unit
         }
     }
 
@@ -62,6 +63,7 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
         withContext(Dispatchers.IO) {
             val result = auth.createUserWithEmailAndPassword(email, password).await()
             result.user?.let { ensureUserDocumentExists(it) }
+            Unit
         }
     }
 
@@ -116,46 +118,38 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
 
             val credential = EmailAuthProvider.getCredential(email, password)
 
-            user
-                .reauthenticate(credential)
-                .await()
+            user.reauthenticate(credential).await()
+            Unit
         }
     }
 
     // --- Account Maintenance ---
     override suspend fun deleteUserDataAndAuth() {
         withContext(Dispatchers.IO) {
-            auth.getUserDocumentRef()
-                ?.delete()
-                ?.await()
-
-            auth.currentUser
-                ?.delete()
-                ?.await()
+            auth.getUserDocumentRef()?.delete()?.await()
+            auth.currentUser?.delete()?.await()
+            Unit
         }
     }
 
     override suspend fun changeEmail(email: String) {
         withContext(Dispatchers.IO) {
-            auth.currentUser
-                ?.verifyBeforeUpdateEmail(email)
-                ?.await()
+            auth.currentUser?.verifyBeforeUpdateEmail(email)?.await()
+            Unit
         }
     }
 
     override suspend fun changePassword(password: String) {
         withContext(Dispatchers.IO) {
-            auth.currentUser
-                ?.updatePassword(password)
-                ?.await()
+            auth.currentUser?.updatePassword(password)?.await()
+            Unit
         }
     }
 
     override suspend fun resetPassword(email: String) {
         withContext(Dispatchers.IO) {
-            auth
-                .sendPasswordResetEmail(email)
-                .await()
+            auth.sendPasswordResetEmail(email).await()
+            Unit
         }
     }
 
@@ -178,38 +172,37 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
                 trySend(AppUser())
             }
         }
-
         awaitClose { registration.remove() }
     }
 
     // --- User Data/Settings ---
     override suspend fun updateUserInformation(bookmarkId: String?, settings: Settings?) {
         withContext(Dispatchers.IO) {
-            val values = mutableMapOf<String, Any>().apply {
-                bookmarkId?.let { this["bookmarkIDs"] = FieldValue.arrayUnion(it) }
-                settings?.let {
-                    this["settings"] = mapOf(
-                        "notificationsEnabled" to it.notificationsEnabled,
-                        "language" to it.language
-                    )
-                }
+            val userRef = auth.getUserDocumentRef() ?: return@withContext
+            val values = mutableMapOf<String, Any?>()
+
+            bookmarkId?.takeIf { it.isNotBlank() }?.let {
+                values["bookmarkIDs"] = FieldValue.arrayUnion(it)
             }
 
-            if (values.isEmpty()) return@withContext
+            settings?.let {
+                values["settings.notificationsEnabled"] = it.notificationsEnabled
+                values["settings.language"] = it.language
+            }
 
-            auth.getUserDocumentRef()
-                ?.update(values)
-                ?.await()
+            if (values.isNotEmpty()) {
+                userRef.update(values).await()
+            }
+            Unit
         }
     }
 
-    override suspend fun removeBookmarkIds(bookmarkIds: List<String>) {
-        if (bookmarkIds.isEmpty()) return
+    override suspend fun removeBookmarkIds(bookmarkIds: List<String>) =
         withContext(Dispatchers.IO) {
-            val userRef = auth.getUserDocumentRef()
-            userRef?.update("bookmarkIDs", FieldValue.arrayRemove(*bookmarkIds.toTypedArray()))
-                ?.await()
-        }
+        if (bookmarkIds.isEmpty()) return@withContext
+        val userRef = auth.getUserDocumentRef()
+        userRef?.update("bookmarkIDs", FieldValue.arrayRemove(*bookmarkIds.toTypedArray()))?.await()
+        Unit
     }
 
     // --- Support ---
@@ -224,9 +217,8 @@ class UserRepositoryImpl(private val db: FirebaseFirestore) : UserRepository {
                 "device_info" to Build.MODEL
             )
 
-            db.collection("bug_reports")
-                .add(bugReportData)
-                .await()
+            db.collection("bug_reports").add(bugReportData).await()
+            Unit
         }
     }
 }

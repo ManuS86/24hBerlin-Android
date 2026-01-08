@@ -18,7 +18,7 @@ import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.esutor.twentyfourhoursberlin.utils.toLanguageOrNull
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -34,20 +34,27 @@ class SettingsViewModel(
         private const val KEY_FIREBASE_ERROR = "firebaseError"
         private const val KEY_IS_PROBLEM_REPORT_SHEET_OPEN = "isProblemReportSheetOpen"
         private const val KEY_IS_REAUTHENTICATED = "isReauthenticated"
-        private const val KEY_LANGUAGE = "selectedLanguage"
         private const val KEY_PASSWORD_ERROR = "passwordError"
         private const val KEY_PROBLEM_REPORT_ALERT_MESSAGE = "problemReportAlertMessage"
-        private const val KEY_NOTIFICATIONS_ENABLED = "notificationsEnabled"
         private const val KEY_SHOW_DELETE_ACCOUNT_ALERT = "showDeleteAccountAlert"
         private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
     }
 
     val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
-        .onEach { user ->
-            savedStateHandle[KEY_NOTIFICATIONS_ENABLED] = user?.settings?.notificationsEnabled ?: false
-            savedStateHandle[KEY_LANGUAGE] = user?.settings?.language?.toLanguageOrNull()
-        }
         .stateIn(viewModelScope, WhileSubscribed(5000), null)
+
+    val notificationsEnabledState = currentAppUser.map { user ->
+        user?.settings?.notificationsEnabled ?: true
+    }.stateIn(viewModelScope, WhileSubscribed(5000), true)
+
+    val language = currentAppUser.map { user ->
+        user?.settings?.language?.toLanguageOrNull() ?:
+        AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
+    }.stateIn(
+        viewModelScope,
+        WhileSubscribed(5000),
+        AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
+    )
 
     // --- UI state ---
     val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
@@ -56,14 +63,8 @@ class SettingsViewModel(
     val isReauthenticated = savedStateHandle.getStateFlow(KEY_IS_REAUTHENTICATED, false)
     val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
     val problemReportAlertMessage = savedStateHandle.getStateFlow<String?>(KEY_PROBLEM_REPORT_ALERT_MESSAGE, null)
-    var notificationsEnabledState = savedStateHandle.getStateFlow(KEY_NOTIFICATIONS_ENABLED, true)
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
-
-    val language = savedStateHandle.getStateFlow(
-        KEY_LANGUAGE,
-        AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
-    )
 
     // --- Private Atomic Helper ---
     /**
@@ -85,8 +86,6 @@ class SettingsViewModel(
 
     // --- User Settings actions ---
     fun changeLanguage(context: Context, newLanguage: Language?) {
-        savedStateHandle[KEY_LANGUAGE] = newLanguage
-
         val targetCode = newLanguage?.languageCode ?: ""
         LanguageChangeHelper().setLanguage(context, targetCode)
 
