@@ -35,8 +35,8 @@
     <string name="delete_account">Delete Account</string>
     <string name="directions">Directions</string>
     <string name="dont_forget_event_1week">Don\'t forget: %1$s is happening next week!</string>
-    <string name="dont_forget_event_1day">Don\'t forget: %1$s is happening in tomorrow!</string>
-    <string name="dont_forget_event_1hour">Don\'t forget: %1$s is happening in one hour!</string>
+    <string name="dont_forget_event_1day">Don\'t forget: %1$s is happening tomorrow!</string>
+    <string name="dont_forget_event_1hour">Don\'t forget: %1$s is happening in an hour!</string>
     <string name="dont_have_an_account">Don’t have an account?</string>
     <string name="email">Email</string>
     <string name="email_changed_successfully">Email changed successfully.</string>
