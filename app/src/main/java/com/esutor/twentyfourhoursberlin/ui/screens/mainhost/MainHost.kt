@@ -1,6 +1,7 @@
 package com.esutor.twentyfourhoursberlin.ui.screens.mainhost
 
 import android.app.Activity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,9 +24,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
@@ -45,6 +48,7 @@ import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.co
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainBottomNavigationBar
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.MainTopAppBar
 import com.esutor.twentyfourhoursberlin.ui.screens.mainhost.nestedcomposables.connectivitysnackbar.ConnectivitySnackbarEffect
+import com.esutor.twentyfourhoursberlin.ui.theme.extraSmallPadding
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.ConnectivityViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.EventViewModel
 import com.esutor.twentyfourhoursberlin.ui.viewmodel.SettingsViewModel
@@ -68,6 +72,12 @@ fun MainHost() {
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
+
+    val filterBarTopPadding by remember {
+        derivedStateOf {
+            if (scrollBehavior.state.heightOffset < -1f) extraSmallPadding else 0.dp
+        }
+    }
 
     val isMainTab by remember(currentRoute) {
         derivedStateOf {
@@ -119,7 +129,13 @@ fun MainHost() {
                     )
 
                     if (showFilterBar) {
-                        FilterBar(eventVM)
+                        Box(
+                            modifier = Modifier
+                                .background(color = Black)
+                                .padding(top = filterBarTopPadding)
+                        ) {
+                            FilterBar(eventVM)
+                        }
                     }
                 }
             },
