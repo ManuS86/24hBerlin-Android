@@ -53,7 +53,7 @@ class SettingsViewModel(
     }.stateIn(
         viewModelScope,
         WhileSubscribed(5000),
-        AppCompatDelegate.getApplicationLocales()[0]?.language?.toLanguageOrNull()
+        null
     )
 
     // --- UI state ---
@@ -85,6 +85,22 @@ class SettingsViewModel(
     }
 
     // --- User Settings actions ---
+    fun syncLanguageWithDevice(context: Context, targetLanguage: Language?) {
+        val targetCode = targetLanguage?.languageCode
+        if (targetCode.isNullOrEmpty()) return
+
+        val currentAppLocales = AppCompatDelegate.getApplicationLocales()
+        val currentCode = if (!currentAppLocales.isEmpty) {
+            currentAppLocales[0]?.language
+        } else {
+            context.resources.configuration.locales[0].language
+        }
+
+        if (targetCode != currentCode) {
+            changeLanguage(context, targetLanguage)
+        }
+    }
+
     fun changeLanguage(context: Context, newLanguage: Language?) {
         val targetCode = newLanguage?.languageCode ?: ""
         LanguageChangeHelper().setLanguage(context, targetCode)

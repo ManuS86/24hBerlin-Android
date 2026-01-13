@@ -57,6 +57,7 @@ import com.esutor.twentyfourhoursberlin.utils.SetSystemBarColorsToLight
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainHost() {
+    val context = LocalContext.current
     val navController = rememberNavController()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -69,6 +70,7 @@ fun MainHost() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val isLoading by eventVM.isLoading.collectAsStateWithLifecycle()
+    val savedLanguage by settingsVM.language.collectAsStateWithLifecycle()
     val showSearchBarState = rememberSaveable { mutableStateOf(false) }
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -103,6 +105,10 @@ fun MainHost() {
     ScheduleReminderEffect(eventVM)
     HandleNotificationEffect(navController, eventVM)
     SetSystemBarColorsToLight(false)
+
+    LaunchedEffect(savedLanguage) {
+        settingsVM.syncLanguageWithDevice(context, savedLanguage)
+    }
 
     LaunchedEffect(currentRoute) {
         scrollBehavior.state.heightOffset = 0f
