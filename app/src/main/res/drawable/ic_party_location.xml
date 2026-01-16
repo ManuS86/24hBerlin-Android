@@ -21,7 +21,7 @@
 
     <group
         android:translateX="12"
-        android:translateY="11"
+        android:translateY="12"
         android:scaleX="0.05"
         android:scaleY="0.05">
         <path
