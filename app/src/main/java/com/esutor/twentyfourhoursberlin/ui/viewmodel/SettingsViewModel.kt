@@ -66,6 +66,8 @@ class SettingsViewModel(
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
 
+    private var isManuallyChangingLanguage = false
+
     // --- Private Atomic Helper ---
     /**
      * "Ensures that" settings updates are atomic by copying the current state
@@ -86,8 +88,12 @@ class SettingsViewModel(
 
     // --- User Settings actions ---
     fun syncLanguageWithDevice(context: Context, targetLanguage: Language?) {
-        val targetCode = targetLanguage?.languageCode
-        if (targetCode.isNullOrEmpty()) return
+        if (isManuallyChangingLanguage) {
+            isManuallyChangingLanguage = false
+            return
+        }
+
+        val targetCode = targetLanguage?.languageCode ?: return
 
         val currentAppLocales = AppCompatDelegate.getApplicationLocales()
         val currentCode = if (!currentAppLocales.isEmpty) {
@@ -97,14 +103,15 @@ class SettingsViewModel(
         }
 
         if (targetCode != currentCode) {
-            changeLanguage(context, targetLanguage)
+            LanguageChangeHelper().setLanguage(context, targetCode)
         }
     }
 
     fun changeLanguage(context: Context, newLanguage: Language?) {
         val targetCode = newLanguage?.languageCode ?: ""
-        LanguageChangeHelper().setLanguage(context, targetCode)
 
+        isManuallyChangingLanguage = true
+        LanguageChangeHelper().setLanguage(context, targetCode)
         updateSettings { it.copy(language = newLanguage?.label) }
     }
 
