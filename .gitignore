@@ -2,10 +2,7 @@
 .idea/
 *.iml
 .gradle/
-/local.properties
-local.properties
 secrets.properties
-local.defaults.properties
 .DS_Store
 
 # --- Build Output ---
