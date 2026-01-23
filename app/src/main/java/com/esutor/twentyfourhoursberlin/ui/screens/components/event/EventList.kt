@@ -13,7 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.EventItem
 import com.esutor.twentyfourhoursberlin.ui.theme.smallPadding
 import com.esutor.twentyfourhoursberlin.ui.theme.standardPadding

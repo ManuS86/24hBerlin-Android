@@ -1,8 +1,8 @@
-package com.esutor.twentyfourhoursberlin.data.repository.user
+package com.esutor.twentyfourhoursberlin.data.repositories.user
 
 import android.content.Context
-import com.esutor.twentyfourhoursberlin.data.model.AppUser
-import com.esutor.twentyfourhoursberlin.data.model.Settings
+import com.esutor.twentyfourhoursberlin.data.models.AppUser
+import com.esutor.twentyfourhoursberlin.data.models.Settings
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 

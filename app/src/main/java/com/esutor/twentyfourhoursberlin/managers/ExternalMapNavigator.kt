@@ -15,7 +15,6 @@ object ExternalMapNavigator {
      * Uses the universal Directions API format.
      */
     fun navigateToGoogleMaps(context: Context, latitude: Double, longitude: Double) {
-        // Universal URI for directions
         val directionsUri = "https://www.google.com/maps/search/?api=1&query=$latitude,$longitude".toUri()
 
         val mapIntent = Intent(Intent.ACTION_VIEW, directionsUri).apply {

@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.data.repository.user
+package com.esutor.twentyfourhoursberlin.data.repositories.user
 
 import android.content.Context
 import android.os.Build
@@ -8,8 +8,8 @@ import androidx.credentials.GetCredentialRequest
 import androidx.credentials.exceptions.NoCredentialException
 import com.esutor.twentyfourhoursberlin.BuildConfig
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.data.model.AppUser
-import com.esutor.twentyfourhoursberlin.data.model.Settings
+import com.esutor.twentyfourhoursberlin.data.models.AppUser
+import com.esutor.twentyfourhoursberlin.data.models.Settings
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.firebase.Firebase

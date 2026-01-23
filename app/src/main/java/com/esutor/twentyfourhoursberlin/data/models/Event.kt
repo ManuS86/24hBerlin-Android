@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.data.model
+package com.esutor.twentyfourhoursberlin.data.models
 
 import com.esutor.twentyfourhoursberlin.data.api.adapters.EndDateTime
 import com.esutor.twentyfourhoursberlin.data.api.adapters.StartDateTime
@@ -13,12 +13,12 @@ data class Event(
     val name: String,
     val permalink: String,
 
-    // We map the JSON key "start" directly to a LocalDateTime object
+    //Maps the JSON key "start" directly to a LocalDateTime object
     @Json(name = "start")
     @StartDateTime
     val start: LocalDateTime,
 
-    // We map the JSON key "end" directly to a LocalDateTime? object
+    //Maps the JSON key "end" directly to a LocalDateTime? object
     @Json(name = "end")
     @EndDateTime
     val end: LocalDateTime?,

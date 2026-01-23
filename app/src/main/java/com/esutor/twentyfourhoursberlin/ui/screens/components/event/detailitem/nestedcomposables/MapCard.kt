@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.ui.theme.mapPreviewHeight
 import com.esutor.twentyfourhoursberlin.ui.theme.mediumRounding
 import com.esutor.twentyfourhoursberlin.utils.bitmapDescriptorFromVector

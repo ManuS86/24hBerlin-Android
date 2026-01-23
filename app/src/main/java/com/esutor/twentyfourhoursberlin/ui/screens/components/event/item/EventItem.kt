@@ -33,7 +33,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.unit.dp
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.BookmarkButton
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.EventDetailItem
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.item.nestedcomposables.Categories

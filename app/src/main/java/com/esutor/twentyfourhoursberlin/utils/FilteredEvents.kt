@@ -3,7 +3,7 @@ package com.esutor.twentyfourhoursberlin.utils
 import androidx.compose.ui.text.input.TextFieldValue
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 
 fun filteredEvents(
     events: List<Event>,

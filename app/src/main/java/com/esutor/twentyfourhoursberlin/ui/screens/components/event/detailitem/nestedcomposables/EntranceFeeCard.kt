@@ -19,7 +19,7 @@ import androidx.compose.ui.graphics.Color.Companion.DarkGray
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.data.model.EntranceFee
+import com.esutor.twentyfourhoursberlin.data.models.EntranceFee
 import com.esutor.twentyfourhoursberlin.ui.theme.OffWhite
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
 import com.esutor.twentyfourhoursberlin.utils.cleanToAnnotatedString

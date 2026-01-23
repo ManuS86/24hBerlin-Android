@@ -1,4 +1,4 @@
-package com.esutor.twentyfourhoursberlin.data.model
+package com.esutor.twentyfourhoursberlin.data.models
 
 import androidx.annotation.Keep
 import com.google.firebase.Timestamp

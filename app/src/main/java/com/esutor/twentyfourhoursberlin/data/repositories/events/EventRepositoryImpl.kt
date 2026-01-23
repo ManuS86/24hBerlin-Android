@@ -1,7 +1,7 @@
-package com.esutor.twentyfourhoursberlin.data.repository.events
+package com.esutor.twentyfourhoursberlin.data.repositories.events
 
 import com.esutor.twentyfourhoursberlin.data.api.EventApi
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.time.Instant

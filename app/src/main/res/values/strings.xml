@@ -12,6 +12,7 @@
     <string name="august">Aug</string>
     <string name="back">Back</string>
     <string name="back_online">Back online</string>
+    <string name="berlins_underground_doesnt_wait">Berlins underground doesn’t wait.</string>
     <string name="bookmark">Bookmark</string>
     <string name="change_email">Change Email</string>
     <string name="change_password">Change Password</string>
@@ -22,7 +23,6 @@
     <string name="clear_filters">Clear Filters</string>
     <string name="clear_search">Clear Search</string>
     <string name="club_map">Club Map</string>
-    <string name="come_back_and_check_out_the_latest_events">Come back and check out the latest events.</string>
     <string name="concert">Concert</string>
     <string name="confirm_new_password">Confirm new Password</string>
     <string name="confirm_password">Confirm Password</string>
@@ -34,9 +34,9 @@
     <string name="default_web_client_id">1095749043096-bvksmmagq7grs003doh6isak88qfrnjm.apps.googleusercontent.com</string>
     <string name="delete_account">Delete Account</string>
     <string name="directions">Directions</string>
-    <string name="dont_forget_event_1week">Don\'t forget: %1$s is happening next week!</string>
-    <string name="dont_forget_event_1day">Don\'t forget: %1$s is happening tomorrow!</string>
-    <string name="dont_forget_event_1hour">Don\'t forget: %1$s is happening in an hour!</string>
+    <string name="dont_forget_event_1week">Don’t forget: %1$s is happening next week!</string>
+    <string name="dont_forget_event_1day">Don’t forget: %1$s is happening tomorrow!</string>
+    <string name="dont_forget_event_1hour">Don’t forget: %1$s is happening in an hour!</string>
     <string name="dont_have_an_account">Don’t have an account?</string>
     <string name="email">Email</string>
     <string name="email_changed_successfully">Email changed successfully.</string>
@@ -100,6 +100,7 @@
     <string name="reset_password">Reset Password</string>
     <string name="search">Search</string>
     <string name="search_event_names">Search Event Names</string>
+    <string name="see_whats_happening">See what’s happening this week!</string>
     <string name="send_problem_report">Send Problem Report</string>
     <string name="september">Sep</string>
     <string name="settings">Settings</string>
@@ -118,6 +119,5 @@
     <string name="type">Type</string>
     <string name="venue">Venue</string>
     <string name="verify_password">Verify Password</string>
-    <string name="we_miss_you">We miss you!</string>
     <string name="yes">YES</string>
 </resources>

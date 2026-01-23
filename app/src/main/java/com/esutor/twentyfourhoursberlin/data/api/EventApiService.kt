@@ -2,7 +2,7 @@ package com.esutor.twentyfourhoursberlin.data.api
 
 import com.esutor.twentyfourhoursberlin.BuildConfig
 import com.esutor.twentyfourhoursberlin.data.api.adapters.EventDateAdapter
-import com.esutor.twentyfourhoursberlin.data.model.ServerResponse
+import com.esutor.twentyfourhoursberlin.data.models.ServerResponse
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient

@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.Language
-import com.esutor.twentyfourhoursberlin.data.model.AppUser
-import com.esutor.twentyfourhoursberlin.data.model.Event
-import com.esutor.twentyfourhoursberlin.data.model.Settings
-import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.data.models.AppUser
+import com.esutor.twentyfourhoursberlin.data.models.Event
+import com.esutor.twentyfourhoursberlin.data.models.Settings
+import com.esutor.twentyfourhoursberlin.data.repositories.user.UserRepository
 import com.esutor.twentyfourhoursberlin.managers.LanguageChangeHelper
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
@@ -28,6 +28,7 @@ class SettingsViewModel(
     private val reminderScheduler: AndroidReminderScheduler
 ) : ViewModel() {
 
+    // region Constants
     companion object {
         private const val TAG = "SettingsViewModel"
         private const val KEY_CONFIRMATION_MESSAGE = "confirmationMessage"
@@ -39,7 +40,9 @@ class SettingsViewModel(
         private const val KEY_SHOW_DELETE_ACCOUNT_ALERT = "showDeleteAccountAlert"
         private const val KEY_SHOW_LOGOUT_ALERT = "showLogoutAlert"
     }
+    // endregion
 
+    // region UI State & Flows
     val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
         .stateIn(viewModelScope, WhileSubscribed(5000), null)
 
@@ -56,37 +59,30 @@ class SettingsViewModel(
         null
     )
 
-    // --- UI state ---
+    // Message & Error States
     val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
     val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
+    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
+
+    // Auth & Overlay Visibility States
     val isProblemReportSheetOpen = savedStateHandle.getStateFlow(KEY_IS_PROBLEM_REPORT_SHEET_OPEN, false)
     val isReauthenticated = savedStateHandle.getStateFlow(KEY_IS_REAUTHENTICATED, false)
-    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
     val problemReportAlertMessage = savedStateHandle.getStateFlow<String?>(KEY_PROBLEM_REPORT_ALERT_MESSAGE, null)
     val showDeleteAccountAlert = savedStateHandle.getStateFlow(KEY_SHOW_DELETE_ACCOUNT_ALERT, false)
     val showLogoutAlert = savedStateHandle.getStateFlow(KEY_SHOW_LOGOUT_ALERT, false)
 
     private var isManuallyChangingLanguage = false
+    // endregion
 
-    // --- Private Atomic Helper ---
-    /**
-     * "Ensures that" settings updates are atomic by copying the current state
-     * and only modifying the requested fields.
-     */
-    private fun updateSettings(update: (Settings) -> Settings) {
-        val currentSettings = currentAppUser.value?.settings ?: Settings()
-        val newSettings = update(currentSettings)
+    // region User Settings Actions
+    fun changeLanguage(context: Context, newLanguage: Language?) {
+        val targetCode = newLanguage?.languageCode ?: ""
 
-        viewModelScope.launch {
-            try {
-                userRepo.updateUserInformation(null, newSettings)
-            } catch (ex: Exception) {
-                Log.e(TAG, "Error updating settings in Firestore.", ex)
-            }
-        }
+        isManuallyChangingLanguage = true
+        LanguageChangeHelper().setLanguage(context, targetCode)
+        updateSettings { it.copy(language = newLanguage?.label) }
     }
 
-    // --- User Settings actions ---
     fun syncLanguageWithDevice(context: Context, targetLanguage: Language?) {
         if (isManuallyChangingLanguage) {
             isManuallyChangingLanguage = false
@@ -107,19 +103,12 @@ class SettingsViewModel(
         }
     }
 
-    fun changeLanguage(context: Context, newLanguage: Language?) {
-        val targetCode = newLanguage?.languageCode ?: ""
-
-        isManuallyChangingLanguage = true
-        LanguageChangeHelper().setLanguage(context, targetCode)
-        updateSettings { it.copy(language = newLanguage?.label) }
-    }
-
     fun changeNotificationPermission(enabled: Boolean) {
         updateSettings { it.copy(notificationsEnabled = enabled) }
     }
+    // endregion
 
-    // --- Account and Auth actions ---
+    // region Account & Auth Actions
     fun reAuthenticate(password: String) {
         savedStateHandle[KEY_FIREBASE_ERROR] = null
 
@@ -188,8 +177,9 @@ class SettingsViewModel(
             }
         }
     }
+    // endregion
 
-    // --- Problem reporting ---
+    // region Problem Reporting
     fun openBugReport() {
         savedStateHandle[KEY_IS_PROBLEM_REPORT_SHEET_OPEN] = true
     }
@@ -218,17 +208,9 @@ class SettingsViewModel(
             }
         }
     }
+    // endregion
 
-    // --- UI overlay controls ---
-    fun toggleDeleteAlert(show: Boolean) {
-        savedStateHandle[KEY_SHOW_DELETE_ACCOUNT_ALERT] = show
-    }
-
-    fun toggleLogoutAlert(show: Boolean) {
-        savedStateHandle[KEY_SHOW_LOGOUT_ALERT] = show
-    }
-
-    // --- Notification and cleanup helpers ---
+    // region Notification & Utility Helpers
     fun cancelAllReminders(bookmarks: List<Event>) {
         viewModelScope.launch {
             try {
@@ -239,9 +221,37 @@ class SettingsViewModel(
         }
     }
 
+    /**
+     * "Ensures that" settings updates are atomic by copying the current state
+     * and only modifying the requested fields.
+     */
+    private fun updateSettings(update: (Settings) -> Settings) {
+        val currentSettings = currentAppUser.value?.settings ?: Settings()
+        val newSettings = update(currentSettings)
+
+        viewModelScope.launch {
+            try {
+                userRepo.updateUserInformation(null, newSettings)
+            } catch (ex: Exception) {
+                Log.e(TAG, "Error updating settings in Firestore.", ex)
+            }
+        }
+    }
+    // endregion
+
+    // region UI Overlay Controls
+    fun toggleDeleteAlert(show: Boolean) {
+        savedStateHandle[KEY_SHOW_DELETE_ACCOUNT_ALERT] = show
+    }
+
+    fun toggleLogoutAlert(show: Boolean) {
+        savedStateHandle[KEY_SHOW_LOGOUT_ALERT] = show
+    }
+
     fun clearErrorMessages() {
         savedStateHandle[KEY_CONFIRMATION_MESSAGE] = null
         savedStateHandle[KEY_FIREBASE_ERROR] = null
         savedStateHandle[KEY_PASSWORD_ERROR] = null
     }
+    //endregion
 }

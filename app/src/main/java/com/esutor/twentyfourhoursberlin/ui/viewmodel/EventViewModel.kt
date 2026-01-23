@@ -8,10 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.data.enums.EventReminderType
 import com.esutor.twentyfourhoursberlin.data.enums.EventType
 import com.esutor.twentyfourhoursberlin.data.enums.Month
-import com.esutor.twentyfourhoursberlin.data.model.AppUser
-import com.esutor.twentyfourhoursberlin.data.model.Event
-import com.esutor.twentyfourhoursberlin.data.repository.events.EventRepository
-import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.data.models.AppUser
+import com.esutor.twentyfourhoursberlin.data.models.Event
+import com.esutor.twentyfourhoursberlin.data.repositories.events.EventRepository
+import com.esutor.twentyfourhoursberlin.data.repositories.user.UserRepository
 import com.esutor.twentyfourhoursberlin.managers.internetconnectionobserver.ConnectivityObserver
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.notifications.reminderscheduler.AndroidReminderScheduler
@@ -48,6 +48,7 @@ class EventViewModel(
     private val connectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
+    // region Constants
     companion object {
         private const val TAG = "EventViewModel"
         private const val KEY_SEARCH_TEXT = "search_text"
@@ -56,19 +57,9 @@ class EventViewModel(
         private const val KEY_SOUND = "selected_sound"
         private const val KEY_VENUE = "selected_venue"
     }
+    // endregion
 
-    // --- Navigation & Scroll States ---
-    private val _scrollToEventId = MutableStateFlow<String?>(null)
-    val scrollToEventId = _scrollToEventId.asStateFlow()
-
-    // --- UI & App States ---
-    val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
-        .stateIn(
-            scope = viewModelScope,
-            started = WhileSubscribed(5000),
-            initialValue = null
-        )
-
+    // region Base Data & Connection
     private val _events = MutableStateFlow<List<Event>?>(null)
     val events: StateFlow<List<Event>?> = _events
         .onStart {
@@ -87,14 +78,20 @@ class EventViewModel(
     private val _isLoading: MutableStateFlow<Boolean?> = MutableStateFlow(null)
     val isLoading = _isLoading.asStateFlow()
 
+    val currentAppUser: StateFlow<AppUser?> = userRepo.getUserFlow()
+        .stateIn(
+            scope = viewModelScope,
+            started = WhileSubscribed(5000),
+            initialValue = null
+        )
+    // endregion
+
+    // region Search & Filter Inputs
     private val _searchTextFieldValue = MutableStateFlow(
         TextFieldValue(savedStateHandle.get<String>(KEY_SEARCH_TEXT) ?: "")
     )
     val searchTextFieldValue = _searchTextFieldValue.asStateFlow()
 
-    val hasNotificationPermission = permissionManager.hasNotificationPermission
-
-    // --- Filter Inputs (SavedStateHandle) ---
     val selectedEventType = savedStateHandle.getStateFlow<EventType?>(KEY_EVENT_TYPE, null)
     val selectedMonth = savedStateHandle.getStateFlow<Month?>(KEY_MONTH, null)
     val selectedSound = savedStateHandle.getStateFlow<String?>(KEY_SOUND, null)
@@ -105,8 +102,9 @@ class EventViewModel(
     ) { month, type, sound, venue ->
         EventFilters(month, type, sound, venue)
     }.stateIn(viewModelScope, WhileSubscribed(5000L), EventFilters())
+    // endregion
 
-    // --- Computed Outputs (Derived Lists) ---
+    // region Derived UI States (Computed Lists)
     val filteredEvents: StateFlow<List<Event>?> = combine(
         events,
         searchTextFieldValue,
@@ -173,8 +171,40 @@ class EventViewModel(
                 ?.distinct()?.sorted() ?: emptyList()
         }
     }.stateIn(viewModelScope, WhileSubscribed(5000L), emptyList())
+    // endregion
 
-    // --- Lifecycle & Data Loading ---
+    // region Navigation Actions
+    private val _scrollToEventId = MutableStateFlow<String?>(null)
+    val scrollToEventId = _scrollToEventId.asStateFlow()
+
+    fun setScrollTarget(eventId: String?) { _scrollToEventId.value = eventId }
+    fun clearScrollTarget() { _scrollToEventId.value = null }
+    // endregion
+
+    // region User Input Actions (Search & Filters)
+    fun updateSearchText(newValue: TextFieldValue) {
+        _searchTextFieldValue.value = newValue
+        savedStateHandle[KEY_SEARCH_TEXT] = newValue.text
+        if (newValue.text.isNotEmpty()) clearScrollTarget()
+    }
+
+    fun updateEventType(type: EventType?) = toggleFilter(KEY_EVENT_TYPE, selectedEventType.value, type)
+    fun updateMonth(month: Month?) = toggleFilter(KEY_MONTH, selectedMonth.value, month)
+    fun updateSound(sound: String?) = toggleFilter(KEY_SOUND, selectedSound.value, sound)
+    fun updateVenue(venue: String?) = toggleFilter(KEY_VENUE, selectedVenue.value, venue)
+
+    fun clearAllFilters() {
+        listOf(KEY_EVENT_TYPE, KEY_MONTH, KEY_SOUND, KEY_VENUE).forEach { key ->
+            savedStateHandle[key] = null
+        }
+    }
+
+    private fun <T> toggleFilter(key: String, currentValue: T?, newValue: T?) {
+        savedStateHandle[key] = if (currentValue == newValue) null else newValue
+    }
+    // endregion
+
+    // region Private Data Operations (Loading & Connectivity)
     private fun observeConnectivity() {
         connectivityObserver.isConnected
             .onEach { isConnected ->
@@ -197,51 +227,9 @@ class EventViewModel(
             }
         }
     }
+    // endregion
 
-    private fun purgeExpiredBookmarks(expiredIds: List<String>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                userRepo.removeBookmarkIds(expiredIds)
-                Log.d(TAG, "Successfully purged ${expiredIds.size} bookmarks in one batch.")
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to purge bookmarks batch", e)
-            }
-        }
-    }
-
-    // --- Navigation actions ---
-    fun setScrollTarget(eventId: String?) {
-        _scrollToEventId.value = eventId
-    }
-
-    fun clearScrollTarget() {
-        _scrollToEventId.value = null
-    }
-
-    // --- Filter & Search actions ---
-    fun updateSearchText(newValue: TextFieldValue) {
-        _searchTextFieldValue.value = newValue
-        savedStateHandle[KEY_SEARCH_TEXT] = newValue.text
-
-        if (newValue.text.isNotEmpty()) clearScrollTarget()
-    }
-
-    private fun <T> toggleFilter(key: String, currentValue: T?, newValue: T?) {
-        savedStateHandle[key] = if (currentValue == newValue) null else newValue
-    }
-
-    fun updateEventType(type: EventType?) = toggleFilter(KEY_EVENT_TYPE, selectedEventType.value, type)
-    fun updateMonth(month: Month?) = toggleFilter(KEY_MONTH, selectedMonth.value, month)
-    fun updateSound(sound: String?) = toggleFilter(KEY_SOUND, selectedSound.value, sound)
-    fun updateVenue(venue: String?) = toggleFilter(KEY_VENUE, selectedVenue.value, venue)
-
-    fun clearAllFilters() {
-        listOf(KEY_EVENT_TYPE, KEY_MONTH, KEY_SOUND, KEY_VENUE).forEach { key ->
-            savedStateHandle[key] = null
-        }
-    }
-
-    // --- Event & Bookmark actions ---
+    // region Bookmark & Reminder Actions
     fun addBookmarkId(bookmarkId: String) {
         val event = _events.value?.find { it.id == bookmarkId } ?: return
 
@@ -274,6 +262,23 @@ class EventViewModel(
         }
     }
 
+    private fun purgeExpiredBookmarks(expiredIds: List<String>) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                userRepo.removeBookmarkIds(expiredIds)
+                Log.d(TAG, "Successfully purged ${expiredIds.size} bookmarks in one batch.")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to purge bookmarks batch", e)
+            }
+        }
+    }
+    // endregion
+
+    // region Reminder & Permission Actions
+    val hasNotificationPermission = permissionManager.hasNotificationPermission
+
+    fun setupAbsenceReminder() = reminderScheduler.scheduleAbsenceReminder()
+
     fun addBookmarkReminder(event: Event) {
         listOf(
             EventReminderType.ONE_WEEK_BEFORE,
@@ -283,6 +288,5 @@ class EventViewModel(
             reminderScheduler.scheduleEventReminder(event, type, event.imageURL)
         }
     }
-
-    fun setupAbsenceReminder() = reminderScheduler.schedule14DayReminder()
+    // endregion
 }

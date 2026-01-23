@@ -9,7 +9,7 @@ import android.os.Build
 import android.util.Log
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.EventReminderType
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver
 import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_BODY
 import com.esutor.twentyfourhoursberlin.notifications.ReminderReceiver.Companion.EXTRA_EVENT_ID
@@ -53,17 +53,17 @@ class AndroidReminderScheduler(
     }
 
     @SuppressLint("MissingPermission")
-    override fun schedule14DayReminder() {
+    override fun scheduleAbsenceReminder() {
         val triggerMillis = LocalDateTime.now()
-            .plusDays(14)
+            .plusDays(7)
             .atZone(ZoneId.systemDefault())
             .toInstant()
             .toEpochMilli()
 
         val intent = createIntent(
             ABSENCE_REMINDER_ID,
-            context.getString(R.string.we_miss_you),
-            context.getString(R.string.come_back_and_check_out_the_latest_events)
+            context.getString(R.string.berlins_underground_doesnt_wait),
+            context.getString(R.string.see_whats_happening)
         )
 
         scheduleAlarm(ABSENCE_REMINDER_ID, triggerMillis, intent)

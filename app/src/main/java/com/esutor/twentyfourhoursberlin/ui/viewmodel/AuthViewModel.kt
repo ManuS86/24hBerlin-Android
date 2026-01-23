@@ -6,7 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.esutor.twentyfourhoursberlin.R
-import com.esutor.twentyfourhoursberlin.data.repository.user.UserRepository
+import com.esutor.twentyfourhoursberlin.data.repositories.user.UserRepository
 import com.esutor.twentyfourhoursberlin.managers.permissionmanager.AndroidPermissionManager
 import com.esutor.twentyfourhoursberlin.utils.checkPassword
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -27,6 +27,7 @@ class AuthViewModel(
     private val permissionManager: AndroidPermissionManager
 ) : ViewModel() {
 
+    // region Constants
     companion object {
         private const val TAG = "AuthViewModel"
         private const val KEY_CONFIRMATION_MESSAGE = "confirmationMessage"
@@ -35,9 +36,17 @@ class AuthViewModel(
         private const val KEY_IS_LOADING = "isLoading"
         private const val KEY_PASSWORD_ERROR = "passwordError"
     }
+    // endregion
 
+    // region UI State & Flows
     private val _currentUser = MutableStateFlow(auth.currentUser)
     val currentUser = _currentUser.asStateFlow()
+
+    val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
+    val errorMessageResId = savedStateHandle.getStateFlow(KEY_ERROR_MESSAGE, null as Int?)
+    val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
+    val isLoading = savedStateHandle.getStateFlow(KEY_IS_LOADING, false)
+    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
 
     val hasNotificationPermission: StateFlow<Boolean> =
         permissionManager.hasNotificationPermission
@@ -46,23 +55,17 @@ class AuthViewModel(
                 WhileSubscribed(5000L),
                 permissionManager.hasNotificationPermission.value
             )
+    // endregion
 
-    val confirmationMessageResId = savedStateHandle.getStateFlow(KEY_CONFIRMATION_MESSAGE, null as Int?)
-    val errorMessageResId = savedStateHandle.getStateFlow(KEY_ERROR_MESSAGE, null as Int?)
-    val firebaseError = savedStateHandle.getStateFlow(KEY_FIREBASE_ERROR, null as String?)
-    val isLoading = savedStateHandle.getStateFlow(KEY_IS_LOADING, false)
-    val passwordErrorResId = savedStateHandle.getStateFlow(KEY_PASSWORD_ERROR, null as Int?)
-
+    // region Initialization
     init {
         auth.addAuthStateListener { firebaseAuth ->
             _currentUser.value = firebaseAuth.currentUser
         }
     }
+    // endregion
 
-    fun updateNotificationPermission(isGranted: Boolean) {
-        permissionManager.updateNotificationPermission(isGranted)
-    }
-
+    // region Authentication Actions (Email & Password)
     fun register(
         password: String,
         confirmPassword: String,
@@ -71,11 +74,10 @@ class AuthViewModel(
         savedStateHandle[KEY_FIREBASE_ERROR] = null
         savedStateHandle[KEY_PASSWORD_ERROR] = null
 
-        // Run your existing password check utility
+        // Run local password check utility
         val errorResId = checkPassword(password, confirmPassword)
         savedStateHandle[KEY_PASSWORD_ERROR] = errorResId
 
-        // If local validation passes, tell the UI to proceed
         if (errorResId == null) {
             onValidationSuccess()
         }
@@ -154,6 +156,12 @@ class AuthViewModel(
                 Log.e(TAG, "Password reset requested Error: ${ex.toString()}")
             }
         }
+    }
+    // endregion
+
+    // region Permission & Utility Actions
+    fun updateNotificationPermission(isGranted: Boolean) {
+        permissionManager.updateNotificationPermission(isGranted)
     }
 
     fun clearErrorMessages() {

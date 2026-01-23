@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.Role
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.DetailCard
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.DirectionsCard
 import com.esutor.twentyfourhoursberlin.ui.screens.components.event.detailitem.nestedcomposables.EntranceFeeCard

@@ -1,6 +1,6 @@
-package com.esutor.twentyfourhoursberlin.data.repository.events
+package com.esutor.twentyfourhoursberlin.data.repositories.events
 
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 
 interface EventRepository {
     suspend fun getProcessedEvents(): List<Event>

@@ -8,7 +8,7 @@ import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.data.enums.Language
-import com.esutor.twentyfourhoursberlin.data.model.Event
+import com.esutor.twentyfourhoursberlin.data.models.Event
 import com.esutor.twentyfourhoursberlin.ui.theme.ArtAndCulture
 import com.esutor.twentyfourhoursberlin.ui.theme.Concert
 import com.esutor.twentyfourhoursberlin.ui.theme.Party
@@ -47,14 +47,14 @@ fun String.cleanToAnnotatedString(): AnnotatedString {
 fun String.extractCleanContent(): String {
     if (this.isBlank()) return ""
 
-    // Decode HTML entities (like &amp;) first to make Regex more reliable
+    // Decodes HTML entities (like &amp;) first to make Regex more reliable
     val decoded = HtmlCompat.fromHtml(this, FROM_HTML_MODE_LEGACY).toString()
 
-    // Extract content between backticks
+    // Extracts content between backticks
     val jsContentRegex = Regex("`([^`]+)`")
     val extracted = jsContentRegex.find(decoded)?.groupValues?.get(1) ?: ""
 
-    // Strip out the document.getElementById boilerplate
+    // Strips out the document.getElementById boilerplate
     val boilerplateRegex = Regex(
         """document\.getElementById\(.*?\)\.innerHTML\s*=\s*[`'"].*?[`'"]\s*;""",
         RegexOption.DOT_MATCHES_ALL

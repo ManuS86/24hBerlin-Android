@@ -9,8 +9,6 @@ import java.time.ZoneId
 
 /**
  * Custom Moshi Qualifiers.
- * These must be defined so Moshi knows how to link your data class fields
- * to the specific adapter functions.
  */
 @Retention(AnnotationRetention.RUNTIME)
 @JsonQualifier
@@ -34,7 +32,6 @@ class EventDateAdapter {
     }
 
     @ToJson
-    // Ensure the qualifier is directly on the parameter
     fun startToJson(@StartDateTime dateTime: LocalDateTime): String {
         return dateTime.atZone(ZoneId.systemDefault()).toEpochSecond().toString()
     }
@@ -51,7 +48,6 @@ class EventDateAdapter {
     }
 
     @ToJson
-    // Ensure the qualifier is directly on the parameter
     fun endToJson(@EndDateTime dateTime: LocalDateTime?): Long? {
         return dateTime?.atZone(ZoneId.systemDefault())?.toEpochSecond()
     }
