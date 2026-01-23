@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.GoogleSignInButton
@@ -75,7 +76,8 @@ fun RegisterScreen(
             placeholder = stringResource(R.string.enter_an_email),
             value = email,
             onValueChange = { email = it },
-            isPasswordField = false
+            isPasswordField = false,
+            imeAction = ImeAction.Next
         )
 
         Spacer(Modifier.height(smallPadding))
@@ -85,7 +87,8 @@ fun RegisterScreen(
             placeholder = stringResource(R.string.create_a_password),
             value = password,
             onValueChange = { password = it },
-            isPasswordField = true
+            isPasswordField = true,
+            imeAction = ImeAction.Next
         )
 
         Spacer(Modifier.height(smallPadding))

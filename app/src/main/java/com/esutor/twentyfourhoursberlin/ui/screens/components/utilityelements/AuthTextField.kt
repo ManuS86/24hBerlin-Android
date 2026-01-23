@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.Color.Companion.Gray
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.SemiBold
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import androidx.compose.ui.text.input.KeyboardType.Companion.Password
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -38,7 +39,8 @@ fun AuthTextField(
     placeholder: String,
     value: String,
     onValueChange: (String) -> Unit,
-    isPasswordField: Boolean
+    isPasswordField: Boolean,
+    imeAction: ImeAction = ImeAction.Done
 ) {
     var isPasswordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -63,7 +65,10 @@ fun AuthTextField(
                 VisualTransformation.None
             },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = if (isPasswordField) Password else Email),
+            keyboardOptions = KeyboardOptions(
+                keyboardType = if (isPasswordField) Password else Email,
+                imeAction = imeAction
+            ),
             trailingIcon = if (isPasswordField) {
                 {
                     val image = if (isPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff

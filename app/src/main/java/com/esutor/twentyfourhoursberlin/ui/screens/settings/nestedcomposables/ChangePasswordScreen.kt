@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Black
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
+import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.esutor.twentyfourhoursberlin.R
 import com.esutor.twentyfourhoursberlin.ui.screens.components.buttons.LargeBlackButton
@@ -65,7 +66,8 @@ fun ChangePasswordScreen(
                 placeholder = stringResource(R.string.enter_your_new_password),
                 value = password,
                 onValueChange = { password = it },
-                isPasswordField = true
+                isPasswordField = true,
+                imeAction = ImeAction.Next
             )
 
             Spacer(Modifier.height(standardPadding))
