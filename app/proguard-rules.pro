@@ -45,6 +45,10 @@
     @com.google.firebase.firestore.Exclude <fields>;
 }
 
+# --- 6. Data Model Protection ---
+-keep class com.esutor.twentyfourhoursberlin.data.models.** { *; }
+-keep class com.esutor.twentyfourhoursberlin.data.enums.** { *; }
+
 -dontwarn com.google.firebase.firestore.**
 -dontwarn com.google.errorprone.annotations.**
 -dontwarn com.google.j2objc.annotations.**
